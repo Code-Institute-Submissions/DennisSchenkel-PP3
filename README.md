@@ -30,3 +30,29 @@ The deployment terminal is set to 80 columns by 24 rows. That means that each li
 ---
 
 Happy coding!
+
+
+
+
+
+## Modules & libraries used
+
+
+### xlrd
+
+xlrd is a library that helps with reading data from Excel files (.xls).
+
+
+### Panda
+
+Panda helps with importing and analyzing data
+
+
+### openpyxl
+
+openpyxl is a library that helps with reading data from Excel files (.xlsx/.xlsm).
+
+
+### Misc.
+
+- pyArrow
