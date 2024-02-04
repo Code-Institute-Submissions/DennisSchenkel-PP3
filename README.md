@@ -56,3 +56,24 @@ openpyxl is a library that helps with reading data from Excel files (.xlsx/.xlsm
 ### Misc.
 
 - pyArrow
+
+
+
+
+## Questions to integrate
+
+How motivated are you to come to work every day?
+
+How much do you feel valued and recognized for your work?
+
+How would you rate the opportunities for professional development and career opportunities in the company?
+
+Do you feel you are treated fairly and equally?
+
+How would you rate the company's salary and benefits?
+
+How transparent are decision-making processes in the company?
+
+How would you rate the leadership skills in the company?
+
+How well are new employees integrated into the company?
