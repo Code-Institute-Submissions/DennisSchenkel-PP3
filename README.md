@@ -68,6 +68,15 @@ openpyxl is a library that helps with reading data from Excel files (.xlsx/.xlsm
 
 
 
+## Excel file structure
+
+- Only one sheet
+- Questions in first row
+- Answers in following rows
+
+
+
+
 ## Questions to integrate
 
 How motivated are you to come to work every day?
