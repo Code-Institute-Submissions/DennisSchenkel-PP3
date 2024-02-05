@@ -26,18 +26,20 @@ SHEET = GSPREAD_CLIENT.open("evp_survey_samples")
 
 def get_g_survey_data():
     """
-    Get content from survey data worksheet
+    Get content from survey data worksheet and format it as list of lists
     """
     survey_data = SHEET.worksheet("Survey_data")
     all_g_survey_data = survey_data.get_all_values()
+    all_g_survey_data.pop(0) # Remove the first row filled with questions from the list
     return all_g_survey_data
 
 def get_g_survey_results():
     """
-    Get content from survey results worksheet
+    Get content from survey results worksheet and format it as list of lists
     """
     survey_results = SHEET.worksheet("Survey_results")
     all_g_survey_results = survey_results.get_all_values()
+    all_g_survey_results.pop(0) # Remove the first row filled with questions from the list
     return all_g_survey_results
 
 
@@ -60,14 +62,14 @@ def get_excel_file():
             # Name and location of file is formatted as string
             get_excel = "{}".format(location)
             # Formatted name and location is pasted into read_excel() function
-            excel_read = pd.read_excel(get_excel)
+            excel_content = pd.read_excel(get_excel)
             
                                                                                             # Validation for correct Excel structure is missing
                                                                                             # If correct, TRUE, else FALSE
             
             # Return content of the excel file
-            print("file read")
-            return excel_read
+            excel_content_as_array = excel_content.to_numpy() # Format results as list of lists
+            return excel_content_as_array
         except:
             # Print FileNotFoundError statement
             vipe_terminal() # Clear terminal
@@ -134,7 +136,8 @@ vipe_terminal() # Clear terminal
 data = start() 
 
 # Print returned content of excel file
+
+
 print(data)
 
-
-
+print(data[1][1])
