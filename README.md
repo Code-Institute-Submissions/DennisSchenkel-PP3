@@ -37,6 +37,14 @@ Happy coding!
 
 ## Modules & libraries used
 
+### Google-Auth
+
+Google-Auth helps with the authentication to use the google API
+
+### gspread
+
+gspread is needed for accessing and updating data in a google spread sheet.
+
 
 ### xlrd
 
