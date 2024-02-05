@@ -81,8 +81,7 @@ def get_excel_file():
                     break  # Go back to beginning of the first while loop
                 elif try_again.lower() == 'n':
                     print("Going back to the start")
-                    start() # Restart programm by calling start()
-                    break
+                    os.system('python "run.py"') # Restart programm by calling start()
                 else:
                     # vipe_terminal() # Clear terminal
                     print("\nInvalid input. Please enter 'y' to try again or 'n' to exit.")
@@ -97,20 +96,25 @@ def start():
     vipe_terminal() # Clear terminal
     print("Welcome to the EVP Survey\n")
     print("You have two options to choose from:\n")
-    print("(1) Import file to analyze\n")
-    print("(2) Use the integrated Google sheet to analyze\n")
+    print("(1) Import Excel file to analyze\n")
+    print("(2) Use Google sheet to analyze\n")
+    print("(3) Open survey results\n")
     options = input("What would you like to do?: ")
     if options == "1":
-        list = get_excel_file()
-        return list
+        excel_file = get_excel_file()
+        return excel_file
     elif options == "2":
-        print("\nOption 2 was not integrated at this point.")
+        gsheet = get_g_survey_data()
+        return gsheet 
+    elif options == "3":
+        gresults = get_g_survey_results()
+        return gresults    
     else:
         vipe_terminal() # Clear terminal
         print("Wrong input. Please select one of the shown options.\n")
         print("The program will restart in 3 seconds.")
-        time.sleep(3)
-        start()
+        time.sleep(3) # Wait for 3 seconds
+        os.system('python "run.py"') # Restart programm by calling start()
 
 def vipe_terminal():
     """
@@ -131,13 +135,6 @@ data = start()
 
 # Print returned content of excel file
 print(data)
-
-
-
-# Print content of the google worksheets
-gresult = get_g_survey_results()
-print(gresult)
-
 
 
 
