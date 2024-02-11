@@ -24,7 +24,7 @@ SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open("evp_survey_samples")
 
-def get_g_survey_data():
+def get_google_survey_data():
     """
     Get content from survey data worksheet and format it as list of lists
     """
@@ -33,7 +33,7 @@ def get_g_survey_data():
     all_g_survey_data.pop(0) # Remove the first row filled with questions from the list
     return all_g_survey_data
 
-def get_g_survey_results():
+def get_google_survey_results():
     """
     Get content from survey results worksheet and format it as list of lists
     """
@@ -68,8 +68,8 @@ def get_excel_file():
                                                                                             # If correct, TRUE, else FALSE
             
             # Return content of the excel file
-            excel_content_as_array = excel_content.to_numpy() # Format results as list of lists
-            return excel_content_as_array
+            excel_content_as_list = excel_content.to_numpy() # Format results as list of lists
+            return excel_content_as_list
         except:
             # Print FileNotFoundError statement
             vipe_terminal() # Clear terminal
@@ -106,10 +106,10 @@ def start():
         excel_file = get_excel_file()
         return excel_file
     elif options == "2":
-        gsheet = get_g_survey_data()
+        gsheet = get_google_survey_data()
         return gsheet 
     elif options == "3":
-        gresults = get_g_survey_results()
+        gresults = get_google_survey_results()
         return gresults    
     else:
         vipe_terminal() # Clear terminal
@@ -140,4 +140,4 @@ data = start()
 
 print(data)
 
-print(data[1][1])
+print(data[0][6])
