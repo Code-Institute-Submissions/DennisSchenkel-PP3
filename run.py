@@ -24,7 +24,7 @@ SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open("evp_survey_samples")
 
-def get_google_survey_data():
+def get_google_file_data():
     """
     Get content from survey data worksheet and format it as list of lists
     """
@@ -46,7 +46,7 @@ def get_google_survey_results():
 # ------------------------------------ App Functions ------------------------------------
 
 # Get Excel file by import
-def get_excel_file():
+def get_excel_file_data():
     """
     This functions asks for the location of the file to import. 
     The "samples.xlsx" can be used for test purposes.
@@ -91,32 +91,79 @@ def get_excel_file():
         
 # ------------------------------------ General Functions ------------------------------------
 
+
+def program():
+    while True:
+        keepgoing = choose_data_source()
+        print(keepgoing)                             ## Delete later ----------------------------
+        
+        if keepgoing != True:   # If keepgoing is no longer true, the program will end. this is 
+            break
+
+
+
 def start():
     """
     Start of the program.
     """
-    vipe_terminal() # Clear terminal
-    print("Welcome to the EVP Survey\n")
-    print("You have two options to choose from:\n")
-    print("(1) Import Excel file to analyze\n")
-    print("(2) Use Google sheet to analyze\n")
-    print("(3) Open survey results\n")
-    options = input("What would you like to do?: ")
-    if options == "1":
-        excel_file = get_excel_file()
-        return excel_file
-    elif options == "2":
-        gsheet = get_google_survey_data()
-        return gsheet 
-    elif options == "3":
-        gresults = get_google_survey_results()
-        return gresults    
-    else:
+    while True:
         vipe_terminal() # Clear terminal
-        print("Wrong input. Please select one of the shown options.\n")
-        print("The program will restart in 3 seconds.")
-        time.sleep(3) # Wait for 3 seconds
-        os.system('python "run.py"') # Restart programm by calling start()
+        print("Welcome to the EVP Survey\n")
+        print("You have two options to choose from:\n")
+        print("(1) Do the survey\n")
+        print("(2) Login and analyze survey results\n")
+        option = input("What would you like to do?: ")
+        if option == "1":
+            print("Here comes the survey")
+        elif option == "2":
+            print("Here comes the Login")
+            choose_data_source()
+        else:
+            vipe_terminal() # Clear terminal
+            print("Wrong input. Please select one of the shown options.\n")
+            print("The program will restart in 3 seconds.")
+            break
+            # time.sleep(3) # Wait for 3 seconds
+            # os.system('python "run.py"') # Restart programm by calling start()
+
+def login():
+    """
+    Login for users to analyze survey results.
+    """
+
+
+def survey():
+    """
+    Do survey.
+    """
+
+
+def choose_data_source():
+        while True:
+            vipe_terminal()
+            print("(1) Import Excel file to analyze\n")
+            print("(2) Use Google sheet to analyze\n")
+            print("(3) Go back to the start of the program\n")
+            option = input("What would you like to do?: ")
+            if option == "1":
+                excel_file = get_excel_file_data()
+                return excel_file
+            elif option == "2":
+                gsheet = get_google_file_data()
+                return gsheet  
+            elif option == "3":
+                vipe_terminal() # Clear terminal
+                print("The program will restart in 3 seconds.")
+                time.sleep(3) # Wait for 3 seconds
+                # vipe_terminal()
+                return False
+            else:
+                vipe_terminal() # Clear terminal
+                print("Wrong input. Please select one of the shown options.\n")
+                print("Please try again in 3 seconds.")
+                time.sleep(3) # Wait for 3 seconds
+
+
 
 def vipe_terminal():
     """
@@ -133,11 +180,12 @@ def vipe_terminal():
 vipe_terminal() # Clear terminal
 
 # Call start function and asign result to data variable
-data = start() 
+data = start()
+
 
 # Print returned content of excel file
 
 
-print(data)
+# print(data)
 
-print(data[0][6])
+# print(data[0][6])

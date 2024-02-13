@@ -71,7 +71,8 @@ openpyxl is a library that helps with reading data from Excel files (.xlsx/.xlsm
 ## Excel file structure
 
 - Only one sheet
-- Questions in first row
+- Questions and kind of field input in first row
+    -   Date, Name, Company Name, Questions
 - Answers in following rows
 
 
@@ -94,3 +95,30 @@ How transparent are decision-making processes in the company?
 How would you rate the leadership skills in the company?
 
 How well are new employees integrated into the company?
+
+
+
+
+
+## Items to develop
+
+### Login
+
+- Ask for Login
+- Ask if just do survey
+
+
+
+### Result calculation
+
+- Select compamy to analyse
+    - Loop through result list and add each company and number of done surveys in another list
+
+
+
+### Do survey
+
+- Select existing company from list
+- If not in list, write own company name
+
+- Go back to previous question
