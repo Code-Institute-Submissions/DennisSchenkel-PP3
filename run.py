@@ -7,6 +7,17 @@ import pandas as pd # import pandas for excel handling
 import time # Import time for sleep feature
 
 
+
+
+questions = ["Name", "Question 1", "Question 2", "Question 3", "Question 4", "Question 5", "Question 6", "Question 7", "Question 8"]
+
+
+
+
+
+
+
+
 # ------------------------------------ Google API & Sheets ------------------------------------
 
 # The following code was taken from the Code Institute Love Sandwitches project.
@@ -28,22 +39,149 @@ def get_google_file_data():
     """
     Get content from survey data worksheet and format it as list of lists
     """
-    survey_data = SHEET.worksheet("Survey_data")
+    survey_data = SHEET.worksheet("Survey_data") # Select worksheet "Survey_data"
     all_g_survey_data = survey_data.get_all_values()
     all_g_survey_data.pop(0) # Remove the first row filled with questions from the list
     return all_g_survey_data
 
-def get_google_survey_results():
+def get_google_users():
     """
-    Get content from survey results worksheet and format it as list of lists
+    Get information about registered users from google sheet and worksheet "Users"
     """
-    survey_results = SHEET.worksheet("Survey_results")
+    survey_results = SHEET.worksheet("Users") # Select worksheet "Users"
     all_g_survey_results = survey_results.get_all_values()
     all_g_survey_results.pop(0) # Remove the first row filled with questions from the list
     return all_g_survey_results
 
 
+
+
+        
+        
+# ------------------------------------ General Functions ------------------------------------
+
+# Clear the terminal from all text
+def vipe_terminal():
+    """
+    Delete all text in the terminal
+    """
+    if os.name == "posix":  # macOS and Linux
+        os.system("clear")
+    elif os.name == "nt":  # Windows
+        os.system("cls")
+        
+
+def program():
+    while True:
+        keepgoing = choose_data_source()
+        print(keepgoing)                             ## Delete later ----------------------------
+        
+        if keepgoing != True:   # If keepgoing is no longer true, the program will end. this is 
+            break
+
+
+
 # ------------------------------------ App Functions ------------------------------------
+
+# Start of the program - Do survey or login and analyze data
+def start():
+    """
+    Start of the program.
+    """
+    while True:
+        vipe_terminal() # Clear terminal
+        print("Welcome to the EVP Survey\n")
+        print("You have two options to choose from:\n")
+        print("(1) Do the survey\n")
+        print("(2) Login and analyze survey results\n")
+        option = input("What would you like to do?: ")
+        if option == "1":
+            # Call survey function
+            print("Here comes the survey")
+        elif option == "2":
+            # Call login function
+            print("Here comes the Login")
+            choose_data_source()
+        else:
+            vipe_terminal() # Clear terminal
+            print("Wrong input. Please select one of the shown options.\n")
+            print("The program will restart in 3 seconds.")
+            break
+            # time.sleep(3) # Wait for 3 seconds
+            # os.system('python "run.py"') # Restart programm by calling start()
+
+
+
+
+
+# ------------------------------------ Survey Functions ------------------------------------
+
+
+
+def survey():
+    """
+    Do survey.
+    """
+    for q in questions:
+        print("This is the question:")
+        answer = input(q)
+        print(answer)
+
+
+def select_company():
+    """
+    Select company for servey
+    """
+
+
+
+# ------------------------------------ Data Analyzing Functions ------------------------------------
+
+
+def login():
+    """
+    Login for users to analyze survey results.
+    """
+
+    
+
+
+
+def choose_data_source():
+    """
+    Ask for the data source to get data for analyzation from.
+    Include option to go back to previous step. In this case restart the program.
+    """
+    while True:
+        vipe_terminal()
+        print("(1) Import Excel file to analyze\n")
+        print("(2) Use Google sheet to analyze\n")
+        print("(3) Go back to the start of the program\n")
+        option = input("What would you like to do?: ")
+        if option == "1":
+            # Call function to get data from excel sheet
+            excel_file = get_excel_file_data()
+            return excel_file
+        elif option == "2":
+            # Call function to get data from google sheet
+            gsheet = get_google_file_data()
+            return gsheet  
+        elif option == "3":
+            vipe_terminal() # Clear terminal
+            print("The program will restart in 3 seconds.")
+            time.sleep(3) # Wait for 3 seconds
+            # vipe_terminal()
+            return False
+        else:
+            vipe_terminal() # Clear terminal
+            print("Wrong input. Please select one of the shown options.\n")
+            print("Please try again in 3 seconds.")
+            time.sleep(3) # Wait for 3 seconds
+
+
+
+# ------------------------------------ Data Source Excel: Functions ------------------------------------
+
 
 # Get Excel file by import
 def get_excel_file_data():
@@ -87,101 +225,17 @@ def get_excel_file_data():
                 else:
                     # vipe_terminal() # Clear terminal
                     print("\nInvalid input. Please enter 'y' to try again or 'n' to exit.")
-        
-        
-# ------------------------------------ General Functions ------------------------------------
-
-
-def program():
-    while True:
-        keepgoing = choose_data_source()
-        print(keepgoing)                             ## Delete later ----------------------------
-        
-        if keepgoing != True:   # If keepgoing is no longer true, the program will end. this is 
-            break
 
 
 
-def start():
-    """
-    Start of the program.
-    """
-    while True:
-        vipe_terminal() # Clear terminal
-        print("Welcome to the EVP Survey\n")
-        print("You have two options to choose from:\n")
-        print("(1) Do the survey\n")
-        print("(2) Login and analyze survey results\n")
-        option = input("What would you like to do?: ")
-        if option == "1":
-            print("Here comes the survey")
-        elif option == "2":
-            print("Here comes the Login")
-            choose_data_source()
-        else:
-            vipe_terminal() # Clear terminal
-            print("Wrong input. Please select one of the shown options.\n")
-            print("The program will restart in 3 seconds.")
-            break
-            # time.sleep(3) # Wait for 3 seconds
-            # os.system('python "run.py"') # Restart programm by calling start()
-
-def login():
-    """
-    Login for users to analyze survey results.
-    """
-
-
-def survey():
-    """
-    Do survey.
-    """
-
-
-def choose_data_source():
-        while True:
-            vipe_terminal()
-            print("(1) Import Excel file to analyze\n")
-            print("(2) Use Google sheet to analyze\n")
-            print("(3) Go back to the start of the program\n")
-            option = input("What would you like to do?: ")
-            if option == "1":
-                excel_file = get_excel_file_data()
-                return excel_file
-            elif option == "2":
-                gsheet = get_google_file_data()
-                return gsheet  
-            elif option == "3":
-                vipe_terminal() # Clear terminal
-                print("The program will restart in 3 seconds.")
-                time.sleep(3) # Wait for 3 seconds
-                # vipe_terminal()
-                return False
-            else:
-                vipe_terminal() # Clear terminal
-                print("Wrong input. Please select one of the shown options.\n")
-                print("Please try again in 3 seconds.")
-                time.sleep(3) # Wait for 3 seconds
-
-
-
-def vipe_terminal():
-    """
-    Delete all text in the terminal
-    """
-    if os.name == "posix":  # macOS and Linux
-        os.system("clear")
-    elif os.name == "nt":  # Windows
-        os.system("cls")
-        
         
 # ------------------------------------ Start Program ------------------------------------
         
 vipe_terminal() # Clear terminal
 
 # Call start function and asign result to data variable
-data = start()
-
+# data = start()
+survey()
 
 # Print returned content of excel file
 
