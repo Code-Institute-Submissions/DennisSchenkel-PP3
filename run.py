@@ -5,6 +5,7 @@
 import os #Import os for terminal vipe
 import pandas as pd # import pandas for excel handling
 import time # Import time for sleep feature
+from colorama import Fore, Back, Style # import color sheme
 
 
 
@@ -86,7 +87,33 @@ def program():
 # Start of the program - Do survey or login and analyze data
 def start():
     """
-    Start of the program.
+    This functions starts the program and contains all logics.
+    """
+    survey_or_analyze = nav_survey_or_analyze()
+
+    # Select what oprion is choosen in the first navigation step
+    if survey_or_analyze == "do_survey":
+        survey()
+    elif survey_or_analyze == "do_login":
+        login_true = login()
+
+    # If login was valid, call function to choose data source for analyzation
+    if login_true == True:
+        print("You are now logged in")
+        data_source = choose_data_source()
+    else:
+        print("Housten, we have a problem!\nSome kind of fatal error happend!\nThe program will restart in 3 seconds!")
+        time.sleep(3) # Wait for 3 seconds
+        os.system('python "run.py"') # Restart programm by restarting run.py
+
+    print(data_source) ### ----------------------------------------------------------------------------- Delete later
+
+
+# ------------------------------------ Navigation Functions ------------------------------------
+
+def nav_survey_or_analyze():
+    """
+    This function displays the first navigation where the user can choose between doing the survey or logging in and analyzing the data.
     """
     while True:
         vipe_terminal() # Clear terminal
@@ -98,18 +125,16 @@ def start():
         if option == "1":
             # Call survey function
             print("Here comes the survey")
+            return "do_survey"
         elif option == "2":
             # Call login function
             print("Here comes the Login")
-            choose_data_source()
+            time.sleep(2) # Wait for 2 seconds
+            return "do_login"
         else:
             vipe_terminal() # Clear terminal
             print("Wrong input. Please select one of the shown options.\n")
-            print("The program will restart in 3 seconds.")
-            break
-            # time.sleep(3) # Wait for 3 seconds
-            # os.system('python "run.py"') # Restart programm by calling start()
-
+            time.sleep(2) # Wait for 2 seconds
 
 
 
@@ -135,17 +160,86 @@ def select_company():
 
 
 
-# ------------------------------------ Data Analyzing Functions ------------------------------------
+# ------------------------------------ Login Functions ------------------------------------
 
-
+# User login with username and password
 def login():
     """
     Login for users to analyze survey results.
     """
-
+    vipe_terminal() # Clear terminal
+    username = login_user_validation()    # If username is found this function returns the correct username
+    password_valid = login_password_validation(username)    # Correct password sets variable to True   
+    return True # Returns True when login worked correctly
+        
+# Validadion of username input 
+def login_user_validation():
+    """
+    Validate if username is to find in user database (gspreed)
+    """
+    list_of_users = get_google_users()
+    print(Fore.BLUE + "This is the user validation." + Style.RESET_ALL)
+    print("If you want to exit, please enter 'EXIT'\n")
+    while True:
+        username = input("What is your username?\n")  # Use "Test" as test user (with uppercase T)    
+        if username == "EXIT":
+            vipe_terminal() # Clear terminal
+            print(Fore.BLUE + "You want to exit" + Style.RESET_ALL)
+            print("The program will restart in 2 seconds.")
+            time.sleep(2) # Wait for 2 seconds
+            os.system('python "run.py"') # Restart programm by calling start()
+            return
+        else:   
+            for element in list_of_users:
+                if username == element[0]:    
+                    vipe_terminal() # Clear terminal
+                    print(Fore.GREEN + "Your username " + username + " is correct!" + Style.RESET_ALL)
+                    time.sleep(2) # Wait for 2 seconds
+                    return username
+        vipe_terminal() # Clear terminal
+        print(Fore.RED + "Username was not found.\nPlease try again." + Style.RESET_ALL)
+        print("If you want to exit, pleas enter 'EXIT'\n")    
+    
+# Validation of password input    
+def login_password_validation(username):
+    """
+    Validate if the password insered by the users is valid
+    """    
+    list_of_passwords = get_google_users()
+    vipe_terminal() # Clear terminal
+    print(Fore.BLUE + "This is the password validation." + Style.RESET_ALL)
+    print("If you want to exit, please enter 'EXIT'\n")
+    while True:
+        password = input("Please enter your password?\n")  # Use "Test" as test user (with uppercase T)    
+        if password == "EXIT":
+            vipe_terminal() # Clear terminal
+            print(Fore.BLUE + "You want to exit" + Style.RESET_ALL)
+            print("The program will restart in 2 seconds.")
+            time.sleep(2) # Wait for 2 seconds
+            os.system('python "run.py"') # Restart programm by calling start()
+            return
+        else:   
+            for element in list_of_passwords:
+                if username == element[0]:    
+                    if password == element[1]:
+                        vipe_terminal() # Clear terminal
+                        print(Fore.GREEN + "Password is correct!\n" + Style.RESET_ALL + "You will now get logged in!")
+                        time.sleep(2) # Wait for 2 seconds
+                        return True
+                    else:
+                        print(Fore.RED + "Password is not correct.\nPlease try again." + Style.RESET_ALL)
+                        print("If you want to exit, pleas enter 'EXIT'\n")
+                        break
+                else:
+                    continue
+    
+    
     
 
+        
 
+
+# ------------------------------------ Data Analyzing Functions ------------------------------------
 
 def choose_data_source():
     """
@@ -168,15 +262,15 @@ def choose_data_source():
             return gsheet  
         elif option == "3":
             vipe_terminal() # Clear terminal
-            print("The program will restart in 3 seconds.")
-            time.sleep(3) # Wait for 3 seconds
+            print("The program will restart in 2 seconds.")
+            time.sleep(2) # Wait for 2 seconds
             # vipe_terminal()
             return False
         else:
             vipe_terminal() # Clear terminal
             print("Wrong input. Please select one of the shown options.\n")
-            print("Please try again in 3 seconds.")
-            time.sleep(3) # Wait for 3 seconds
+            print("Please try again in 2 seconds.")
+            time.sleep(2) # Wait for 2 seconds
 
 
 
@@ -233,13 +327,4 @@ def get_excel_file_data():
         
 vipe_terminal() # Clear terminal
 
-# Call start function and asign result to data variable
-# data = start()
-survey()
-
-# Print returned content of excel file
-
-
-# print(data)
-
-# print(data[0][6])
+start()
