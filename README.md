@@ -60,6 +60,9 @@ Panda helps with importing and analyzing data
 
 openpyxl is a library that helps with reading data from Excel files (.xlsx/.xlsm).
 
+### colorama
+
+colorama helps with coloring the text and its background
 
 ### Misc.
 

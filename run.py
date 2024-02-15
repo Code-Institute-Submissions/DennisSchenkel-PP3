@@ -70,15 +70,17 @@ def vipe_terminal():
         os.system("clear")
     elif os.name == "nt":  # Windows
         os.system("cls")
+
+# Restart the program by executing run.py
+def restart():
+    vipe_terminal() # Clear terminal
+    print(Fore.BLUE + "You want to exit" + Style.RESET_ALL)
+    print("The program will restart in 2 seconds.")
+    time.sleep(2) # Wait for 2 seconds
+    os.system('python "run.py"') # Restart programm by calling start()
         
 
-def program():
-    while True:
-        keepgoing = choose_data_source()
-        print(keepgoing)                             ## Delete later ----------------------------
-        
-        if keepgoing != True:   # If keepgoing is no longer true, the program will end. this is 
-            break
+
 
 
 
@@ -89,24 +91,35 @@ def start():
     """
     This functions starts the program and contains all logics.
     """
+    
+    # Calling the first navigation function to ask if user wants to analyze existing data or do the survey
     survey_or_analyze = nav_survey_or_analyze()
 
-    # Select what oprion is choosen in the first navigation step
+    # Select what option is choosen in the first navigation step
     if survey_or_analyze == "do_survey":
         survey()
     elif survey_or_analyze == "do_login":
         login_true = login()
 
     # If login was valid, call function to choose data source for analyzation
-    if login_true == True:
+    if survey_or_analyze == "do_login" and login_true == True:
         print("You are now logged in")
-        data_source = choose_data_source()
+        data = choose_data_source()
+        
+        # User is now logged in and can start with the analyzing.
+        # Function to start the first analyzing step with selecting the company to analyze.
+        company = analyze_select_company(data)
+        
+        print(company)
+
+        
     else:
         print("Housten, we have a problem!\nSome kind of fatal error happend!\nThe program will restart in 3 seconds!")
         time.sleep(3) # Wait for 3 seconds
         os.system('python "run.py"') # Restart programm by restarting run.py
 
-    print(data_source) ### ----------------------------------------------------------------------------- Delete later
+
+
 
 
 # ------------------------------------ Navigation Functions ------------------------------------
@@ -124,11 +137,11 @@ def nav_survey_or_analyze():
         option = input("What would you like to do?: ")
         if option == "1":
             # Call survey function
-            print("Here comes the survey")
+            print("Survey is loading ...")
             return "do_survey"
         elif option == "2":
             # Call login function
-            print("Here comes the Login")
+            print("Login is loading ...")
             time.sleep(2) # Wait for 2 seconds
             return "do_login"
         else:
@@ -153,9 +166,9 @@ def survey():
         print(answer)
 
 
-def select_company():
+def survey_select_company():
     """
-    Select company for servey
+    Select company the user wants to do the servey for
     """
 
 
@@ -183,17 +196,13 @@ def login_user_validation():
     while True:
         username = input("What is your username?\n")  # Use "Test" as test user (with uppercase T)    
         if username == "EXIT":
-            vipe_terminal() # Clear terminal
-            print(Fore.BLUE + "You want to exit" + Style.RESET_ALL)
-            print("The program will restart in 2 seconds.")
-            time.sleep(2) # Wait for 2 seconds
-            os.system('python "run.py"') # Restart programm by calling start()
-            return
+            restart()
+            break
         else:   
             for element in list_of_users:
                 if username == element[0]:    
                     vipe_terminal() # Clear terminal
-                    print(Fore.GREEN + "Your username " + username + " is correct!" + Style.RESET_ALL)
+                    print(Fore.GREEN + f"Your username {username} is correct!" + Style.RESET_ALL)
                     time.sleep(2) # Wait for 2 seconds
                     return username
         vipe_terminal() # Clear terminal
@@ -210,26 +219,25 @@ def login_password_validation(username):
     print(Fore.BLUE + "This is the password validation." + Style.RESET_ALL)
     print("If you want to exit, please enter 'EXIT'\n")
     while True:
+        vipe_terminal() # Clear terminal
+        print(Fore.BLUE + "This is the password validation." + Style.RESET_ALL)
+        print("If you want to exit, please enter 'EXIT'\n")
         password = input("Please enter your password?\n")  # Use "Test" as test user (with uppercase T)    
         if password == "EXIT":
-            vipe_terminal() # Clear terminal
-            print(Fore.BLUE + "You want to exit" + Style.RESET_ALL)
-            print("The program will restart in 2 seconds.")
-            time.sleep(2) # Wait for 2 seconds
-            os.system('python "run.py"') # Restart programm by calling start()
-            return
+            restart()
+            break
         else:   
             for element in list_of_passwords:
                 if username == element[0]:    
                     if password == element[1]:
                         vipe_terminal() # Clear terminal
-                        print(Fore.GREEN + "Password is correct!\n" + Style.RESET_ALL + "You will now get logged in!")
+                        print(Fore.GREEN + "Password is correct!\n" + Style.RESET_ALL + "You will now get logged in ...")
                         time.sleep(2) # Wait for 2 seconds
                         return True
                     else:
+                        vipe_terminal() # Clear terminal
                         print(Fore.RED + "Password is not correct.\nPlease try again." + Style.RESET_ALL)
-                        print("If you want to exit, pleas enter 'EXIT'\n")
-                        break
+                        time.sleep(2) # Wait for 2 seconds
                 else:
                     continue
     
@@ -241,6 +249,57 @@ def login_password_validation(username):
 
 # ------------------------------------ Data Analyzing Functions ------------------------------------
 
+
+
+
+
+def analyze_select_company(data):
+    """
+    Select company to analyze
+    """
+    while True:
+        vipe_terminal()
+        print("Please select the company you want to analyze.")    
+        print("If you like to exit, pleas enter EXIT\n")
+
+        # Create empty list for all companies that are contained in the results data
+        company_list = []
+        
+        
+        # Itterate through the list of data and check for every line, if the company is already in the company_list.
+        # If not, add it to that list.
+        # Each company should only be in the list one time.
+        for entry in data:
+            if entry[2] not in company_list:
+                company_list.append(entry[2])
+        # After every company was added to the list, print every element in the list.
+        # Before every element of the list, print its index with +1 to not start at 0.
+        for company in company_list:
+            company_index = company_list.index(company) + 1
+            print(f"({company_index}) " + company + "\n")
+        
+        
+        # Take input which company the user selects.
+        selection = input()
+        count = 0
+        for company in company_list:
+            count += 1
+            if selection == str(count):
+                print("You have selected: " + company_list[count])
+                return company_list[count]
+            elif selection == "EXIT":
+                restart()
+                break
+            else:
+                vipe_terminal()
+                print("Sorry, your selection is no valid option.\nPlease try again in 2 seconds.")
+                time.sleep(2) # Wait for 2 seconds
+
+
+
+# ------------------------------------ Data Source: Functions ------------------------------------
+
+# Choose which source to get data from for analyzing
 def choose_data_source():
     """
     Ask for the data source to get data for analyzation from.
@@ -258,23 +317,18 @@ def choose_data_source():
             return excel_file
         elif option == "2":
             # Call function to get data from google sheet
-            gsheet = get_google_file_data()
-            return gsheet  
+            gspread = get_google_file_data()
+            return gspread  
         elif option == "3":
             vipe_terminal() # Clear terminal
             print("The program will restart in 2 seconds.")
             time.sleep(2) # Wait for 2 seconds
-            # vipe_terminal()
             return False
         else:
             vipe_terminal() # Clear terminal
             print("Wrong input. Please select one of the shown options.\n")
             print("Please try again in 2 seconds.")
             time.sleep(2) # Wait for 2 seconds
-
-
-
-# ------------------------------------ Data Source Excel: Functions ------------------------------------
 
 
 # Get Excel file by import
@@ -285,8 +339,8 @@ def get_excel_file_data():
     With the import a test for the import of a Excel file is done.
     If a Excel file is imported, the file is tested for correct structure.
     """
-    vipe_terminal() # Clear terminal
     while True:
+        vipe_terminal() # Clear terminal
         try:
             # Check for error, if a correct file was entered       
             # Ask for the location and name of Excel file.
@@ -314,8 +368,8 @@ def get_excel_file_data():
                     print("\n")
                     break  # Go back to beginning of the first while loop
                 elif try_again.lower() == 'n':
-                    print("Going back to the start")
-                    os.system('python "run.py"') # Restart programm by calling start()
+                    restart()
+                    break
                 else:
                     # vipe_terminal() # Clear terminal
                     print("\nInvalid input. Please enter 'y' to try again or 'n' to exit.")
