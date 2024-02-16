@@ -56,8 +56,6 @@ def get_google_users():
 
 
 
-
-        
         
 # ------------------------------------ General Functions ------------------------------------
 
@@ -79,8 +77,6 @@ def restart():
     time.sleep(2) # Wait for 2 seconds
     os.system('python "run.py"') # Restart programm by calling start()
         
-
-
 
 
 
@@ -111,8 +107,7 @@ def start():
         company = analyze_select_company(data)
         
         print(company)
-
-        
+   
     else:
         print("Housten, we have a problem!\nSome kind of fatal error happend!\nThe program will restart in 3 seconds!")
         time.sleep(3) # Wait for 3 seconds
@@ -250,9 +245,6 @@ def login_password_validation(username):
 # ------------------------------------ Data Analyzing Functions ------------------------------------
 
 
-
-
-
 def analyze_select_company(data):
     """
     Select company to analyze
@@ -264,7 +256,7 @@ def analyze_select_company(data):
 
         # Create empty list for all companies that are contained in the results data
         company_list = []
-        
+        index_list = []
         
         # Itterate through the list of data and check for every line, if the company is already in the company_list.
         # If not, add it to that list.
@@ -272,29 +264,40 @@ def analyze_select_company(data):
         for entry in data:
             if entry[2] not in company_list:
                 company_list.append(entry[2])
+                
         # After every company was added to the list, print every element in the list.
         # Before every element of the list, print its index with +1 to not start at 0.
         for company in company_list:
             company_index = company_list.index(company) + 1
+            index_list.append(company_index)
             print(f"({company_index}) " + company + "\n")
         
-        
         # Take input which company the user selects.
-        selection = input()
-        count = 0
-        for company in company_list:
-            count += 1
-            if selection == str(count):
-                print("You have selected: " + company_list[count])
-                return company_list[count]
-            elif selection == "EXIT":
+        selection = input()   
+        
+        try:
+            selection_index = int(selection) - 1
+            if selection_index >= 0 and selection_index <= len(company_list):
+                selected_company = company_list[selection_index]
+                vipe_terminal()
+                print(f"You selected: ({selection}) {selected_company}")
+                time.sleep(2) # Wait for 2 seconds
+                
+            else:
+                raise ValueError
+                
+
+        except ValueError:
+            # If users want to exit, they just enter "Exit" and the program will restart. 
+            if selection == "EXIT":
                 restart()
                 break
+            
             else:
                 vipe_terminal()
+                print("exeption Error")
                 print("Sorry, your selection is no valid option.\nPlease try again in 2 seconds.")
                 time.sleep(2) # Wait for 2 seconds
-
 
 
 # ------------------------------------ Data Source: Functions ------------------------------------
