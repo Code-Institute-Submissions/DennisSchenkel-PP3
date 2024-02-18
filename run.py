@@ -2,7 +2,7 @@
 # You can delete these comments, but do not change the name of this file
 # Write your code to expect a terminal of 80 characters wide and 24 rows high
 
-import os #Import os for terminal vipe
+import os #Import os for terminal wipe
 import sys # Import sys for restart of app
 import subprocess # Import subprocess for restart of app
 import pandas as pd # import pandas for excel handling
@@ -12,7 +12,6 @@ from colorama import Fore, Back, Style # import color sheme
 
 
 
-questions = ["Name", "Question 1", "Question 2", "Question 3", "Question 4", "Question 5", "Question 6", "Question 7", "Question 8"]
 
 
 
@@ -42,6 +41,16 @@ def get_google_file_data():
     all_g_survey_data.pop(0) # Remove the first row filled with questions from the list
     return all_g_survey_data
 
+def get_questions_from_google():
+    """
+    Get content from survey data worksheet and format it as list of lists
+    """
+    survey_data = SHEET.worksheet("Survey_data") # Select worksheet "Survey_data"
+    all_g_survey_data = survey_data.get_all_values()
+    questions = all_g_survey_data[0] # Select only the index with the questions in it
+    return questions
+
+
 def get_google_users():
     """
     Get information about registered users from google sheet and worksheet "Users"
@@ -57,7 +66,7 @@ def get_google_users():
 # ------------------------------------ General Functions ------------------------------------
 
 # Clear the terminal from all text
-def vipe_terminal():
+def wipe_terminal():
     """
     Delete all text in the terminal
     """
@@ -68,7 +77,7 @@ def vipe_terminal():
 
 # Restart the program by executing run.py
 def restart():
-    vipe_terminal() # Clear terminal
+    wipe_terminal() # Clear terminal
     print(Fore.BLUE + "You want to exit" + Style.RESET_ALL)
     print("The program will restart in 2 seconds.")
     time.sleep(2) # Wait for 2 seconds
@@ -90,7 +99,7 @@ def start():
     This functions starts the program and contains all logics.
     """
     
-    vipe_terminal() # Clear terminal
+    wipe_terminal() # Clear terminal
 
     
     # Calling the first navigation function to ask if user wants to analyze existing data or do the survey
@@ -105,13 +114,16 @@ def start():
     # If login was valid, call function to choose data source for analyzation
     if survey_or_analyze == "do_login" and login_true == True:
         print("You are now logged in")
+        
+        # Choose data source to analyse. Excel file or gspread file.
         data = choose_data_source()
         
         # User is now logged in and can start with the analyzing.
         # Function to start the first analyzing step with selecting the company to analyze.
         company = analyze_select_company(data)
         
-        print(company)
+        
+        return company
    
     else:
         print("Housten, we have a problem!\nSome kind of fatal error happend!\nThe program will restart in 3 seconds!")
@@ -129,7 +141,7 @@ def nav_survey_or_analyze():
     This function displays the first navigation where the user can choose between doing the survey or logging in and analyzing the data.
     """
     while True:
-        vipe_terminal() # Clear terminal
+        wipe_terminal() # Clear terminal
         print("Welcome to the EVP Survey\n")
         print("You have two options to choose from:\n")
         print("(1) Do the survey\n")
@@ -145,7 +157,7 @@ def nav_survey_or_analyze():
             time.sleep(2) # Wait for 2 seconds
             return "do_login"
         else:
-            vipe_terminal() # Clear terminal
+            wipe_terminal() # Clear terminal
             print("Wrong input. Please select one of the shown options.\n")
             time.sleep(2) # Wait for 2 seconds
 
@@ -180,7 +192,7 @@ def login():
     """
     Login for users to analyze survey results.
     """
-    vipe_terminal() # Clear terminal
+    wipe_terminal() # Clear terminal
     username = login_user_validation()    # If username is found this function returns the correct username
     password_valid = login_password_validation(username)    # Correct password sets variable to True   
     return True # Returns True when login worked correctly
@@ -201,11 +213,11 @@ def login_user_validation():
         else:   
             for element in list_of_users:
                 if username == element[0]:    
-                    vipe_terminal() # Clear terminal
+                    wipe_terminal() # Clear terminal
                     print(Fore.GREEN + f"Your username {username} is correct!" + Style.RESET_ALL)
                     time.sleep(2) # Wait for 2 seconds
                     return username
-        vipe_terminal() # Clear terminal
+        wipe_terminal() # Clear terminal
         print(Fore.RED + "Username was not found.\nPlease try again." + Style.RESET_ALL)
         print("If you want to exit, pleas enter 'EXIT'\n")    
     
@@ -215,11 +227,11 @@ def login_password_validation(username):
     Validate if the password insered by the users is valid
     """    
     list_of_passwords = get_google_users()
-    vipe_terminal() # Clear terminal
+    wipe_terminal() # Clear terminal
     print(Fore.BLUE + "This is the password validation." + Style.RESET_ALL)
     print("If you want to exit, please enter 'EXIT'\n")
     while True:
-        vipe_terminal() # Clear terminal
+        wipe_terminal() # Clear terminal
         print(Fore.BLUE + "This is the password validation." + Style.RESET_ALL)
         print("If you want to exit, please enter 'EXIT'\n")
         password = input("Please enter your password?\n")  # Use "Test" as test user (with uppercase T)    
@@ -230,12 +242,12 @@ def login_password_validation(username):
             for element in list_of_passwords:
                 if username == element[0]:    
                     if password == element[1]:
-                        vipe_terminal() # Clear terminal
+                        wipe_terminal() # Clear terminal
                         print(Fore.GREEN + "Password is correct!\n" + Style.RESET_ALL + "You will now get logged in ...")
                         time.sleep(2) # Wait for 2 seconds
                         return True
                     else:
-                        vipe_terminal() # Clear terminal
+                        wipe_terminal() # Clear terminal
                         print(Fore.RED + "Password is not correct.\nPlease try again." + Style.RESET_ALL)
                         time.sleep(2) # Wait for 2 seconds
                 else:
@@ -255,7 +267,7 @@ def analyze_select_company(data):
     Select company to analyze
     """
     while True:
-        vipe_terminal()
+        wipe_terminal()
         print("Please select the company you want to analyze.")    
         print("If you like to exit, pleas enter EXIT\n")
 
@@ -280,29 +292,59 @@ def analyze_select_company(data):
         # Take input which company the user selects.
         selection = input()   
         
+        # Find company associated to input and return selected company
         try:
             selection_index = int(selection) - 1
             if selection_index >= 0 and selection_index <= len(company_list):
                 selected_company = company_list[selection_index]
-                vipe_terminal()
+                wipe_terminal()
                 print(f"You selected: ({selection}) {selected_company}")
                 time.sleep(2) # Wait for 2 seconds
-                
+                return selected_company
             else:
-                raise ValueError
-                
-
+                raise ValueError     
         except ValueError:
             # If users want to exit, they just enter "Exit" and the program will restart. 
             if selection == "EXIT":
                 restart()
                 break
-            
             else:
-                vipe_terminal()
+                wipe_terminal()
                 print("exeption Error")
                 print("Sorry, your selection is no valid option.\nPlease try again in 2 seconds.")
                 time.sleep(2) # Wait for 2 seconds
+
+
+def analyze_company():
+    print("Analyze company")
+
+
+
+
+def analyze_choose_question():
+    wipe_terminal()
+    questions = get_questions_from_google()
+    del questions[0:3]  # Remove first two entries from list of questions (Date, Company Name)
+    print("From which question would you like to see the results? \n")
+    print("------------------------------------------------------------ \n")
+    for question in questions:
+        question_index = questions.index(question)
+        print(f"({question_index + 1}) {question}") # Print all questions and the associated index + 1
+    input("\nChoose the question: ")
+
+
+
+
+    
+# What it needs
+#
+#   - Show questions
+#   - Select question
+#   - Select overall results
+#   - Show question results
+#   - Show overall results
+#
+#   - Overall Result for company 45/100
 
 
 # ------------------------------------ Data Source: Functions ------------------------------------
@@ -314,7 +356,7 @@ def choose_data_source():
     Include option to go back to previous step. In this case restart the program.
     """
     while True:
-        vipe_terminal()
+        wipe_terminal()
         print("(1) Import Excel file to analyze\n")
         print("(2) Use Google sheet to analyze\n")
         print("(3) Go back to the start of the program\n")
@@ -328,12 +370,12 @@ def choose_data_source():
             gspread = get_google_file_data()
             return gspread  
         elif option == "3":
-            vipe_terminal() # Clear terminal
+            wipe_terminal() # Clear terminal
             print("The program will restart in 2 seconds.")
             time.sleep(2) # Wait for 2 seconds
             return False
         else:
-            vipe_terminal() # Clear terminal
+            wipe_terminal() # Clear terminal
             print("Wrong input. Please select one of the shown options.\n")
             print("Please try again in 2 seconds.")
             time.sleep(2) # Wait for 2 seconds
@@ -348,7 +390,7 @@ def get_excel_file_data():
     If a Excel file is imported, the file is tested for correct structure.
     """
     while True:
-        vipe_terminal() # Clear terminal
+        wipe_terminal() # Clear terminal
         try:
             # Check for error, if a correct file was entered       
             # Ask for the location and name of Excel file.
@@ -366,7 +408,7 @@ def get_excel_file_data():
             return excel_content_as_list
         except:
             # Print FileNotFoundError statement
-            vipe_terminal() # Clear terminal
+            wipe_terminal() # Clear terminal
             print("FileNotFoundError: Sorry, but no Excel file to use war found.\n")
             
             # Ask if the user wants to try again entering a file name and location
@@ -379,7 +421,7 @@ def get_excel_file_data():
                     restart()
                     break
                 else:
-                    # vipe_terminal() # Clear terminal
+                    # wipe_terminal() # Clear terminal
                     print("\nInvalid input. Please enter 'y' to try again or 'n' to exit.")
 
 
@@ -387,5 +429,6 @@ def get_excel_file_data():
         
 # ------------------------------------ Start Program ------------------------------------
         
-
-start()
+get_questions_from_google()
+analyze_choose_question()
+#start()
