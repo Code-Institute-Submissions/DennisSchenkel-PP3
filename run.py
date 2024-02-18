@@ -3,6 +3,8 @@
 # Write your code to expect a terminal of 80 characters wide and 24 rows high
 
 import os #Import os for terminal vipe
+import sys # Import sys for restart of app
+import subprocess # Import subprocess for restart of app
 import pandas as pd # import pandas for excel handling
 import time # Import time for sleep feature
 from colorama import Fore, Back, Style # import color sheme
@@ -11,11 +13,6 @@ from colorama import Fore, Back, Style # import color sheme
 
 
 questions = ["Name", "Question 1", "Question 2", "Question 3", "Question 4", "Question 5", "Question 6", "Question 7", "Question 8"]
-
-
-
-
-
 
 
 
@@ -64,10 +61,10 @@ def vipe_terminal():
     """
     Delete all text in the terminal
     """
-    if os.name == "posix":  # macOS and Linux
+    if os.name == "posix":  # Identify if OS is macOS or Linux
         os.system("clear")
-    elif os.name == "nt":  # Windows
-        os.system("cls")
+    elif os.name == "nt":  # Identify of OS is Windows
+        os.system("cls") 
 
 # Restart the program by executing run.py
 def restart():
@@ -75,7 +72,12 @@ def restart():
     print(Fore.BLUE + "You want to exit" + Style.RESET_ALL)
     print("The program will restart in 2 seconds.")
     time.sleep(2) # Wait for 2 seconds
-    os.system('python "run.py"') # Restart programm by calling start()
+    
+    # End the current process and restart it
+    subprocess.run(['python3', sys.argv[0]]) # sys.argv[0] defines the path and script to start with python 3. In this case itselfe.
+    sys.exit() # After restarting the script, exit the current script.
+    
+    
         
 
 
@@ -87,6 +89,9 @@ def start():
     """
     This functions starts the program and contains all logics.
     """
+    
+    vipe_terminal() # Clear terminal
+
     
     # Calling the first navigation function to ask if user wants to analyze existing data or do the survey
     survey_or_analyze = nav_survey_or_analyze()
@@ -111,7 +116,7 @@ def start():
     else:
         print("Housten, we have a problem!\nSome kind of fatal error happend!\nThe program will restart in 3 seconds!")
         time.sleep(3) # Wait for 3 seconds
-        os.system('python "run.py"') # Restart programm by restarting run.py
+        restart()
 
 
 
@@ -382,6 +387,5 @@ def get_excel_file_data():
         
 # ------------------------------------ Start Program ------------------------------------
         
-vipe_terminal() # Clear terminal
 
 start()

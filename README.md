@@ -125,3 +125,17 @@ How well are new employees integrated into the company?
 - If not in list, write own company name
 
 - Go back to previous question
+
+
+
+## Acknowledgement
+
+
+Although I not copied entire code, I'd like to acknoledge the following resources as inspiration
+
+- Restart() - using subprocess and sys
+    - Great information about how to use subprocesses and sys instead ob os if to find here: https://www.dataquest.io/blog/python-subprocess/ 
+
+- vipe_terminal() - using os 
+    - A lengthy discussion on the various methodes of clearing the termal is to find here: https://stackoverflow.com/questions/2084508/clear-the-terminal-in-python
+
