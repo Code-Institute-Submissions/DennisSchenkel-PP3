@@ -10,11 +10,6 @@ import time # Import time for sleep feature
 from colorama import Fore, Back, Style # import color sheme
 
 
-
-
-
-
-
 # ------------------------------------ Google API & Sheets ------------------------------------
 
 # The following code was taken from the Code Institute Love Sandwitches project.
@@ -50,7 +45,6 @@ def get_questions_from_google():
     questions = all_g_survey_data[0] # Select only the index with the questions in it
     return questions
 
-
 def get_google_users():
     """
     Get information about registered users from google sheet and worksheet "Users"
@@ -59,7 +53,6 @@ def get_google_users():
     all_g_survey_results = survey_results.get_all_values()
     all_g_survey_results.pop(0) # Remove the first row filled with questions from the list
     return all_g_survey_results
-
 
 
         
@@ -77,6 +70,9 @@ def wipe_terminal():
 
 # Restart the program by executing run.py
 def restart():
+    """
+    This function is for restarting the run.py and is used as the EXIT solution
+    """
     wipe_terminal() # Clear terminal
     print(Fore.BLUE + "You want to exit" + Style.RESET_ALL)
     print("The program will restart in 2 seconds.")
@@ -101,7 +97,6 @@ def start():
     
     wipe_terminal() # Clear terminal
 
-    
     # Calling the first navigation function to ask if user wants to analyze existing data or do the survey
     survey_or_analyze = nav_survey_or_analyze()
 
@@ -114,7 +109,8 @@ def start():
     # If login was valid, call function to choose data source for analyzation
     if survey_or_analyze == "do_login" and login_true == True:
         print("You are now logged in")
-        
+        time.sleep(2) # Wait for 2 seconds
+             
         # Choose data source to analyse. Excel file or gspread file.
         data = choose_data_source()
         
@@ -161,6 +157,14 @@ def nav_survey_or_analyze():
             print("Wrong input. Please select one of the shown options.\n")
             time.sleep(2) # Wait for 2 seconds
 
+
+def nav_one_or_all_question_results():
+        print("Please select if you like to analyze on specific question or the overall results.\n")
+        print("If you like to exit, pleas enter EXIT")
+        print("------------------------------------------------------------ \n")
+        print("(1) Analyse one single survey question\n")
+        print("(2) Analyse overall survey results\n")
+        option = input("What would you like to do?: ")
 
 
 
@@ -264,15 +268,16 @@ def login_password_validation(username):
 
 def analyze_select_company(data):
     """
-    Select company to analyze
+    This functions is for selecting the company to analyze. The list of companies to choose from comes from the companies in the results lists.
     """
     while True:
         wipe_terminal()
         print("Please select the company you want to analyze.")    
         print("If you like to exit, pleas enter EXIT\n")
-
+        print("------------------------------------------------------------ \n")
         # Create empty list for all companies that are contained in the results data
         company_list = []
+        # Create empty list for all the indexes the user can select in this function.
         index_list = []
         
         # Itterate through the list of data and check for every line, if the company is already in the company_list.
@@ -294,8 +299,8 @@ def analyze_select_company(data):
         
         # Find company associated to input and return selected company
         try:
-            selection_index = int(selection) - 1
-            if selection_index >= 0 and selection_index <= len(company_list):
+            selection_index = int(selection) - 1 # -1 for adjusting to the index count of lists
+            if selection_index >= 0 and selection_index < len(company_list):
                 selected_company = company_list[selection_index]
                 wipe_terminal()
                 print(f"You selected: ({selection}) {selected_company}")
@@ -315,25 +320,56 @@ def analyze_select_company(data):
                 time.sleep(2) # Wait for 2 seconds
 
 
-def analyze_company():
+def analyze_choose_question():
+    """
+    This function gives the user the option to choose a question for analyzing the results.
+    """
+    # Create empty list for all the indexes the user can select in this function.    
+    index_list = []
+    while True:
+        wipe_terminal()
+        questions = get_questions_from_google()
+        del questions[0:3]  # Remove first two entries from list of questions (Date, Company Name)
+        print("From which question would you like to see the results?")
+        print("If you like to exit, pleas enter EXIT")
+        print("------------------------------------------------------------ \n")
+        for question in questions:
+            question_index = questions.index(question)
+            index_list.append(question_index)
+            print(f"({question_index + 1}) {question}") # Print all questions and the associated index + 1
+        
+        # Take input which question the user selects.
+        selection = input("\nChoose the question: ")
+
+        # Find question associated with input and return selected question
+        try:
+            selection_index = int(selection) - 1 # -1 for adjusting to the index count of lists
+            if selection_index >= 0 and selection_index < len(index_list):         
+                selected_question = questions[selection_index]
+                
+                wipe_terminal()
+                print(f"You selected: ({selection}) {selected_question}")
+                time.sleep(2) # Wait for 2 seconds
+                return selected_question
+            else:    
+                raise ValueError 
+        except ValueError:
+            # If users want to exit, they just enter "Exit" and the program will restart. 
+            if selection == "EXIT":
+                restart()
+            else:
+                wipe_terminal()
+                print("exeption Error")
+                print("Sorry, your selection is no valid option.\nPlease try again in 2 seconds.")
+                time.sleep(2) # Wait for 2 seconds
+
+
+def analyze_one_question():
     print("Analyze company")
 
 
-
-
-def analyze_choose_question():
-    wipe_terminal()
-    questions = get_questions_from_google()
-    del questions[0:3]  # Remove first two entries from list of questions (Date, Company Name)
-    print("From which question would you like to see the results? \n")
-    print("------------------------------------------------------------ \n")
-    for question in questions:
-        question_index = questions.index(question)
-        print(f"({question_index + 1}) {question}") # Print all questions and the associated index + 1
-    input("\nChoose the question: ")
-
-
-
+def analyze_all_questions():
+    print("Analyze company")
 
     
 # What it needs
@@ -344,7 +380,7 @@ def analyze_choose_question():
 #   - Show question results
 #   - Show overall results
 #
-#   - Overall Result for company 45/100
+#   - Overall Result for company 45/80
 
 
 # ------------------------------------ Data Source: Functions ------------------------------------
@@ -427,8 +463,9 @@ def get_excel_file_data():
 
 
         
-# ------------------------------------ Start Program ------------------------------------
-        
+# ------------------------------------ Start Program ------------------------------------   
+
+start()
 get_questions_from_google()
 analyze_choose_question()
 #start()
