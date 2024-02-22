@@ -82,7 +82,10 @@ def restart():
     subprocess.run(['python3', sys.argv[0]]) # sys.argv[0] defines the path and script to start with python 3. In this case itselfe.
     sys.exit() # After restarting the script, exit the current script.
     
-    
+def unexpected_error():
+        print("Housten, we have a problem!\nSome kind of fatal error happend!\nThe program will restart in 3 seconds!")
+        time.sleep(3) # Wait for 3 seconds
+        restart()    
         
 
 
@@ -114,17 +117,49 @@ def start():
         # Choose data source to analyse. Excel file or gspread file.
         data = choose_data_source()
         
-        # User is now logged in and can start with the analyzing.
-        # Function to start the first analyzing step with selecting the company to analyze.
-        company = analyze_select_company(data)
         
+        while True:
+            
+            # User is now logged in and can start with the analyzing.
+            # Function to start the first analyzing step with selecting the company to analyze.
+            company = analyze_select_company(data)
         
-        return company
-   
+            # Function to define if the user wants to analyze one specific question or the overall results of the company.
+            analyzation = nav_one_or_all_question_results()
+            
+            if analyzation == "One question":
+                while True:
+                    analyze_choose_question()
+                    input("Press any key to continue!")
+                    
+                    wipe_terminal()
+                    print(company)
+                    print(analyzation)
+
+                    option = nav_analyze_different_question()
+                    
+                    if option == True:
+                        break
+                    
+
+                    
+                    
+                    
+            elif analyzation == "Overall results":
+                print(company)
+                print(analyzation)
+                
+                print("(2) Analyse a different company\n")
+                print("(3) Exit the program\n")
+                option = input("What would you like to do?: ")
+                
+            else:
+                unexpected_error()
+            
+            print(company + analyzation)
+        
     else:
-        print("Housten, we have a problem!\nSome kind of fatal error happend!\nThe program will restart in 3 seconds!")
-        time.sleep(3) # Wait for 3 seconds
-        restart()
+        unexpected_error()
 
 
 
@@ -159,13 +194,53 @@ def nav_survey_or_analyze():
 
 
 def nav_one_or_all_question_results():
-        print("Please select if you like to analyze on specific question or the overall results.\n")
+    while True:
+        wipe_terminal()
+        print("Please select if you like to analyze on specific question or the overall results.")
         print("If you like to exit, pleas enter EXIT")
         print("------------------------------------------------------------ \n")
         print("(1) Analyse one single survey question\n")
         print("(2) Analyse overall survey results\n")
         option = input("What would you like to do?: ")
+        if option == "1":
+            print(option)
+            return "One question"
+        elif option == "2":
+            print(option)
+            return "Overall results"
+        elif option == "EXIT":
+            restart()
+        else:
+            wipe_terminal() # Clear terminal
+            print("Wrong input. Please select one of the shown options.\n")
+            time.sleep(2) # Wait for 2 seconds
+            
+def nav_analyze_different_question():
+    while True:
+    
+        wipe_terminal()
+        print("(1) Analyse another question\n")
+        print("(2) Analyse a different company\n")
+        print("(3) Exit the program\n")
 
+        option = input("What would you like to do?: ")    
+        
+        if option == "1":
+            wipe_terminal() # Clear terminal
+            print("You want to analyze a different question. \nList is loading...\n")
+            time.sleep(2) # Wait for 2 seconds
+            break
+
+        elif option == "2":
+            return True
+        
+        elif option == "3":
+            restart()
+            break
+        else:
+            wipe_terminal() # Clear terminal
+            print("Wrong input. Please select one of the shown options.\n")
+            time.sleep(2) # Wait for 2 seconds   
 
 
 # ------------------------------------ Survey Functions ------------------------------------
@@ -176,10 +251,9 @@ def survey():
     """
     Do survey.
     """
-    for q in questions:
-        print("This is the question:")
-        answer = input(q)
-        print(answer)
+    print("This is the question:")
+    answer = input("Your answer: ")
+    print(answer)
 
 
 def survey_select_company():
@@ -259,9 +333,6 @@ def login_password_validation(username):
     
     
     
-
-        
-
 
 # ------------------------------------ Data Analyzing Functions ------------------------------------
 
@@ -357,6 +428,7 @@ def analyze_choose_question():
             # If users want to exit, they just enter "Exit" and the program will restart. 
             if selection == "EXIT":
                 restart()
+                break
             else:
                 wipe_terminal()
                 print("exeption Error")
@@ -371,6 +443,17 @@ def analyze_one_question():
 def analyze_all_questions():
     print("Analyze company")
 
+    
+def overall_results():
+    while True:    
+        print("Overall results")
+
+def question_results():
+    while True:
+        print("Question results")
+    
+    
+    
     
 # What it needs
 #
@@ -465,7 +548,9 @@ def get_excel_file_data():
         
 # ------------------------------------ Start Program ------------------------------------   
 
+
+
+# nav_one_or_all_question_results()
 start()
-get_questions_from_google()
-analyze_choose_question()
-#start()
+# get_questions_from_google()
+# analyze_choose_question()
