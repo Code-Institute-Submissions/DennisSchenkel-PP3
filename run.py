@@ -43,7 +43,7 @@ def get_questions_from_google():
     survey_data = SHEET.worksheet("Survey_data") # Select worksheet "Survey_data"
     all_g_survey_data = survey_data.get_all_values()
     questions = all_g_survey_data[0] # Select only the index with the questions in it
-    return questions
+    return questions, all_g_survey_data
 
 def get_google_users():
     """
@@ -85,7 +85,7 @@ def restart():
 def unexpected_error():
         print("Housten, we have a problem!\nSome kind of fatal error happend!\nThe program will restart in 3 seconds!")
         time.sleep(3) # Wait for 3 seconds
-        restart()    
+        restart()
         
 
 
@@ -126,33 +126,16 @@ def start():
         
             # Function to define if the user wants to analyze one specific question or the overall results of the company.
             analyzation = nav_one_or_all_question_results()
+          
             
             if analyzation == "One question":
-                while True:
-                    analyze_choose_question()
-                    input("Press any key to continue!")
-                    
-                    wipe_terminal()
-                    print(company)
-                    print(analyzation)
-
-                    option = nav_analyze_different_question()
-                    
-                    if option == True:
-                        break
-                    
-
-                    
-                    
-                    
+                one_question_results(company)
+          
+                           
             elif analyzation == "Overall results":
-                print(company)
-                print(analyzation)
-                
-                print("(2) Analyse a different company\n")
-                print("(3) Exit the program\n")
-                option = input("What would you like to do?: ")
-                
+                overall_question_results(company)
+                        
+                        
             else:
                 unexpected_error()
             
@@ -192,15 +175,14 @@ def nav_survey_or_analyze():
             print("Wrong input. Please select one of the shown options.\n")
             time.sleep(2) # Wait for 2 seconds
 
-
 def nav_one_or_all_question_results():
     while True:
         wipe_terminal()
         print("Please select if you like to analyze on specific question or the overall results.")
-        print("If you like to exit, pleas enter EXIT")
         print("------------------------------------------------------------ \n")
         print("(1) Analyse one single survey question\n")
         print("(2) Analyse overall survey results\n")
+        print("(EXIT) If you like to exit, please enter EXIT\n")
         option = input("What would you like to do?: ")
         if option == "1":
             print(option)
@@ -241,6 +223,8 @@ def nav_analyze_different_question():
             wipe_terminal() # Clear terminal
             print("Wrong input. Please select one of the shown options.\n")
             time.sleep(2) # Wait for 2 seconds   
+
+
 
 
 # ------------------------------------ Survey Functions ------------------------------------
@@ -307,10 +291,12 @@ def login_password_validation(username):
     list_of_passwords = get_google_users()
     wipe_terminal() # Clear terminal
     print(Fore.BLUE + "This is the password validation." + Style.RESET_ALL)
+    print("------------------------------------------------------------ \n")
     print("If you want to exit, please enter 'EXIT'\n")
     while True:
         wipe_terminal() # Clear terminal
         print(Fore.BLUE + "This is the password validation." + Style.RESET_ALL)
+        print("------------------------------------------------------------ \n")
         print("If you want to exit, please enter 'EXIT'\n")
         password = input("Please enter your password?\n")  # Use "Test" as test user (with uppercase T)    
         if password == "EXIT":
@@ -344,7 +330,7 @@ def analyze_select_company(data):
     while True:
         wipe_terminal()
         print("Please select the company you want to analyze.")    
-        print("If you like to exit, pleas enter EXIT\n")
+
         print("------------------------------------------------------------ \n")
         # Create empty list for all companies that are contained in the results data
         company_list = []
@@ -364,6 +350,8 @@ def analyze_select_company(data):
             company_index = company_list.index(company) + 1
             index_list.append(company_index)
             print(f"({company_index}) " + company + "\n")
+        
+        print("\nIf you like to exit, please enter EXIT\n")
         
         # Take input which company the user selects.
         selection = input()   
@@ -399,16 +387,18 @@ def analyze_choose_question():
     index_list = []
     while True:
         wipe_terminal()
-        questions = get_questions_from_google()
+        only_questions = get_questions_from_google()
+        questions = only_questions[0]
         del questions[0:3]  # Remove first two entries from list of questions (Date, Company Name)
         print("From which question would you like to see the results?")
-        print("If you like to exit, pleas enter EXIT")
         print("------------------------------------------------------------ \n")
         for question in questions:
             question_index = questions.index(question)
             index_list.append(question_index)
             print(f"({question_index + 1}) {question}") # Print all questions and the associated index + 1
         
+        
+        print("\n(EXIT) If you like to exit, please enter EXIT")
         # Take input which question the user selects.
         selection = input("\nChoose the question: ")
 
@@ -418,10 +408,10 @@ def analyze_choose_question():
             if selection_index >= 0 and selection_index < len(index_list):         
                 selected_question = questions[selection_index]
                 
-                wipe_terminal()
+                wipe_terminal() # Clear terminal
                 print(f"You selected: ({selection}) {selected_question}")
                 time.sleep(2) # Wait for 2 seconds
-                return selected_question
+                return selected_question, selection
             else:    
                 raise ValueError 
         except ValueError:
@@ -430,18 +420,69 @@ def analyze_choose_question():
                 restart()
                 break
             else:
-                wipe_terminal()
+                wipe_terminal() # Clear terminal
                 print("exeption Error")
                 print("Sorry, your selection is no valid option.\nPlease try again in 2 seconds.")
                 time.sleep(2) # Wait for 2 seconds
 
 
-def analyze_one_question():
-    print("Analyze company")
+def one_question_results(company):
+    """
+    
+    """
+    while True:
+        wipe_terminal() # Clear terminal
+        results = analyze_choose_question()
+        print(f"The results for question {results[1]} for {company} are as follows:\n")
+        print("------------------------------------------------------------ \n")
+        print(results[0])
+        
+        print("\nThis are the results\n")
+        
+        print("------------------------------------------------------------ \n")
+        input("Press any key to continue!")
+        
+        wipe_terminal() # Clear terminal
+
+        option = nav_analyze_different_question()
+        
+        if option == True:
+            break
 
 
-def analyze_all_questions():
-    print("Analyze company")
+def overall_question_results(company):
+    """
+    
+    """
+    
+    only_results = get_questions_from_google()
+    results = only_results[1]
+    
+    
+    
+    
+    wipe_terminal() # Clear terminal
+    
+    print("All results for this company come here: " + company)
+    print("------------------------------------------------------------ \n")
+    
+    print("\nThis are the results\n")
+    print(results)
+    
+    print("------------------------------------------------------------ \n")
+    print("(1) Analyse a different company")
+    print("(2) Exit the program\n")
+    option = input("What would you like to do?: ")
+    
+    if option == "1":
+        return True
+    
+    elif option == "2":
+        restart()
+    else:
+        wipe_terminal() # Clear terminal
+        print("Wrong input. Please select one of the shown options.\n")
+        time.sleep(2) # Wait for 2 seconds  
 
     
 def overall_results():
