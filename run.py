@@ -57,8 +57,10 @@ def get_google_users():
 
 # ------------------------------------ General Data ------------------------------------
 
+# A list of the topics of the questions in the survey
 question_topics = ["Motivation", "Recognition and valuing", "Career opportunities", "Fairness and equality", "Salary and benefits", "Decision-making processes", "Leadership", "Employee integration"]
-        
+
+      
 # ------------------------------------ General Functions ------------------------------------
 
 # Clear the terminal from all text
@@ -84,14 +86,16 @@ def restart():
     # End the current process and restart it
     subprocess.run(['python3', sys.argv[0]]) # sys.argv[0] defines the path and script to start with python 3. In this case itselfe.
     sys.exit() # After restarting the script, exit the current script.
-    
+
+# Display an error message    
 def unexpected_error():
-        print("Housten, we have a problem!\nSome kind of fatal error happend!\nThe program will restart in 3 seconds!")
-        time.sleep(3) # Wait for 3 seconds
-        restart()
+    """
+    If an error occures which reason is unknown, this error message is shown. 
+    """
+    print("Housten, we have a problem!\nSome kind of fatal error happend!\nThe program will restart in 3 seconds!")
+    time.sleep(3) # Wait for 3 seconds
+    restart()
         
-
-
 
 # ------------------------------------ App Functions ------------------------------------
 
@@ -100,7 +104,6 @@ def start():
     """
     This functions starts the program and contains all logics.
     """
-    
     wipe_terminal() # Clear terminal
 
     # Calling the first navigation function to ask if user wants to analyze existing data or do the survey
@@ -118,7 +121,7 @@ def start():
         time.sleep(2) # Wait for 2 seconds
              
         # Choose data source to analyse. Excel file or gspread file.
-        data = choose_data_source()
+        data = data_choose_source()
         
         
         while True:
@@ -132,11 +135,11 @@ def start():
           
             
             if analyzation == "One question":
-                one_question_results(company)
+                analyze_one_question_results(company)
           
                            
             elif analyzation == "Overall results":
-                overall_question_results(company)
+                analyze_overall_question_results(company)
                         
                         
             else:
@@ -153,6 +156,7 @@ def start():
 
 # ------------------------------------ Navigation Functions ------------------------------------
 
+# First screen with navigation
 def nav_survey_or_analyze():
     """
     This function displays the first navigation where the user can choose between doing the survey or logging in and analyzing the data.
@@ -178,14 +182,18 @@ def nav_survey_or_analyze():
             print("Wrong input. Please select one of the shown options.\n")
             time.sleep(2) # Wait for 2 seconds
 
+# Selection if results of one question or overall results
 def nav_one_or_all_question_results():
+    """
+    Question if to analyse one specific question or the overall results of a company.
+    """
     while True:
         wipe_terminal()
         print("Please select if you like to analyze on specific question or the overall results.")
         print("------------------------------------------------------------ \n")
         print("(1) Analyse one single survey question\n")
         print("(2) Analyse overall survey results\n")
-        print("(EXIT) If you like to exit, please enter EXIT\n")
+        print("(0) If you like to exit, please enter EXIT\n")
         option = input("What would you like to do?: ")
         if option == "1":
             print(option)
@@ -193,20 +201,24 @@ def nav_one_or_all_question_results():
         elif option == "2":
             print(option)
             return "Overall results"
-        elif option == "EXIT":
+        elif option == "0":
             restart()
         else:
             wipe_terminal() # Clear terminal
             print("Wrong input. Please select one of the shown options.\n")
             time.sleep(2) # Wait for 2 seconds
-            
+
+# Ask if to analyze a different question or exit           
 def nav_analyze_different_question():
+    """
+    Ask if to analyze a different question after the one just analyzed or exit the program           
+    """
     while True:
     
         wipe_terminal()
         print("(1) Analyse another question\n")
         print("(2) Analyse a different company\n")
-        print("(3) Exit the program\n")
+        print("(0) Exit the program\n")
 
         option = input("What would you like to do?: ")    
         
@@ -219,15 +231,13 @@ def nav_analyze_different_question():
         elif option == "2":
             return True
         
-        elif option == "3":
+        elif option == "0":
             restart()
             break
         else:
             wipe_terminal() # Clear terminal
             print("Wrong input. Please select one of the shown options.\n")
             time.sleep(2) # Wait for 2 seconds   
-
-
 
 
 # ------------------------------------ Survey Functions ------------------------------------
@@ -320,12 +330,10 @@ def login_password_validation(username):
                 else:
                     continue
     
-    
-    
 
 # ------------------------------------ Data Analyzing Functions ------------------------------------
 
-
+# Choose company to analyse
 def analyze_select_company(data):
     """
     This functions is for selecting the company to analyze. The list of companies to choose from comes from the companies in the results lists.
@@ -354,7 +362,7 @@ def analyze_select_company(data):
             index_list.append(company_index)
             print(f"({company_index}) " + company + "\n")
         
-        print("\nIf you like to exit, please enter EXIT\n")
+        print("\n(0) If you like to exit\n")
         
         # Take input which company the user selects.
         selection = input()   
@@ -371,8 +379,8 @@ def analyze_select_company(data):
             else:
                 raise ValueError     
         except ValueError:
-            # If users want to exit, they just enter "Exit" and the program will restart. 
-            if selection == "EXIT":
+            # If users want to exit, they just enter "0" and the program will restart. 
+            if selection == "0":
                 restart()
                 break
             else:
@@ -381,66 +389,80 @@ def analyze_select_company(data):
                 print("Sorry, your selection is no valid option.\nPlease try again in 2 seconds.")
                 time.sleep(2) # Wait for 2 seconds
 
-
+# Choose which question to analyze
 def analyze_choose_question():
     """
     This function gives the user the option to choose a question for analyzing the results.
-    """
-    # Create empty list for all the indexes the user can select in this function.    
-    index_list = []
+    """    
+    only_questions = get_questions_from_google()
+    questions = only_questions[0]
+    del questions[0:3] # Remove first two entries from list of questions (Date, Company Name)
+    
     while True:
-        wipe_terminal()
-        only_questions = get_questions_from_google()
-        questions = only_questions[0]
-        del questions[0:3]  # Remove first two entries from list of questions (Date, Company Name)
-        print("From which question would you like to see the results?")
-        print("------------------------------------------------------------ \n")
-        for question in questions:
-            question_index = questions.index(question)
-            index_list.append(question_index)
-            print(f"({question_index + 1}) {question}") # Print all questions and the associated index + 1
-        
-        
-        print("\n(EXIT) If you like to exit, please enter EXIT")
-        # Take input which question the user selects.
-        selection = input("\nChoose the question: ")
 
         # Find question associated with input and return selected question
         try:
-            selection_index = int(selection) - 1 # -1 for adjusting to the index count of lists
-            if selection_index >= 0 and selection_index < len(index_list):         
-                selected_question = questions[selection_index]
+        
+            wipe_terminal()
+            print("From which question would you like to see the results?")
+            print("------------------------------------------------------------ \n")
+            
+            # Create empty list for all the indexes the user can select in this function.
+            # Creation of this list inside the loop to reset it with every loop.    
+            index_list = []
+            
+            for question in questions:
+                question_index = questions.index(question)
+                index_list.append(question_index)
+                print(f"({question_index + 1}) {question}") # Print all questions and the associated index + 1
+            
+            print("\n(0) If you like to exit")
+            print("\n------------------------------------------------------------ \n")
                 
+            # Take input which question the user selects.
+            selection = input("\nChoose a question: ")
+        
+            # If users want to exit, they just enter "0" and the program will restart. 
+            if selection == "0":
+                restart()
+                break
+            
+            if int(selection) > 0 and int(selection) <= len(index_list):
+                            
+                selection_index = int(selection) - 1 # -1 for adjusting to the index count of lists         
+                selected_question = questions[selection_index]
+                                
                 wipe_terminal() # Clear terminal
                 print(f"You selected: ({selection}) {selected_question}")
                 time.sleep(2) # Wait for 2 seconds
-                return selected_question, selection
+                return selected_question, selection, selection_index
             else:    
                 raise ValueError 
         except ValueError:
-            # If users want to exit, they just enter "Exit" and the program will restart. 
-            if selection == "EXIT":
-                restart()
-                break
-            else:
-                wipe_terminal() # Clear terminal
-                print("exeption Error")
-                print("Sorry, your selection is no valid option.\nPlease try again in 2 seconds.")
-                time.sleep(2) # Wait for 2 seconds
+            wipe_terminal() # Clear terminal
+            print("Sorry, your selection is no valid option.\nPlease try again in 2 seconds.")
+            time.sleep(2) # Wait for 2 seconds
 
-
-def one_question_results(company):
+# Display results for one specific question
+def analyze_one_question_results(company):
     """
     
     """
     while True:
-        wipe_terminal() # Clear terminal
-        results = analyze_choose_question()
-        print(f"The results for question {results[1]} for {company} are as follows:\n")
-        print("------------------------------------------------------------ \n")
-        print(results[0])
         
-        print("\nThis are the results\n")
+        selected_question = analyze_choose_question()
+        analyzation_results = analyze_get_overall_results(company)
+        question_index = int(selected_question[2])
+        question_result = analyzation_results[1]
+        sum = question_result[question_index]
+        
+        wipe_terminal() # Clear terminal
+        print(f"The results for question {selected_question[1]} for {company} are as follows:\n")
+        print("------------------------------------------------------------ \n")
+        
+        print(selected_question[0] + "\n")
+        
+        print(f"Results: {'{:.2f}'.format(sum)} out of 10\n")
         
         print("------------------------------------------------------------ \n")
         input("Press any key to continue!")
@@ -452,22 +474,18 @@ def one_question_results(company):
         if option == True:
             break
 
-
-
-
-
-
-def overall_question_results(company):
+# Calculate and display the overall company results
+def analyze_overall_question_results(company):
     """
     Summary: Get all data for the selected company, calculate results and print them in an overview.
 
     Args:
         company (string): Name of the company to analyze
     """
-    result_data = get_questions_from_google() # Get all data from g-spread
-    results = result_data[1] # 1 to select the second RETURN from the function
+#    result_data = get_questions_from_google() # Get all data from g-spread
+#    results = result_data[1] # 1 to select the second RETURN from the function
     
-    analyzation_results = overall_results(results, company)
+    analyzation_results = analyze_get_overall_results(company)
     
     topic_index = 0 # Index for the topics list to go through when printing.
     overall_sum = 0 # Variable for calculation the overall sum of ratings the companie received.
@@ -502,13 +520,9 @@ def overall_question_results(company):
         wipe_terminal() # Clear terminal
         print("Wrong input. Please select one of the shown options.\n")
         time.sleep(2) # Wait for 2 seconds  
-
-    
-
-
-    
+   
 # Get and calculate the overall company results.   
-def overall_results(results, company):
+def analyze_get_overall_results(company):
     """
     Summary;
         Calculate the average results for every company and every question by adding up the individual submits and deviding the sum by the sum of submits. 
@@ -525,7 +539,10 @@ def overall_results(results, company):
     
     result_sum = [0, 0, 0, 0, 0, 0, 0, 0]
     
+    result_data = get_questions_from_google() # Get all data from g-spread
+    results = result_data[1] # 1 to select the second RETURN from the function
     
+    # For every row (list) in the list(s) of results
     for result in results:
         
         # Only use the row, if the company mentioned is the selected company.
@@ -550,49 +567,11 @@ def overall_results(results, company):
 
     return count_submits, result_sum
     
-    
-
-   
-    
-
-    
-    
-    
-        
-        
-
-def question_results():
-    while True:
-        print("Question results")
-    
-
-
-
-def sort_results(results, company):
-    
-    for result in results:
-
-        if result[2] == company:
-            print("Right company" + company)
-       
-    
-    
-    
-# What it needs
-#
-#   - Show questions
-#   - Select question
-#   - Select overall results
-#   - Show question results
-#   - Show overall results
-#
-#   - Overall Result for company 45/80
-
 
 # ------------------------------------ Data Source: Functions ------------------------------------
 
 # Choose which source to get data from for analyzing
-def choose_data_source():
+def data_choose_source():
     """
     Ask for the data source to get data for analyzation from.
     Include option to go back to previous step. In this case restart the program.
@@ -605,7 +584,7 @@ def choose_data_source():
         option = input("What would you like to do?: ")
         if option == "1":
             # Call function to get data from excel sheet
-            excel_file = get_excel_file_data()
+            excel_file = data_get_excel_file()
             return excel_file
         elif option == "2":
             # Call function to get data from google sheet
@@ -624,7 +603,7 @@ def choose_data_source():
 
 
 # Get Excel file by import
-def get_excel_file_data():
+def data_get_excel_file():
     """
     This functions asks for the location of the file to import. 
     The "samples.xlsx" can be used for test purposes.
