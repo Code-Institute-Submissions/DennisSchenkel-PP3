@@ -55,6 +55,9 @@ def get_google_users():
     return all_g_survey_results
 
 
+# ------------------------------------ General Data ------------------------------------
+
+question_topics = ["Motivation", "Recognition and valuing", "Career opportunities", "Fairness and equality", "Salary and benefits", "Decision-making processes", "Leadership", "Employee integration"]
         
 # ------------------------------------ General Functions ------------------------------------
 
@@ -450,34 +453,50 @@ def one_question_results(company):
             break
 
 
+
+
+
+
 def overall_question_results(company):
     """
-    
+    Summary: Get all data for the selected company, calculate results and print them in an overview.
+
+    Args:
+        company (string): Name of the company to analyze
     """
+    result_data = get_questions_from_google() # Get all data from g-spread
+    results = result_data[1] # 1 to select the second RETURN from the function
     
-    only_results = get_questions_from_google()
-    results = only_results[1]
+    analyzation_results = overall_results(results, company)
     
-    
-    
+    topic_index = 0 # Index for the topics list to go through when printing.
+    overall_sum = 0 # Variable for calculation the overall sum of ratings the companie received.
     
     wipe_terminal() # Clear terminal
-    
-    print("All results for this company come here: " + company)
+      
+    print(Fore.BLUE + company + Style.RESET_ALL + " reveived " + Fore.BLUE + str(analyzation_results[0]) + Style.RESET_ALL + " survey submissions.")
+    print("Results per question are as follows:\n")
     print("------------------------------------------------------------ \n")
     
-    print("\nThis are the results\n")
-    print(results)
+
+    # Display the results for each question/topic and calculate overall result sum.
+    for sum in analyzation_results[1]:
+        overall_sum += sum # Add rating of this specific question to the overall_sum for the company
+        sum = "{:.2f}".format(sum) # Convert float to string and limit to two decimal points.
+        print(sum + " of 10 for " + question_topics[topic_index].lower() + "\n")
+        topic_index += 1 # Go to next topic
     
-    print("------------------------------------------------------------ \n")
+    print(f"\nThe overall result for " + Fore.BLUE + company + Style.RESET_ALL + " is " + Fore.BLUE + '{:.2f}'.format(overall_sum)  + Style.RESET_ALL + " out of " + Fore.BLUE + "80" + Style.RESET_ALL + ".")
+    
+    print("\n------------------------------------------------------------ \n")
     print("(1) Analyse a different company")
-    print("(2) Exit the program\n")
+    print("(0) Exit the program\n")
     option = input("What would you like to do?: ")
     
     if option == "1":
         return True
     
-    elif option == "2":
+    elif option == "0":
         restart()
     else:
         wipe_terminal() # Clear terminal
@@ -485,14 +504,77 @@ def overall_question_results(company):
         time.sleep(2) # Wait for 2 seconds  
 
     
-def overall_results():
-    while True:    
-        print("Overall results")
+
+
+    
+# Get and calculate the overall company results.   
+def overall_results(results, company):
+    """
+    Summary;
+        Calculate the average results for every company and every question by adding up the individual submits and deviding the sum by the sum of submits. 
+
+    Args:
+        results (list of lists): Contains all the individual answeres submitted by users taking the survey 
+        company (string): Name of the company to analyze
+
+    Returns:
+        count_submits (int): The amount of submits to this companies survey.
+        result_sum (list of floats): Average results for every question for this company.
+    """
+    count_submits = 0 # Used for later deviding the summed up question results 
+    
+    result_sum = [0, 0, 0, 0, 0, 0, 0, 0]
+    
+    
+    for result in results:
+        
+        # Only use the row, if the company mentioned is the selected company.
+        if result[2] == company:
+            
+            count_submits += 1 # For every submit for this company, increase the count by 1    
+            result_count = len(result) # Length of each row of results in the results g-spread
+            question_index = 3 # Starting with 3 because 0-2 are Date, Name, Company and not question answers
+            sum_index = 0 # Starting with the first index in the list and go though it with the while loop.
+            
+            # For every result to every question, add the answer to the result_sum list.
+            while question_index < result_count:
+                
+                result_sum[sum_index] = result_sum[sum_index] + float(result[question_index]) # Make sure to convert so float for accurate calculation.
+                
+                sum_index += 1 # Go to next index in result_sum list
+                question_index += 1 # Go to answer for the next question
+                 
+    # Calculate the average result for every question from this company.        
+    if count_submits > 0:   
+        result_sum = [value / count_submits for value in result_sum]
+
+    return count_submits, result_sum
+    
+    
+
+   
+    
+
+    
+    
+    
+        
+        
 
 def question_results():
     while True:
         print("Question results")
     
+
+
+
+def sort_results(results, company):
+    
+    for result in results:
+
+        if result[2] == company:
+            print("Right company" + company)
+       
     
     
     
