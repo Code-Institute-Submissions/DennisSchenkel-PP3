@@ -27,14 +27,7 @@ SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open("evp_survey_samples")
 
-def get_google_file_data():
-    """
-    Get content from survey data worksheet and format it as list of lists
-    """
-    survey_data = SHEET.worksheet("Survey_data") # Select worksheet "Survey_data"
-    all_g_survey_data = survey_data.get_all_values()
-    all_g_survey_data.pop(0) # Remove the first row filled with questions from the list
-    return all_g_survey_data
+
 
 def get_questions_from_google():
     """
@@ -122,8 +115,7 @@ def start():
              
         # Choose data source to analyse. Excel file or gspread file.
         data = data_choose_source()
-        
-        
+                
         while True:
             
             # User is now logged in and can start with the analyzing.
@@ -135,11 +127,11 @@ def start():
           
             
             if analyzation == "One question":
-                analyze_one_question_results(company)
+                analyze_one_question_results(company, data)
           
                            
             elif analyzation == "Overall results":
-                analyze_overall_question_results(company)
+                analyze_overall_question_results(company, data)
                         
                         
             else:
@@ -269,7 +261,7 @@ def login():
     """
     wipe_terminal() # Clear terminal
     username = login_user_validation()    # If username is found this function returns the correct username
-    password_valid = login_password_validation(username)    # Correct password sets variable to True   
+    login_password_validation(username)    # Correct password sets variable to True   
     return True # Returns True when login worked correctly
         
 # Validadion of username input 
@@ -341,7 +333,6 @@ def analyze_select_company(data):
     while True:
         wipe_terminal()
         print("Please select the company you want to analyze.")    
-
         print("------------------------------------------------------------ \n")
         # Create empty list for all companies that are contained in the results data
         company_list = []
@@ -354,7 +345,7 @@ def analyze_select_company(data):
         for entry in data:
             if entry[2] not in company_list:
                 company_list.append(entry[2])
-                
+        
         # After every company was added to the list, print every element in the list.
         # Before every element of the list, print its index with +1 to not start at 0.
         for company in company_list:
@@ -444,14 +435,14 @@ def analyze_choose_question():
             time.sleep(2) # Wait for 2 seconds
 
 # Display results for one specific question
-def analyze_one_question_results(company):
+def analyze_one_question_results(company, data):
     """
     
     """
     while True:
         
         selected_question = analyze_choose_question()
-        analyzation_results = analyze_get_overall_results(company)
+        analyzation_results = analyze_get_overall_results(company, data)
         question_index = int(selected_question[2])
         question_result = analyzation_results[1]
         sum = question_result[question_index]
@@ -475,7 +466,7 @@ def analyze_one_question_results(company):
             break
 
 # Calculate and display the overall company results
-def analyze_overall_question_results(company):
+def analyze_overall_question_results(company, data):
     """
     Summary: Get all data for the selected company, calculate results and print them in an overview.
 
@@ -485,44 +476,45 @@ def analyze_overall_question_results(company):
 #    result_data = get_questions_from_google() # Get all data from g-spread
 #    results = result_data[1] # 1 to select the second RETURN from the function
     
-    analyzation_results = analyze_get_overall_results(company)
-    
-    topic_index = 0 # Index for the topics list to go through when printing.
-    overall_sum = 0 # Variable for calculation the overall sum of ratings the companie received.
-    
-    wipe_terminal() # Clear terminal
-      
-    print(Fore.BLUE + company + Style.RESET_ALL + " reveived " + Fore.BLUE + str(analyzation_results[0]) + Style.RESET_ALL + " survey submissions.")
-    print("Results per question are as follows:\n")
-    print("------------------------------------------------------------ \n")
-    
-
-    # Display the results for each question/topic and calculate overall result sum.
-    for sum in analyzation_results[1]:
-        overall_sum += sum # Add rating of this specific question to the overall_sum for the company
-        sum = "{:.2f}".format(sum) # Convert float to string and limit to two decimal points.
-        print(sum + " of 10 for " + question_topics[topic_index].lower() + "\n")
-        topic_index += 1 # Go to next topic
-    
-    print(f"\nThe overall result for " + Fore.BLUE + company + Style.RESET_ALL + " is " + Fore.BLUE + '{:.2f}'.format(overall_sum)  + Style.RESET_ALL + " out of " + Fore.BLUE + "80" + Style.RESET_ALL + ".")
-    
-    print("\n------------------------------------------------------------ \n")
-    print("(1) Analyse a different company")
-    print("(0) Exit the program\n")
-    option = input("What would you like to do?: ")
-    
-    if option == "1":
-        return True
-    
-    elif option == "0":
-        restart()
-    else:
+    while True:
+        analyzation_results = analyze_get_overall_results(company, data)
+        
+        topic_index = 0 # Index for the topics list to go through when printing.
+        overall_sum = 0 # Variable for calculation the overall sum of ratings the companie received.
+        
         wipe_terminal() # Clear terminal
-        print("Wrong input. Please select one of the shown options.\n")
-        time.sleep(2) # Wait for 2 seconds  
+        
+        print(Fore.BLUE + company + Style.RESET_ALL + " reveived " + Fore.BLUE + str(analyzation_results[0]) + Style.RESET_ALL + " survey submissions.")
+        print("Results per question are as follows:\n")
+        print("------------------------------------------------------------ \n")
+        
+
+        # Display the results for each question/topic and calculate overall result sum.
+        for sum in analyzation_results[1]:
+            overall_sum += sum # Add rating of this specific question to the overall_sum for the company
+            sum = "{:.2f}".format(sum) # Convert float to string and limit to two decimal points.
+            print(sum + " of 10 for " + question_topics[topic_index].lower() + "\n")
+            topic_index += 1 # Go to next topic
+        
+        print(f"\nThe overall result for " + Fore.BLUE + company + Style.RESET_ALL + " is " + Fore.BLUE + '{:.2f}'.format(overall_sum)  + Style.RESET_ALL + " out of " + Fore.BLUE + "80" + Style.RESET_ALL + ".")
+        
+        print("\n------------------------------------------------------------ \n")
+        print("(1) Analyse a different company\n")
+        print("(0) Exit the program\n")
+        option = input("What would you like to do?: ")
+        
+        if option == "1":
+            return True
+        
+        elif option == "0":
+            restart()
+        else:
+            wipe_terminal() # Clear terminal
+            print("Wrong input. Please select one of the shown options.\n")
+            time.sleep(2) # Wait for 2 seconds  
    
 # Get and calculate the overall company results.   
-def analyze_get_overall_results(company):
+def analyze_get_overall_results(company, data):
     """
     Summary;
         Calculate the average results for every company and every question by adding up the individual submits and deviding the sum by the sum of submits. 
@@ -539,8 +531,9 @@ def analyze_get_overall_results(company):
     
     result_sum = [0, 0, 0, 0, 0, 0, 0, 0]
     
-    result_data = get_questions_from_google() # Get all data from g-spread
-    results = result_data[1] # 1 to select the second RETURN from the function
+    result_data = data
+    # get_questions_from_google() # Get all data from g-spread
+    results = result_data # 1 to select the second RETURN from the function
     
     # For every row (list) in the list(s) of results
     for result in results:
@@ -580,7 +573,7 @@ def data_choose_source():
         wipe_terminal()
         print("(1) Import Excel file to analyze\n")
         print("(2) Use Google sheet to analyze\n")
-        print("(3) Go back to the start of the program\n")
+        print("(0) Go back to the start of the program\n")
         option = input("What would you like to do?: ")
         if option == "1":
             # Call function to get data from excel sheet
@@ -588,9 +581,9 @@ def data_choose_source():
             return excel_file
         elif option == "2":
             # Call function to get data from google sheet
-            gspread = get_google_file_data()
+            gspread = data_get_google_file()
             return gspread  
-        elif option == "3":
+        elif option == "0":
             wipe_terminal() # Clear terminal
             print("The program will restart in 2 seconds.")
             time.sleep(2) # Wait for 2 seconds
@@ -626,6 +619,16 @@ def data_get_excel_file():
             
             # Return content of the excel file
             excel_content_as_list = excel_content.to_numpy() # Format results as list of lists
+            
+            
+            # test = excel_content_as_list[3]
+            # print(test[2])
+            # print(test[3])
+            # print(test[4])
+            # print(test[5])
+            # print(test[6])
+            
+            
             return excel_content_as_list
         except:
             # Print FileNotFoundError statement
@@ -645,14 +648,27 @@ def data_get_excel_file():
                     # wipe_terminal() # Clear terminal
                     print("\nInvalid input. Please enter 'y' to try again or 'n' to exit.")
 
-
+def data_get_google_file():
+    """
+    Get content from survey data worksheet and format it as list of lists
+    """
+    survey_data = SHEET.worksheet("Survey_data") # Select worksheet "Survey_data"
+    all_g_survey_data = survey_data.get_all_values()
+    all_g_survey_data.pop(0) # Remove the first row filled with questions from the list
+    
+    
+    # print(all_g_survey_data)
+    # test = all_g_survey_data[3]
+    # print(test[3])
+    # input()
+    
+    
+    return all_g_survey_data
 
         
 # ------------------------------------ Start Program ------------------------------------   
 
+#data_get_google_file()
+# print(data_choose_source())
 
-
-# nav_one_or_all_question_results()
 start()
-# get_questions_from_google()
-# analyze_choose_question()
