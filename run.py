@@ -29,6 +29,15 @@ SHEET = GSPREAD_CLIENT.open("evp_survey_samples")
 
 
 
+
+# ------------------------------------ General Data ------------------------------------
+
+# A list of the topics of the questions in the survey
+question_topics = ["Motivation", "Recognition and valuing", "Career opportunities", "Fairness and equality", "Salary and benefits", "Decision-making processes", "Leadership", "Employee integration"]
+
+
+# ------------------------------------ Get Google Data ------------------------------------
+
 def get_questions_from_google():
     """
     Get content from survey data worksheet and format it as list of lists
@@ -48,281 +57,111 @@ def get_google_users():
     return all_g_survey_results
 
 
-# ------------------------------------ General Data ------------------------------------
+# ------------------------------------ Data Source Functions ------------------------------------
 
-# A list of the topics of the questions in the survey
-question_topics = ["Motivation", "Recognition and valuing", "Career opportunities", "Fairness and equality", "Salary and benefits", "Decision-making processes", "Leadership", "Employee integration"]
-
-      
-# ------------------------------------ General Functions ------------------------------------
-
-# Clear the terminal from all text
-def wipe_terminal():
+# Choose which source to get data from for analyzing
+def data_choose_source():
     """
-    Delete all text in the terminal
-    """
-    if os.name == "posix":  # Identify if OS is macOS or Linux
-        os.system("clear")
-    elif os.name == "nt":  # Identify of OS is Windows
-        os.system("cls") 
-
-# Restart the program by executing run.py
-def restart():
-    """
-    This function is for restarting the run.py and is used as the EXIT solution
-    """
-    wipe_terminal() # Clear terminal
-    print(Fore.BLUE + "You want to exit" + Style.RESET_ALL)
-    print("The program will restart in 2 seconds.")
-    time.sleep(2) # Wait for 2 seconds
-    
-    # End the current process and restart it
-    subprocess.run(['python3', sys.argv[0]]) # sys.argv[0] defines the path and script to start with python 3. In this case itselfe.
-    sys.exit() # After restarting the script, exit the current script.
-
-# Display an error message    
-def unexpected_error():
-    """
-    If an error occures which reason is unknown, this error message is shown. 
-    """
-    print("Housten, we have a problem!\nSome kind of fatal error happend!\nThe program will restart in 3 seconds!")
-    time.sleep(3) # Wait for 3 seconds
-    restart()
-        
-
-# ------------------------------------ App Functions ------------------------------------
-
-# Start of the program - Do survey or login and analyze data
-def start():
-    """
-    This functions starts the program and contains all logics.
-    """
-    wipe_terminal() # Clear terminal
-
-    # Calling the first navigation function to ask if user wants to analyze existing data or do the survey
-    survey_or_analyze = nav_survey_or_analyze()
-
-    # Select what option is choosen in the first navigation step
-    if survey_or_analyze == "do_survey":
-        survey()
-    elif survey_or_analyze == "do_login":
-        login_true = login()
-
-    # If login was valid, call function to choose data source for analyzation
-    if survey_or_analyze == "do_login" and login_true == True:
-        print("You are now logged in")
-        time.sleep(2) # Wait for 2 seconds
-             
-        # Choose data source to analyse. Excel file or gspread file.
-        data = data_choose_source()
-                
-        while True:
-            
-            # User is now logged in and can start with the analyzing.
-            # Function to start the first analyzing step with selecting the company to analyze.
-            company = analyze_select_company(data)
-        
-            # Function to define if the user wants to analyze one specific question or the overall results of the company.
-            analyzation = nav_one_or_all_question_results()
-          
-            
-            if analyzation == "One question":
-                analyze_one_question_results(company, data)
-          
-                           
-            elif analyzation == "Overall results":
-                analyze_overall_question_results(company, data)
-                        
-                        
-            else:
-                unexpected_error()
-            
-            print(company + analyzation)
-        
-    else:
-        unexpected_error()
-
-
-
-
-
-# ------------------------------------ Navigation Functions ------------------------------------
-
-# First screen with navigation
-def nav_survey_or_analyze():
-    """
-    This function displays the first navigation where the user can choose between doing the survey or logging in and analyzing the data.
-    """
-    while True:
-        wipe_terminal() # Clear terminal
-        print("Welcome to the EVP Survey\n")
-        print("You have two options to choose from:\n")
-        print("(1) Do the survey\n")
-        print("(2) Login and analyze survey results\n")
-        option = input("What would you like to do?: ")
-        if option == "1":
-            # Call survey function
-            print("Survey is loading ...")
-            return "do_survey"
-        elif option == "2":
-            # Call login function
-            print("Login is loading ...")
-            time.sleep(2) # Wait for 2 seconds
-            return "do_login"
-        else:
-            wipe_terminal() # Clear terminal
-            print("Wrong input. Please select one of the shown options.\n")
-            time.sleep(2) # Wait for 2 seconds
-
-# Selection if results of one question or overall results
-def nav_one_or_all_question_results():
-    """
-    Question if to analyse one specific question or the overall results of a company.
+    Ask for the data source to get data for analyzation from.
+    Include option to go back to previous step. In this case restart the program.
     """
     while True:
         wipe_terminal()
-        print("Please select if you like to analyze on specific question or the overall results.")
-        print("------------------------------------------------------------ \n")
-        print("(1) Analyse one single survey question\n")
-        print("(2) Analyse overall survey results\n")
-        print("(0) If you like to exit, please enter EXIT\n")
+        print("(1) Import Excel file to analyze\n")
+        print("(2) Use Google sheet to analyze\n")
+        print("(0) Go back to the start of the program\n")
         option = input("What would you like to do?: ")
         if option == "1":
-            print(option)
-            return "One question"
+            # Call function to get data from excel sheet
+            excel_file = data_get_excel_file()
+            return excel_file
         elif option == "2":
-            print(option)
-            return "Overall results"
+            # Call function to get data from google sheet
+            gspread = data_get_google_file()
+            return gspread  
         elif option == "0":
-            restart()
+            wipe_terminal() # Clear terminal
+            print("The program will restart in 2 seconds.")
+            time.sleep(2) # Wait for 2 seconds
+            return False
         else:
             wipe_terminal() # Clear terminal
             print("Wrong input. Please select one of the shown options.\n")
+            print("Please try again in 2 seconds.")
             time.sleep(2) # Wait for 2 seconds
 
-# Ask if to analyze a different question or exit           
-def nav_analyze_different_question():
+# Get Excel file by import
+def data_get_excel_file():
     """
-    Ask if to analyze a different question after the one just analyzed or exit the program           
+    This functions asks for the location of the file to import. 
+    The "samples.xlsx" can be used for test purposes.
+    With the import a test for the import of a Excel file is done.
+    If a Excel file is imported, the file is tested for correct structure.
     """
-    while True:
-    
-        wipe_terminal()
-        print("(1) Analyse another question\n")
-        print("(2) Analyse a different company\n")
-        print("(0) Exit the program\n")
-
-        option = input("What would you like to do?: ")    
-        
-        if option == "1":
-            wipe_terminal() # Clear terminal
-            print("You want to analyze a different question. \nList is loading...\n")
-            time.sleep(2) # Wait for 2 seconds
-            break
-
-        elif option == "2":
-            return True
-        
-        elif option == "0":
-            restart()
-            break
-        else:
-            wipe_terminal() # Clear terminal
-            print("Wrong input. Please select one of the shown options.\n")
-            time.sleep(2) # Wait for 2 seconds   
-
-
-# ------------------------------------ Survey Functions ------------------------------------
-
-
-
-def survey():
-    """
-    Do survey.
-    """
-    print("This is the question:")
-    answer = input("Your answer: ")
-    print(answer)
-
-
-def survey_select_company():
-    """
-    Select company the user wants to do the servey for
-    """
-
-
-
-# ------------------------------------ Login Functions ------------------------------------
-
-# User login with username and password
-def login():
-    """
-    Login for users to analyze survey results.
-    """
-    wipe_terminal() # Clear terminal
-    username = login_user_validation()    # If username is found this function returns the correct username
-    login_password_validation(username)    # Correct password sets variable to True   
-    return True # Returns True when login worked correctly
-        
-# Validadion of username input 
-def login_user_validation():
-    """
-    Validate if username is to find in user database (gspreed)
-    """
-    list_of_users = get_google_users()
-    print(Fore.BLUE + "This is the user validation." + Style.RESET_ALL)
-    print("If you want to exit, please enter 'EXIT'\n")
-    while True:
-        username = input("What is your username?\n")  # Use "Test" as test user (with uppercase T)    
-        if username == "EXIT":
-            restart()
-            break
-        else:   
-            for element in list_of_users:
-                if username == element[0]:    
-                    wipe_terminal() # Clear terminal
-                    print(Fore.GREEN + f"Your username {username} is correct!" + Style.RESET_ALL)
-                    time.sleep(2) # Wait for 2 seconds
-                    return username
-        wipe_terminal() # Clear terminal
-        print(Fore.RED + "Username was not found.\nPlease try again." + Style.RESET_ALL)
-        print("If you want to exit, pleas enter 'EXIT'\n")    
-    
-# Validation of password input    
-def login_password_validation(username):
-    """
-    Validate if the password insered by the users is valid
-    """    
-    list_of_passwords = get_google_users()
-    wipe_terminal() # Clear terminal
-    print(Fore.BLUE + "This is the password validation." + Style.RESET_ALL)
-    print("------------------------------------------------------------ \n")
-    print("If you want to exit, please enter 'EXIT'\n")
     while True:
         wipe_terminal() # Clear terminal
-        print(Fore.BLUE + "This is the password validation." + Style.RESET_ALL)
-        print("------------------------------------------------------------ \n")
-        print("If you want to exit, please enter 'EXIT'\n")
-        password = input("Please enter your password?\n")  # Use "Test" as test user (with uppercase T)    
-        if password == "EXIT":
-            restart()
-            break
-        else:   
-            for element in list_of_passwords:
-                if username == element[0]:    
-                    if password == element[1]:
-                        wipe_terminal() # Clear terminal
-                        print(Fore.GREEN + "Password is correct!\n" + Style.RESET_ALL + "You will now get logged in ...")
-                        time.sleep(2) # Wait for 2 seconds
-                        return True
-                    else:
-                        wipe_terminal() # Clear terminal
-                        print(Fore.RED + "Password is not correct.\nPlease try again." + Style.RESET_ALL)
-                        time.sleep(2) # Wait for 2 seconds
+        try:
+            # Check for error, if a correct file was entered       
+            # Ask for the location and name of Excel file.
+            location = input('Where is the file located?:\n(E.g. "samples.xlsx")\n')  
+            # Name and location of file is formatted as string
+            get_excel = "{}".format(location)
+            # Formatted name and location is pasted into read_excel() function
+            excel_content = pd.read_excel(get_excel)
+            
+                                                                                            # Validation for correct Excel structure is missing
+                                                                                            # If correct, TRUE, else FALSE
+            
+            # Return content of the excel file
+            excel_content_as_list = excel_content.to_numpy() # Format results as list of lists
+            
+            
+            # test = excel_content_as_list[3]
+            # print(test[2])
+            # print(test[3])
+            # print(test[4])
+            # print(test[5])
+            # print(test[6])
+            
+            
+            return excel_content_as_list
+        except:
+            # Print FileNotFoundError statement
+            wipe_terminal() # Clear terminal
+            print("FileNotFoundError: Sorry, but no Excel file to use war found.\n")
+            
+            # Ask if the user wants to try again entering a file name and location
+            while True:  # Test if user enters only y or n and no other key.
+                try_again = input("Do you want to try a different file? (y/n): ")
+                if try_again.lower() == 'y':
+                    print("\n")
+                    break  # Go back to beginning of the first while loop
+                elif try_again.lower() == 'n':
+                    restart()
+                    break
                 else:
-                    continue
-    
+                    # wipe_terminal() # Clear terminal
+                    print("\nInvalid input. Please enter 'y' to try again or 'n' to exit.")
 
+# Get Google spreadsheet by API request.
+def data_get_google_file():
+    """
+    Get content from survey data worksheet and format it as list of lists
+    """
+    survey_data = SHEET.worksheet("Survey_data") # Select worksheet "Survey_data"
+    all_g_survey_data = survey_data.get_all_values()
+    all_g_survey_data.pop(0) # Remove the first row filled with questions from the list
+    
+    
+    # print(all_g_survey_data)
+    # test = all_g_survey_data[3]
+    # print(test[3])
+    # input()
+    
+    
+    return all_g_survey_data
+
+        
 # ------------------------------------ Data Analyzing Functions ------------------------------------
 
 # Choose company to analyse
@@ -435,9 +274,14 @@ def analyze_choose_question():
             time.sleep(2) # Wait for 2 seconds
 
 # Display results for one specific question
-def analyze_one_question_results(company, data):
+def analyze_single_question_results(company, data):
     """
-    
+    Summary:
+        Display the results for a single specific question by using the analyze_get_overall_results function.
+
+    Args:
+        company (string): Name of the selected company to analyze.
+        data (str, int): A list with all survey data that is then filtered for the selected company. 
     """
     while True:
         
@@ -559,116 +403,281 @@ def analyze_get_overall_results(company, data):
         result_sum = [value / count_submits for value in result_sum]
 
     return count_submits, result_sum
+
+      
+# ------------------------------------ General Functions ------------------------------------
+
+# Clear the terminal from all text
+def wipe_terminal():
+    """
+    Delete all text in the terminal
+    """
+    if os.name == "posix":  # Identify if OS is macOS or Linux
+        os.system("clear")
+    elif os.name == "nt":  # Identify of OS is Windows
+        os.system("cls") 
+
+# Restart the program by executing run.py
+def restart():
+    """
+    This function is for restarting the run.py and is used as the EXIT solution
+    """
+    wipe_terminal() # Clear terminal
+    print(Fore.BLUE + "You want to exit" + Style.RESET_ALL)
+    print("The program will restart in 2 seconds.")
+    time.sleep(2) # Wait for 2 seconds
     
+    # End the current process and restart it
+    subprocess.run(['python3', sys.argv[0]]) # sys.argv[0] defines the path and script to start with python 3. In this case itselfe.
+    sys.exit() # After restarting the script, exit the current script.
 
-# ------------------------------------ Data Source: Functions ------------------------------------
+# Display an error message    
+def unexpected_error():
+    """
+    If an error occures which reason is unknown, this error message is shown. 
+    """
+    print("Housten, we have a problem!\nSome kind of fatal error happend!\nThe program will restart in 3 seconds!")
+    time.sleep(3) # Wait for 3 seconds
+    restart()
+        
 
-# Choose which source to get data from for analyzing
-def data_choose_source():
+# ------------------------------------ Login Functions ------------------------------------
+
+# User login with username and password
+def login():
     """
-    Ask for the data source to get data for analyzation from.
-    Include option to go back to previous step. In this case restart the program.
+    Login for users to analyze survey results.
     """
+    wipe_terminal() # Clear terminal
+    username = login_user_validation()    # If username is found this function returns the correct username
+    login_password_validation(username)    # Correct password sets variable to True   
+    return True # Returns True when login worked correctly
+        
+# Validadion of username input 
+def login_user_validation():
+    """
+    Validate if username is to find in user database (gspreed)
+    """
+    list_of_users = get_google_users()
+    print(Fore.BLUE + "This is the user validation." + Style.RESET_ALL)
+    print("If you want to exit, please enter 'EXIT'\n")
     while True:
-        wipe_terminal()
-        print("(1) Import Excel file to analyze\n")
-        print("(2) Use Google sheet to analyze\n")
-        print("(0) Go back to the start of the program\n")
-        option = input("What would you like to do?: ")
-        if option == "1":
-            # Call function to get data from excel sheet
-            excel_file = data_get_excel_file()
-            return excel_file
-        elif option == "2":
-            # Call function to get data from google sheet
-            gspread = data_get_google_file()
-            return gspread  
-        elif option == "0":
-            wipe_terminal() # Clear terminal
-            print("The program will restart in 2 seconds.")
-            time.sleep(2) # Wait for 2 seconds
-            return False
-        else:
-            wipe_terminal() # Clear terminal
-            print("Wrong input. Please select one of the shown options.\n")
-            print("Please try again in 2 seconds.")
-            time.sleep(2) # Wait for 2 seconds
-
-
-# Get Excel file by import
-def data_get_excel_file():
+        username = input("What is your username?\n")  # Use "Test" as test user (with uppercase T)    
+        if username == "EXIT":
+            restart()
+            break
+        else:   
+            for element in list_of_users:
+                if username == element[0]:    
+                    wipe_terminal() # Clear terminal
+                    print(Fore.GREEN + f"Your username {username} is correct!" + Style.RESET_ALL)
+                    time.sleep(2) # Wait for 2 seconds
+                    return username
+        wipe_terminal() # Clear terminal
+        print(Fore.RED + "Username was not found.\nPlease try again." + Style.RESET_ALL)
+        print("If you want to exit, pleas enter 'EXIT'\n")    
+    
+# Validation of password input    
+def login_password_validation(username):
     """
-    This functions asks for the location of the file to import. 
-    The "samples.xlsx" can be used for test purposes.
-    With the import a test for the import of a Excel file is done.
-    If a Excel file is imported, the file is tested for correct structure.
+    Validate if the password insered by the users is valid
+    """    
+    list_of_passwords = get_google_users()
+    wipe_terminal() # Clear terminal
+    print(Fore.BLUE + "This is the password validation." + Style.RESET_ALL)
+    print("------------------------------------------------------------ \n")
+    print("If you want to exit, please enter 'EXIT'\n")
+    while True:
+        wipe_terminal() # Clear terminal
+        print(Fore.BLUE + "This is the password validation." + Style.RESET_ALL)
+        print("------------------------------------------------------------ \n")
+        print("If you want to exit, please enter 'EXIT'\n")
+        password = input("Please enter your password?\n")  # Use "Test" as test user (with uppercase T)    
+        if password == "EXIT":
+            restart()
+            break
+        else:   
+            for element in list_of_passwords:
+                if username == element[0]:    
+                    if password == element[1]:
+                        wipe_terminal() # Clear terminal
+                        print(Fore.GREEN + "Password is correct!\n" + Style.RESET_ALL + "You will now get logged in ...")
+                        time.sleep(2) # Wait for 2 seconds
+                        return True
+                    else:
+                        wipe_terminal() # Clear terminal
+                        print(Fore.RED + "Password is not correct.\nPlease try again." + Style.RESET_ALL)
+                        time.sleep(2) # Wait for 2 seconds
+                else:
+                    continue
+
+
+# ------------------------------------ Navigation Functions ------------------------------------
+
+# First screen with navigation
+def nav_survey_or_analyze():
+    """
+    This function displays the first navigation where the user can choose between doing the survey or logging in and analyzing the data.
     """
     while True:
         wipe_terminal() # Clear terminal
-        try:
-            # Check for error, if a correct file was entered       
-            # Ask for the location and name of Excel file.
-            location = input('Where is the file located?:\n(E.g. "samples.xlsx")\n')  
-            # Name and location of file is formatted as string
-            get_excel = "{}".format(location)
-            # Formatted name and location is pasted into read_excel() function
-            excel_content = pd.read_excel(get_excel)
-            
-                                                                                            # Validation for correct Excel structure is missing
-                                                                                            # If correct, TRUE, else FALSE
-            
-            # Return content of the excel file
-            excel_content_as_list = excel_content.to_numpy() # Format results as list of lists
-            
-            
-            # test = excel_content_as_list[3]
-            # print(test[2])
-            # print(test[3])
-            # print(test[4])
-            # print(test[5])
-            # print(test[6])
-            
-            
-            return excel_content_as_list
-        except:
-            # Print FileNotFoundError statement
+        print("Welcome to the EVP Survey\n")
+        print("You have two options to choose from:\n")
+        print("(1) Do the survey\n")
+        print("(2) Login and analyze survey results\n")
+        option = input("What would you like to do?: ")
+        if option == "1":
+            # Call survey function
+            print("Survey is loading ...")
+            return "do_survey"
+        elif option == "2":
+            # Call login function
+            print("Login is loading ...")
+            time.sleep(2) # Wait for 2 seconds
+            return "do_login"
+        else:
             wipe_terminal() # Clear terminal
-            print("FileNotFoundError: Sorry, but no Excel file to use war found.\n")
-            
-            # Ask if the user wants to try again entering a file name and location
-            while True:  # Test if user enters only y or n and no other key.
-                try_again = input("Do you want to try a different file? (y/n): ")
-                if try_again.lower() == 'y':
-                    print("\n")
-                    break  # Go back to beginning of the first while loop
-                elif try_again.lower() == 'n':
-                    restart()
-                    break
-                else:
-                    # wipe_terminal() # Clear terminal
-                    print("\nInvalid input. Please enter 'y' to try again or 'n' to exit.")
+            print("Wrong input. Please select one of the shown options.\n")
+            time.sleep(2) # Wait for 2 seconds
 
-def data_get_google_file():
+# Selection if results of one question or overall results
+def nav_one_or_all_question_results():
     """
-    Get content from survey data worksheet and format it as list of lists
+    Question if to analyse one specific question or the overall results of a company.
     """
-    survey_data = SHEET.worksheet("Survey_data") # Select worksheet "Survey_data"
-    all_g_survey_data = survey_data.get_all_values()
-    all_g_survey_data.pop(0) # Remove the first row filled with questions from the list
-    
-    
-    # print(all_g_survey_data)
-    # test = all_g_survey_data[3]
-    # print(test[3])
-    # input()
-    
-    
-    return all_g_survey_data
+    while True:
+        wipe_terminal()
+        print("Please select if you like to analyze on specific question or the overall results.")
+        print("------------------------------------------------------------ \n")
+        print("(1) Analyse one single survey question\n")
+        print("(2) Analyse overall survey results\n")
+        print("(0) If you like to exit, please enter EXIT\n")
+        option = input("What would you like to do?: ")
+        if option == "1":
+            print(option)
+            return "One question"
+        elif option == "2":
+            print(option)
+            return "Overall results"
+        elif option == "0":
+            restart()
+        else:
+            wipe_terminal() # Clear terminal
+            print("Wrong input. Please select one of the shown options.\n")
+            time.sleep(2) # Wait for 2 seconds
 
+# Ask if to analyze a different question or exit           
+def nav_analyze_different_question():
+    """
+    Ask if to analyze a different question after the one just analyzed or exit the program           
+    """
+    while True:
+    
+        wipe_terminal()
+        print("(1) Analyse another question\n")
+        print("(2) Analyse a different company\n")
+        print("(0) Exit the program\n")
+
+        option = input("What would you like to do?: ")    
         
-# ------------------------------------ Start Program ------------------------------------   
+        if option == "1":
+            wipe_terminal() # Clear terminal
+            print("You want to analyze a different question. \nList is loading...\n")
+            time.sleep(2) # Wait for 2 seconds
+            break
 
-#data_get_google_file()
-# print(data_choose_source())
+        elif option == "2":
+            return True
+        
+        elif option == "0":
+            restart()
+            break
+        else:
+            wipe_terminal() # Clear terminal
+            print("Wrong input. Please select one of the shown options.\n")
+            time.sleep(2) # Wait for 2 seconds   
 
-start()
+
+# ------------------------------------ Survey Functions ------------------------------------
+
+
+
+def survey():
+    """
+    Do survey.
+    """
+    print("This is the question:")
+    answer = input("Your answer: ")
+    print(answer)
+
+
+def survey_select_company():
+    """
+    Select company the user wants to do the servey for
+    """
+
+
+
+# ------------------------------------ Program Flow ------------------------------------
+
+# Start of the program - Do survey or login and analyze data
+def start():
+    """
+    This functions starts the program and contains all logics.
+    """
+    wipe_terminal() # Clear terminal
+
+    # Calling the first navigation function to ask if user wants to analyze existing data or do the survey
+    survey_or_analyze = nav_survey_or_analyze()
+
+    # Select what option is choosen in the first navigation step
+    if survey_or_analyze == "do_survey":
+        survey()
+    elif survey_or_analyze == "do_login":
+        login_true = login()
+
+    # If login was valid, call function to choose data source for analyzation
+    if survey_or_analyze == "do_login" and login_true == True:
+        print("You are now logged in")
+        time.sleep(2) # Wait for 2 seconds
+             
+        # Choose data source to analyse. Excel file or gspread file.
+        data = data_choose_source()
+                
+        while True:
+            
+            # User is now logged in and can start with the analyzing.
+            # Function to start the first analyzing step with selecting the company to analyze.
+            company = analyze_select_company(data)
+        
+            # Function to define if the user wants to analyze one specific question or the overall results of the company.
+            analyzation = nav_one_or_all_question_results()
+          
+            
+            if analyzation == "One question":
+                analyze_single_question_results(company, data)
+          
+                           
+            elif analyzation == "Overall results":
+                analyze_overall_question_results(company, data)
+                        
+                        
+            else:
+                unexpected_error()
+            
+            print(company + analyzation)
+        
+    else:
+        unexpected_error()
+
+
+
+
+
+
+
+
+
+# ------------------------------------ Program Start ------------------------------------   
+
+start() # Start the program
