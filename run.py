@@ -119,7 +119,7 @@ def data_get_excel_file():
         try:
             # Check for error, if a correct file was entered
             # Ask for the location and name of Excel file.
-            location = input('Where is the file located?:\n(E.g. "samples.xlsx")\n')
+            location = input('Where is the file located?:\n(Test file: "samples.xlsx")\n')
             # Name and location of file is formatted as string
             get_excel = "{}".format(location)
             # Formatted name and location is pasted into read_excel() function
@@ -528,7 +528,7 @@ def login_user_validation():
     print("If you want to exit, please enter 'EXIT'\n")
     while True:
         username = input(
-            "What is your username?\n"
+            "What is your username? (Test)\n"
         )  # Use "Test" as test user (with uppercase T)
         if username == "EXIT":
             restart()
@@ -565,7 +565,7 @@ def login_password_validation(username):
         print("------------------------------------------------------------ \n")
         print("If you want to exit, please enter 'EXIT'\n")
         password = input(
-            "Please enter your password?\n"
+            "Please enter your password? (Test)\n"
         )  # Use "Test" as test user (with uppercase T)
         if password == "EXIT":
             restart()
@@ -698,6 +698,117 @@ def nav_analyze_different_question():
 
 
 
+class Survey:
+    def __init__(self, today, name, company, q1, q2, q3, q4, q5, q6, q7, q8):
+        self.today = today
+        self.name = name
+        self.company = company
+        self.q1 = q1
+        self.q2 = q2
+        self.q3 = q3
+        self.q4 = q4
+        self.q5 = q5
+        self.q6 = q6
+        self.q7 = q7
+        self.q8 = q8
+
+
+
+
+
+def survey():
+    """
+    Do survey.
+    """
+    
+    wipe_terminal()  # Clear terminal
+    company = survey_select_company()
+
+    today = date.today()
+
+    print(today)
+
+    name = input("Please type in your name: ")
+
+    answer = survey_get_answers()
+
+    survey_answers = Survey(today, name, company, *answer)
+
+    print(survey_answers)
+
+    input()
+
+
+
+
+
+def survey_select_company():
+    """
+    Select company the user wants to do the servey for
+    """
+
+    company = "Test Company"
+
+    return company
+
+
+
+
+
+
+
+def survey_get_answers():
+
+    questions = [
+        "Please answer question 1: ",
+        "Please answer question 2: ",
+        "Please answer question 3: ",
+        "Please answer question 4: ",
+        "Please answer question 5: ",
+        "Please answer question 6: ",
+        "Please answer question 7: ",
+        "Please answer question 8: ",
+    ]
+
+    answers = []
+
+    for question in questions:
+        wipe_terminal()  # Clear terminal
+        print("Please choose a value between 0 and 10.")
+        user_input = input(question)
+        answers.append(user_input)
+
+        # while True:
+
+        # try:
+        #    if int(user_input) >= 0 and int(user_input) <= 10:
+        #        answers.append(user_input)
+        #    elif user_input == "EXIT":
+        #        restart()
+        #    else:
+        #        print("Your answer is not valid.\nPlease choose a value between 0 and 10.")
+        # except:
+        #    if user_input == "EXIT":
+        #        restart()
+        #    else:
+        #        print("Your answer is not valid.\nPlease choose a value between 0 and 10.")
+
+    print(answers)
+    
+    return answers
+
+
+
+
+
+
+
+
+def survey_name():
+    print("kbasf")
+
+
+
 
 
 
@@ -754,5 +865,5 @@ def start():
 
 # --------------------------------- Program Start ---------------------------------
 
-survey_get_answers()
+
 start()  # Start the program
