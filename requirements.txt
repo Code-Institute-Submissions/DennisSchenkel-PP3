@@ -23,3 +23,4 @@ StrEnum==0.4.15
 tzdata==2023.4
 urllib3==2.2.0
 xlrd==2.0.1
+colorama==0.4.3.
