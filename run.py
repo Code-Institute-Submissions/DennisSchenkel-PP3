@@ -46,6 +46,56 @@ question_topics = [
 ]
 
 
+# Choose company to analyse
+def select_company(mode):
+    """
+    Summary:
+        This functions is for selecting the company to analyze. The list of companies to choose from comes from the companies in the results lists.
+    """
+    while True:
+        wipe_terminal()  # Clear terminal
+        print("Please select the company you want to analyze.")
+        print("------------------------------------------------------------ \n")
+
+        company_list = get_google_companies(mode)
+        
+        # Take input which company the user selects.
+        selection = input()
+
+        # If the user chooses to do the survey, check if creation of a new company was selected.
+        if mode == "survey" and selection == "NEW":
+            # Get new company name and return it.
+            new_company = survey_create_company()
+            return new_company
+
+        # Find company associated to input and return selected company
+        try:
+            selection_index = (
+                int(selection) - 1
+            )  # -1 for adjusting to the index count of lists
+            if selection_index >= 0 and selection_index < len(company_list):
+                selected_company = company_list[selection_index]
+                wipe_terminal()  # Clear terminal
+                print(f"You selected: ({selection}) {selected_company}")
+                time.sleep(2)  # Wait for 2 seconds
+                return selected_company
+            else:
+                raise ValueError
+        except ValueError:
+            # If users want to exit, they just enter "0" and the program will restart.
+            if selection == "0":
+                restart()
+                break
+            else:
+                wipe_terminal()  # Clear terminal
+                print("exeption Error")
+                print(
+                    "Sorry, your selection is no valid option.\nPlease try again in 2 seconds."
+                )
+                time.sleep(2)  # Wait for 2 seconds
+
+
+
 # --------------------------------- Get Google Data ---------------------------------
 
 
@@ -55,7 +105,7 @@ def get_questions_from_google():
         Get content from survey data worksheet and format it as list of lists
     """
     survey_data = SHEET.worksheet("Survey_data")  # Select worksheet "Survey_data"
-    all_g_survey_data = survey_data.get_all_values()
+    all_g_survey_data = survey_data.get_all_values()  # All data in a list of lists
     questions = all_g_survey_data[0]  # Select only the index with the questions in it
     return questions, all_g_survey_data
 
@@ -71,6 +121,8 @@ def get_google_users():
         0
     )  # Remove the first row filled with questions from the list
     return all_g_survey_results
+
+
 
 
 # --------------------------------- Data Source Functions ---------------------------------
@@ -154,7 +206,7 @@ def data_get_excel_file():
                     restart()
                     break
                 else:
-                    # wipe_terminal()  # Clear terminal
+                    wipe_terminal()  # Clear terminal
                     print(
                         "\nInvalid input. Please enter 'y' to try again or 'n' to exit."
                     )
@@ -176,65 +228,43 @@ def data_get_google_file():
 # --------------------------------- Data Analyzing Functions ---------------------------------
 
 
-# Choose company to analyse
-def analyze_select_company(data):
-    """
-    Summary:
-        This functions is for selecting the company to analyze. The list of companies to choose from comes from the companies in the results lists.
-    """
-    while True:
-        wipe_terminal()  # Clear terminal
-        print("Please select the company you want to analyze.")
-        print("------------------------------------------------------------ \n")
-        # Create empty list for all companies that are contained in the results data
-        company_list = []
-        # Create empty list for all the indexes the user can select in this function.
-        index_list = []
 
-        # Itterate through the list of data and check for every line, if the company is already in the company_list.
-        # If not, add it to that list.
-        # Each company should only be in the list one time.
-        for entry in data:
-            if entry[2] not in company_list:
-                company_list.append(entry[2])
 
-        # After every company was added to the list, print every element in the list.
-        # Before every element of the list, print its index with +1 to not start at 0.
-        for company in company_list:
-            company_index = company_list.index(company) + 1
-            index_list.append(company_index)
-            print(f"({company_index}) " + company + "\n")
+def get_google_companies(mode):
+    
+    # Get all survey data from gspread.
+    data = data_get_google_file()
+    
+    # Create empty list for all companies that are contained in the results data.
+    company_list = []
+    # Create empty list for all the indexes the user can select in this function.
+    index_list = []
 
-        print("\n(0) If you like to exit\n")
+    # Itterate through the list of data and check for every line, 
+    # if the company is already in the company_list.
+    # If not, add it to that list.
+    # Each company should only be in the list one time.
+    for entry in data:
+        if entry[2] not in company_list:
+            company_list.append(entry[2])
 
-        # Take input which company the user selects.
-        selection = input()
+    # After every company was added to the list, print every element in the list.
+    # Before every element of the list, print its index with +1 to not start at 0.
+    for company in company_list:
+        company_index = company_list.index(company) + 1
+        index_list.append(company_index)
+        print(f"({company_index}) " + company + "\n")
 
-        # Find company associated to input and return selected company
-        try:
-            selection_index = (
-                int(selection) - 1
-            )  # -1 for adjusting to the index count of lists
-            if selection_index >= 0 and selection_index < len(company_list):
-                selected_company = company_list[selection_index]
-                wipe_terminal()  # Clear terminal
-                print(f"You selected: ({selection}) {selected_company}")
-                time.sleep(2)  # Wait for 2 seconds
-                return selected_company
-            else:
-                raise ValueError
-        except ValueError:
-            # If users want to exit, they just enter "0" and the program will restart.
-            if selection == "0":
-                restart()
-                break
-            else:
-                wipe_terminal()  # Clear terminal
-                print("exeption Error")
-                print(
-                    "Sorry, your selection is no valid option.\nPlease try again in 2 seconds."
-                )
-                time.sleep(2)  # Wait for 2 seconds
+    # If in survey mode, show option to create new company.
+    if mode == "survey":
+        print("(NEW) Create new company\n")
+
+    print("\n(0) If you like to exit\n")
+    
+    return company_list
+
+
+
 
 
 # Choose which question to analyze
@@ -745,13 +775,21 @@ def survey():
     """
     
     wipe_terminal()  # Clear terminal
-    company = survey_select_company()
+    
+    # Get the company to do the survey for.
+    
+    # Defines mode as survey mode.
+    mode = "survey"
 
     today = date.today()
 
     print(today)
     
     name = survey_get_name()
+    
+    company = select_company(mode)
+    
+    print(company)
 
     answer = survey_get_answers(name)
 
@@ -795,9 +833,7 @@ def survey_get_name():
             if (name.isalpha() and 
                 name[0].isupper() and 
                 name[1:].islower() and 
-                len(name) <= 20):
-                
-                print(name)
+                len(name) <= 20):                
                 return name
             else:
                 raise ValueError
@@ -815,37 +851,74 @@ def survey_get_name():
 
 
 
-def survey_select_company():
-    """
-    Summary:
-        Select company the user wants to do the servey for.
-    """
-
-    company = "Test Company"
-
-    return company
-
-
-
-
+def survey_create_company():
+    
+    while True:
+        wipe_terminal()  # Clear terminal
+        print("You want to create a new company for the survey?")
+        print("What is the company name?\n")
+        print("If you want to exit, please enter 'EXIT'\n")
+        new_company = input()
+        
+        # Validate if the user wants to exit the program using "EXIT"
+        if new_company == "EXIT":
+            restart()
+            break
+        
+        while True:
+            print(f"Is {new_company} correct?")
+            print("(y) Use the entered name")
+            print("(n) Enter different name\n")
+            correct_name = input()
+            
+            if  correct_name.lower() == "n":
+                print("\n")
+                break  # Go back to beginning of the first while loop
+            elif  correct_name.lower() == "y":
+                return new_company
+            else:
+                wipe_terminal()  # Clear terminal
+                print("\nInvalid input. Please enter 'y' to continue or (n) for a different name.")
+                time.sleep(2)  # Wait for 2 seconds
 
 
 
 def survey_get_answers(name):
+    """
+    Summary:
+        The user has to answer 8 questions with an int valie
+        between 0 and 10. The results are then used for saving
+        in the gspread file.
+    
+    Args:
+        name (str): First name of the person doing the survey.
 
+    Raises:
+        ValueError: Error for when no valid input was given.
+
+    Returns:
+        answers (list of ints): A list with a int value between 0 and 10
+        for each answered question.
+    """
+    # Get all data from gspread.
     get_questions = get_questions_from_google()
+    # Select only all the questions from the first row.
     selected_questions = get_questions[0]
+    # Remove date, name and company from questions list.
     questions = selected_questions[3:]
 
+    # Initializing a counter for questions.
     question_count = 0
+    # Initialising a list to be filled with the users answers.
     answers = []
 
+    
     for question in questions:
 
+        # Count the questions for showing the current one displayed.
         question_count += 1
 
         while True:
-
             wipe_terminal()  # Clear terminal
             print(f"{name}, please answer the following question.")
             print("Choose a value between 0 and 10.\n")
@@ -857,34 +930,29 @@ def survey_get_answers(name):
             if user_input == "EXIT":
                 restart()
                 break
-
+            
+            # Validate is user input is integer.
             try:
                 int_user_input = int(user_input)
-
+                # If input is int, check if between 0 and 10.
+                # If so, add to answers list.
                 if int_user_input >= 0 and int_user_input <= 10:
                     answers.append(int_user_input)
                     break
                 else:
                     raise ValueError
+            # If input is not correct, raise ValueError.
             except ValueError:
                 wipe_terminal()  # Clear terminal
                 print("Your answer is not valid.")
                 print("Please choose a value between 0 and 10.")
                 time.sleep(2)  # Wait for 2 seconds
-                
-    print(answers)
-    
+                    
     return answers
 
 
 
 
-
-
-
-
-def survey_name():
-    print("kbasf")
 
 
 
@@ -918,12 +986,15 @@ def main():
 
         # Choose data source to analyse. Excel file or gspread file.
         data = data_choose_source()
+        
+        # Defines mode as analyzation mode
+        mode = "analyze"
 
         while True:
 
             # User is now logged in and can start with the analyzing.
             # Function to start the first analyzing step with selecting the company to analyze.
-            company = analyze_select_company(data)
+            company = select_company(mode)
 
             # Function to define if the user wants to analyze one specific question or the overall results of the company.
             analyzation = nav_one_or_all_question_results()
@@ -947,5 +1018,5 @@ def main():
 
 
 
-survey()
+# survey()
 main()  # Start the program
