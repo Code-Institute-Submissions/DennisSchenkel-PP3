@@ -29,6 +29,8 @@ CREDS = Credentials.from_service_account_file("creds.json")
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open("evp_survey_samples")
+SHEET_DATA = SHEET.worksheet("Survey_data")
+SHEET_USER = SHEET.worksheet("Users")
 
 
 # --------------------------------- General Data ---------------------------------
@@ -46,19 +48,23 @@ question_topics = [
 ]
 
 
-# Choose company to analyse
+# Choose company to analyse.
 def select_company(mode):
     """
     Summary:
         This functions is for selecting the company to analyze. The list of companies to choose from comes from the companies in the results lists.
     """
+
     while True:
         wipe_terminal()  # Clear terminal
-        print("Please select the company you want to analyze.")
+        if mode == "survey":
+            print("Please select the company to do the survey.")
+        else:
+            print("Please select the company you want to analyze.")
         print("------------------------------------------------------------ \n")
 
         company_list = get_google_companies(mode)
-        
+
         # Take input which company the user selects.
         selection = input()
 
@@ -95,34 +101,33 @@ def select_company(mode):
                 time.sleep(2)  # Wait for 2 seconds
 
 
-
 # --------------------------------- Get Google Data ---------------------------------
 
 
+# Get questions from gspread sheet.
 def get_questions_from_google():
     """
     Summary:
         Get content from survey data worksheet and format it as list of lists
     """
-    survey_data = SHEET.worksheet("Survey_data")  # Select worksheet "Survey_data"
+    survey_data = SHEET_DATA  # Select worksheet "Survey_data"
     all_g_survey_data = survey_data.get_all_values()  # All data in a list of lists
     questions = all_g_survey_data[0]  # Select only the index with the questions in it
     return questions, all_g_survey_data
 
 
+# Get users from gspread sheet.
 def get_google_users():
     """
     Summary:
         Get information about registered users from google sheet and worksheet "Users"
     """
-    survey_results = SHEET.worksheet("Users")  # Select worksheet "Users"
+    survey_results = SHEET_USER  # Select worksheet "Users"
     all_g_survey_results = survey_results.get_all_values()
     all_g_survey_results.pop(
         0
     )  # Remove the first row filled with questions from the list
     return all_g_survey_results
-
-
 
 
 # --------------------------------- Data Source Functions ---------------------------------
@@ -175,7 +180,9 @@ def data_get_excel_file():
         try:
             # Check for error, if a correct file was entered
             # Ask for the location and name of Excel file.
-            location = input('Where is the file located?:\n(Test file: "samples.xlsx")\n')
+            location = input(
+                'Where is the file located?:\n(Test file: "samples.xlsx")\n'
+            )
             # Name and location of file is formatted as string
             get_excel = "{}".format(location)
             # Formatted name and location is pasted into read_excel() function
@@ -228,19 +235,18 @@ def data_get_google_file():
 # --------------------------------- Data Analyzing Functions ---------------------------------
 
 
-
-
+# Get company list from gspread sheet.
 def get_google_companies(mode):
-    
+
     # Get all survey data from gspread.
     data = data_get_google_file()
-    
+
     # Create empty list for all companies that are contained in the results data.
     company_list = []
     # Create empty list for all the indexes the user can select in this function.
     index_list = []
 
-    # Itterate through the list of data and check for every line, 
+    # Itterate through the list of data and check for every line,
     # if the company is already in the company_list.
     # If not, add it to that list.
     # Each company should only be in the list one time.
@@ -260,11 +266,8 @@ def get_google_companies(mode):
         print("(NEW) Create new company\n")
 
     print("\n(0) If you like to exit\n")
-    
+
     return company_list
-
-
-
 
 
 # Choose which question to analyze
@@ -741,15 +744,6 @@ def nav_analyze_different_question():
 # --------------------------------- Survey Functions ---------------------------------
 
 
-
-
-
-
-
-
-
-
-
 class Survey:
     def __init__(self, today, name, company, *answers):
         self.today = today
@@ -758,52 +752,50 @@ class Survey:
         self.answers = answers
 
 
-
-
-
 def survey():
     """
     Summary:
         Do survey.
     """
-    
+
     wipe_terminal()  # Clear terminal
-    
+
     # Get the company to do the survey for.
-    
+
     # Defines mode as survey mode.
     mode = "survey"
 
     # Get the current days date.
-    today = date.today()
-    
-    # Get the users name.
-    name = survey_get_name()
-    
+    today_raw = date.today()
+    # Change date to string format.
+    today = today_raw.isoformat()
+
     # Get the company name from user.
     company = select_company(mode)
-    
+
+    # Get the users name.
+    name = survey_get_name()
+
     # Get survey answers from user.
     answers = survey_get_answers(name, company)
 
     wipe_terminal()  # Clear terminal
-    
-    print(answers)
-    
+
+    # Put data into class object.
     survey_results = Survey(today, name, company, *answers)
-    
-    survey_data_to_db = [survey_results.today, survey_results.name, survey_results.company] + list(survey_results.answers)
 
-    print(survey_data_to_db)
+    # Format data for export to gspread sheet.
+    survey_data_to_db = [
+        survey_results.today,
+        survey_results.name,
+        survey_results.company,
+    ] + list(survey_results.answers)
 
-    sheets = SHEET.sheet1
+    # Export survey data to gspread sheet.
+    SHEET_DATA.append_row(survey_data_to_db)
 
-    sheets.append_row(survey_data_to_db)
-
-    
-    input()
-
-
+    print(f"Thank you, {name}!")
+    print(f"You've completed the survey for {company}")
 
 
 # Get user name.
@@ -820,7 +812,7 @@ def survey_get_name():
         string: Name of the user.
     """
     while True:
-        
+
         wipe_terminal()  # Clear terminal
         print("What is your first name?")
         print("(Max 20 letters and the first letter in uppercases)")
@@ -834,14 +826,16 @@ def survey_get_name():
         try:
             # Validate if name is a maximum of 20 letters,
             # first letter uppercase and rest lowercase.
-            if (name.isalpha() and 
-                name[0].isupper() and 
-                name[1:].islower() and 
-                len(name) <= 20):                
+            if (
+                name.isalpha()
+                and name[0].isupper()
+                and name[1:].islower()
+                and len(name) <= 20
+            ):
                 return name
             else:
                 raise ValueError
-        
+
         except ValueError:
             wipe_terminal()  # Clear terminal
             print("No valid first name!\n")
@@ -849,22 +843,22 @@ def survey_get_name():
             print("and make sure that the first letter is in uppercases.\n")
             print("You can try again in 5 seconds.")
             time.sleep(5)  # Wait for 5 seconds
-        
-        
+
+
 # Create a new company, that is not in the database.
 def survey_create_company(company_list):
-    
+
     while True:
         wipe_terminal()  # Clear terminal
         print("You want to create a new company for the survey?")
         print("If you want to exit, please enter 'EXIT'\n")
         new_company = input("Enter the company name: ")
-        
+
         # Validate if the user wants to exit the program using "EXIT"
         if new_company == "EXIT":
             restart()
             break
-        
+
         # Ask if the entered new company name is correct.
         while True:
             wipe_terminal()  # Clear terminal
@@ -872,11 +866,11 @@ def survey_create_company(company_list):
             print("(1) Use the entered name")
             print("(2) Enter different name\n")
             correct_name = input("What would you like to do?: ")
-            
-            if  correct_name.lower() == "2":
+
+            if correct_name.lower() == "2":
                 print("\n")
                 break  # Go back to beginning of the first while loop
-            elif  correct_name.lower() == "1":
+            elif correct_name.lower() == "1":
                 # Check if the entered company is already existing in the database
                 if new_company in company_list:
                     wipe_terminal()  # Clear terminal
@@ -888,7 +882,9 @@ def survey_create_company(company_list):
                     return new_company
             else:
                 wipe_terminal()  # Clear terminal
-                print("\nInvalid input. Please enter '1' to continue or (2) for a different name.")
+                print(
+                    "\nInvalid input. Please enter '1' to continue or (2) for a different name."
+                )
                 time.sleep(2)  # Wait for 2 seconds
 
 
@@ -899,7 +895,7 @@ def survey_get_answers(name, company):
         The user has to answer 8 questions with an int valie
         between 0 and 10. The results are then used for saving
         in the gspread file.
-    
+
     Args:
         name (str): First name of the person doing the survey.
 
@@ -922,7 +918,6 @@ def survey_get_answers(name, company):
     # Initialising a list to be filled with the users answers.
     answers = []
 
-    
     for question in questions:
 
         # Count the questions for showing the current one displayed.
@@ -941,7 +936,7 @@ def survey_get_answers(name, company):
             if user_input == "EXIT":
                 restart()
                 break
-            
+
             # Validate is user input is integer.
             try:
                 int_user_input = int(user_input)
@@ -958,16 +953,8 @@ def survey_get_answers(name, company):
                 print("Your answer is not valid.")
                 print("Please choose a value between 0 and 10.")
                 time.sleep(2)  # Wait for 2 seconds
-                    
+
     return answers
-
-
-
-
-
-
-
-
 
 
 # --------------------------------- Program Flow ---------------------------------
@@ -986,9 +973,9 @@ def main():
 
     # Select what option is choosen in the first navigation step
     if survey_or_analyze == "do_survey":
-        survey()
+        survey()  # Start survey
     elif survey_or_analyze == "do_login":
-        login_true = login()
+        login_true = login()  # Start login process
 
     # If login was valid, call function to choose data source for analyzation
     if survey_or_analyze == "do_login" and login_true:
@@ -997,12 +984,11 @@ def main():
 
         # Choose data source to analyse. Excel file or gspread file.
         data = data_choose_source()
-        
+
         # Defines mode as analyzation mode
         mode = "analyze"
 
         while True:
-
             # User is now logged in and can start with the analyzing.
             # Function to start the first analyzing step with selecting the company to analyze.
             company = select_company(mode)
@@ -1011,9 +997,11 @@ def main():
             analyzation = nav_one_or_all_question_results()
 
             if analyzation == "One question":
+                # Start analyzation of one single question results.
                 analyze_single_question_results(company, data)
 
             elif analyzation == "Overall results":
+                # Start analyzation of the overall company results.
                 analyze_overall_question_results(company, data)
 
             else:
@@ -1021,12 +1009,12 @@ def main():
 
             print(company + analyzation)
 
-    else:
-        unexpected_error()
+    print("The end of everything\n")
+    time.sleep(2)  # Wait for 2 seconds
+    print("The program will restart in 2 seconds.")
 
 
 # --------------------------------- Program Start ---------------------------------
-
 
 
 # survey()
