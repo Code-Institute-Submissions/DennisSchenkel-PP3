@@ -67,7 +67,11 @@ colorama helps with coloring the text and its background
 ### Misc.
 
 - pyArrow
-
+- os - for terminal wipe
+- sys - Import sys for restart of app
+- subprocess - Import subprocess for restart of app
+- time - Import time for sleep feature
+- datetime - Import to get date
 
 
 
@@ -78,7 +82,8 @@ colorama helps with coloring the text and its background
     -   Date, Name, Company Name, Questions
 - Answers in following rows
 
-
+G-Spread
+https://docs.google.com/spreadsheets/d/16vTHxofSbLFpQXTzHNgIS84chSTrg7NF4gkwami_Di0/edit?usp=sharing
 
 
 ## Questions to integrate

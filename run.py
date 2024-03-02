@@ -125,7 +125,8 @@ def data_get_excel_file():
             # Formatted name and location is pasted into read_excel() function
             excel_content = pd.read_excel(get_excel)
 
-            # Validation for correct Excel structure is missing
+            # Validation for correct Excel structure is not implemented
+            # Validation would check file tructure is correct.
             # If correct, TRUE, else FALSE
 
             # Return content of the excel file
@@ -137,7 +138,7 @@ def data_get_excel_file():
         except FileNotFoundError:
             # Print FileNotFoundError statement
             wipe_terminal()  # Clear terminal
-            print("FileNotFoundError: Sorry, but no Excel file to use war found.\n")
+            print("FileNotFoundError: Sorry, but no Excel file was found.\n")
 
             # Ask if the user wants to try again entering a file name and location
             while True:  # Test if user enters only y or n and no other key.
@@ -176,7 +177,7 @@ def analyze_select_company(data):
     This functions is for selecting the company to analyze. The list of companies to choose from comes from the companies in the results lists.
     """
     while True:
-        wipe_terminal()
+        wipe_terminal()  # Clear terminal
         print("Please select the company you want to analyze.")
         print("------------------------------------------------------------ \n")
         # Create empty list for all companies that are contained in the results data
@@ -210,7 +211,7 @@ def analyze_select_company(data):
             )  # -1 for adjusting to the index count of lists
             if selection_index >= 0 and selection_index < len(company_list):
                 selected_company = company_list[selection_index]
-                wipe_terminal()
+                wipe_terminal()  # Clear terminal
                 print(f"You selected: ({selection}) {selected_company}")
                 time.sleep(2)  # Wait for 2 seconds
                 return selected_company
@@ -222,7 +223,7 @@ def analyze_select_company(data):
                 restart()
                 break
             else:
-                wipe_terminal()
+                wipe_terminal()  # Clear terminal
                 print("exeption Error")
                 print(
                     "Sorry, your selection is no valid option.\nPlease try again in 2 seconds."
@@ -246,7 +247,7 @@ def analyze_choose_question():
         # Find question associated with input and return selected question
         try:
 
-            wipe_terminal()
+            wipe_terminal()  # Clear terminal
             print("From which question would you like to see the results?")
             print("------------------------------------------------------------ \n")
 
@@ -399,6 +400,7 @@ def analyze_overall_question_results(company, data):
 
         elif option == "0":
             restart()
+            break
         else:
             wipe_terminal()  # Clear terminal
             print("Wrong input. Please select one of the shown options.\n")
@@ -648,6 +650,7 @@ def nav_one_or_all_question_results():
             return "Overall results"
         elif option == "0":
             restart()
+            break
         else:
             wipe_terminal()  # Clear terminal
             print("Wrong input. Please select one of the shown options.\n")
@@ -727,8 +730,8 @@ def survey():
     today = date.today()
 
     print(today)
-
-    name = input("Please type in your name: ")
+    
+    name = survey_get_name()
 
     answer = survey_get_answers()
 
@@ -738,6 +741,44 @@ def survey():
 
     input()
 
+
+
+
+
+def survey_get_name():
+    
+    while True:
+        
+        wipe_terminal()  # Clear terminal
+        print("What is your first name?")
+        print("(Max 20 letters and the first letter in uppercases)")
+        print("If you want to exit, please enter 'EXIT'\n")
+        name = input("Please type in your first: ")
+        
+        if name == "EXIT":
+            restart()
+            break
+
+        try:
+            if (name.isalpha() and 
+                name[0].isupper() and 
+                name[1:].islower() and 
+                len(name) <= 20):
+                
+                print(name)
+                return name
+            else:
+                raise ValueError
+        
+        except ValueError:
+            wipe_terminal()  # Clear terminal
+            print("No valid first name!\n")
+            print("Please enter a first name with up to 20 letters")
+            print("and make sure that the first letter is in uppercases.\n")
+            print("You can try again in 5 seconds.")
+            time.sleep(5)  # Wait for 5 seconds
+        
+        
 
 
 
@@ -773,26 +814,34 @@ def survey_get_answers():
     answers = []
 
     for question in questions:
-        wipe_terminal()  # Clear terminal
-        print("Please choose a value between 0 and 10.")
-        user_input = input(question)
-        answers.append(user_input)
 
-        # while True:
+        while True:
 
-        # try:
-        #    if int(user_input) >= 0 and int(user_input) <= 10:
-        #        answers.append(user_input)
-        #    elif user_input == "EXIT":
-        #        restart()
-        #    else:
-        #        print("Your answer is not valid.\nPlease choose a value between 0 and 10.")
-        # except:
-        #    if user_input == "EXIT":
-        #        restart()
-        #    else:
-        #        print("Your answer is not valid.\nPlease choose a value between 0 and 10.")
+            wipe_terminal()  # Clear terminal
+            print("Please choose a value between 0 and 10.")
+            print("If you want to exit, please enter 'EXIT'\n")
+            user_input = input(question)
 
+            if user_input == "EXIT":
+                restart()
+                break
+
+            try:
+                int_user_input = int(user_input)
+
+                if int_user_input >= 0 and int_user_input <= 10:
+                    answers.append(int_user_input)
+                    print("Jap")
+                    input()
+                    break
+                else:
+                    raise ValueError
+            except ValueError:
+                wipe_terminal()  # Clear terminal
+                print("Your answer is not valid.")
+                print("Please choose a value between 0 and 10.")
+                time.sleep(2)  # Wait for 2 seconds
+                
     print(answers)
     
     return answers
@@ -816,7 +865,7 @@ def survey_name():
 
 
 # Start of the program - Do survey or login and analyze data
-def start():
+def main():
     """
     This functions starts the program and contains all logics.
     """
@@ -865,5 +914,5 @@ def start():
 
 # --------------------------------- Program Start ---------------------------------
 
-
-start()  # Start the program
+survey()
+main()  # Start the program
