@@ -65,7 +65,7 @@ def select_company(mode):
         # If the user chooses to do the survey, check if creation of a new company was selected.
         if mode == "survey" and selection == "NEW":
             # Get new company name and return it.
-            new_company = survey_create_company()
+            new_company = survey_create_company(company_list)
             return new_company
 
         # Find company associated to input and return selected company
@@ -751,18 +751,11 @@ def nav_analyze_different_question():
 
 
 class Survey:
-    def __init__(self, today, name, company, q1, q2, q3, q4, q5, q6, q7, q8):
+    def __init__(self, today, name, company, *answers):
         self.today = today
         self.name = name
         self.company = company
-        self.q1 = q1
-        self.q2 = q2
-        self.q3 = q3
-        self.q4 = q4
-        self.q5 = q5
-        self.q6 = q6
-        self.q7 = q7
-        self.q8 = q8
+        self.answers = answers
 
 
 
@@ -781,28 +774,39 @@ def survey():
     # Defines mode as survey mode.
     mode = "survey"
 
+    # Get the current days date.
     today = date.today()
-
-    print(today)
     
+    # Get the users name.
     name = survey_get_name()
     
+    # Get the company name from user.
     company = select_company(mode)
     
-    print(company)
+    # Get survey answers from user.
+    answers = survey_get_answers(name, company)
 
-    answer = survey_get_answers(name)
+    wipe_terminal()  # Clear terminal
+    
+    print(answers)
+    
+    survey_results = Survey(today, name, company, *answers)
+    
+    survey_data_to_db = [survey_results.today, survey_results.name, survey_results.company] + list(survey_results.answers)
 
-    survey_answers = Survey(today, name, company, *answer)
+    print(survey_data_to_db)
 
-    print(survey_answers)
+    sheets = SHEET.sheet1
 
+    sheets.append_row(survey_data_to_db)
+
+    
     input()
 
 
 
 
-
+# Get user name.
 def survey_get_name():
     """
     Summary:
@@ -821,7 +825,7 @@ def survey_get_name():
         print("What is your first name?")
         print("(Max 20 letters and the first letter in uppercases)")
         print("If you want to exit, please enter 'EXIT'\n")
-        name = input("Please type in your first: ")
+        name = input("Please type in your first name: ")
         # Validate if the user wants to exit the program using "EXIT"
         if name == "EXIT":
             restart()
@@ -847,43 +851,49 @@ def survey_get_name():
             time.sleep(5)  # Wait for 5 seconds
         
         
-
-
-
-
-def survey_create_company():
+# Create a new company, that is not in the database.
+def survey_create_company(company_list):
     
     while True:
         wipe_terminal()  # Clear terminal
         print("You want to create a new company for the survey?")
-        print("What is the company name?\n")
         print("If you want to exit, please enter 'EXIT'\n")
-        new_company = input()
+        new_company = input("Enter the company name: ")
         
         # Validate if the user wants to exit the program using "EXIT"
         if new_company == "EXIT":
             restart()
             break
         
+        # Ask if the entered new company name is correct.
         while True:
-            print(f"Is {new_company} correct?")
-            print("(y) Use the entered name")
-            print("(n) Enter different name\n")
-            correct_name = input()
+            wipe_terminal()  # Clear terminal
+            print(f"Is {new_company} as company name correct?\n")
+            print("(1) Use the entered name")
+            print("(2) Enter different name\n")
+            correct_name = input("What would you like to do?: ")
             
-            if  correct_name.lower() == "n":
+            if  correct_name.lower() == "2":
                 print("\n")
                 break  # Go back to beginning of the first while loop
-            elif  correct_name.lower() == "y":
-                return new_company
+            elif  correct_name.lower() == "1":
+                # Check if the entered company is already existing in the database
+                if new_company in company_list:
+                    wipe_terminal()  # Clear terminal
+                    print(f"{new_company} is already in the database.")
+                    print("Please enter a different name or EXIT.")
+                    time.sleep(3)  # Wait for 3 seconds
+                    break
+                else:
+                    return new_company
             else:
                 wipe_terminal()  # Clear terminal
-                print("\nInvalid input. Please enter 'y' to continue or (n) for a different name.")
+                print("\nInvalid input. Please enter '1' to continue or (2) for a different name.")
                 time.sleep(2)  # Wait for 2 seconds
 
 
-
-def survey_get_answers(name):
+# Get survey answeres from user.
+def survey_get_answers(name, company):
     """
     Summary:
         The user has to answer 8 questions with an int valie
@@ -920,7 +930,8 @@ def survey_get_answers(name):
 
         while True:
             wipe_terminal()  # Clear terminal
-            print(f"{name}, please answer the following question.")
+            print(f"{name}, you are doing the survey for the company {company}.\n")
+            print("Please answer the following question.")
             print("Choose a value between 0 and 10.\n")
             print("If you want to exit, please enter 'EXIT'\n")
             print(f"Question {question_count}:")
