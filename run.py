@@ -51,7 +51,8 @@ question_topics = [
 
 def get_questions_from_google():
     """
-    Get content from survey data worksheet and format it as list of lists
+    Summary:
+        Get content from survey data worksheet and format it as list of lists
     """
     survey_data = SHEET.worksheet("Survey_data")  # Select worksheet "Survey_data"
     all_g_survey_data = survey_data.get_all_values()
@@ -61,7 +62,8 @@ def get_questions_from_google():
 
 def get_google_users():
     """
-    Get information about registered users from google sheet and worksheet "Users"
+    Summary:
+        Get information about registered users from google sheet and worksheet "Users"
     """
     survey_results = SHEET.worksheet("Users")  # Select worksheet "Users"
     all_g_survey_results = survey_results.get_all_values()
@@ -77,8 +79,9 @@ def get_google_users():
 # Choose which source to get data from for analyzing
 def data_choose_source():
     """
-    Ask for the data source to get data for analyzation from.
-    Include option to go back to previous step. In this case restart the program.
+    Summary:
+        Ask for the data source to get data for analyzation from.
+        Include option to go back to previous step. In this case restart the program.
     """
     while True:
         wipe_terminal()
@@ -109,10 +112,11 @@ def data_choose_source():
 # Get Excel file by import
 def data_get_excel_file():
     """
-    This functions asks for the location of the file to import.
-    The "samples.xlsx" can be used for test purposes.
-    With the import a test for the import of a Excel file is done.
-    If a Excel file is imported, the file is tested for correct structure.
+    Summary:
+        This functions asks for the location of the file to import.
+        The "samples.xlsx" can be used for test purposes.
+        With the import a test for the import of a Excel file is done.
+        If a Excel file is imported, the file is tested for correct structure.
     """
     while True:
         wipe_terminal()  # Clear terminal
@@ -159,7 +163,8 @@ def data_get_excel_file():
 # Get Google spreadsheet by API request.
 def data_get_google_file():
     """
-    Get content from survey data worksheet and format it as list of lists
+    Summary:
+        Get content from survey data worksheet and format it as list of lists
     """
     survey_data = SHEET.worksheet("Survey_data")  # Select worksheet "Survey_data"
     all_g_survey_data = survey_data.get_all_values()
@@ -174,7 +179,8 @@ def data_get_google_file():
 # Choose company to analyse
 def analyze_select_company(data):
     """
-    This functions is for selecting the company to analyze. The list of companies to choose from comes from the companies in the results lists.
+    Summary:
+        This functions is for selecting the company to analyze. The list of companies to choose from comes from the companies in the results lists.
     """
     while True:
         wipe_terminal()  # Clear terminal
@@ -234,7 +240,8 @@ def analyze_select_company(data):
 # Choose which question to analyze
 def analyze_choose_question():
     """
-    This function gives the user the option to choose a question for analyzing the results.
+    Summary:
+        This function gives the user the option to choose a question for analyzing the results.
     """
     only_questions = get_questions_from_google()
     questions = only_questions[0]
@@ -336,7 +343,8 @@ def analyze_single_question_results(company, data):
 # Calculate and display the overall company results
 def analyze_overall_question_results(company, data):
     """
-    Summary: Get all data for the selected company, calculate results and print them in an overview.
+    Summary:
+        Get all data for the selected company, calculate results and print them in an overview.
 
     Args:
         company (string): Name of the company to analyze
@@ -467,7 +475,8 @@ def analyze_get_overall_results(company, data):
 # Clear the terminal from all text
 def wipe_terminal():
     """
-    Delete all text in the terminal
+    Summary:
+        Delete all text in the terminal
     """
     if os.name == "posix":  # Identify if OS is macOS or Linux
         os.system("clear")
@@ -478,7 +487,8 @@ def wipe_terminal():
 # Restart the program by executing run.py
 def restart():
     """
-    This function is for restarting the run.py and is used as the EXIT solution
+    Summary:
+        This function is for restarting the run.py and is used as the EXIT solution
     """
     wipe_terminal()  # Clear terminal
     print(Fore.BLUE + "You want to exit" + Style.RESET_ALL)
@@ -495,7 +505,8 @@ def restart():
 # Display an error message
 def unexpected_error():
     """
-    If an error occures which reason is unknown, this error message is shown.
+    Summary:
+        If an error occures which reason is unknown, this error message is shown.
     """
     print(
         "Housten, we have a problem!\nSome kind of fatal error happend!\nThe program will restart in 3 seconds!"
@@ -510,7 +521,8 @@ def unexpected_error():
 # User login with username and password
 def login():
     """
-    Login for users to analyze survey results.
+    Summary:
+        Login for users to analyze survey results.
     """
     wipe_terminal()  # Clear terminal
     username = (
@@ -523,7 +535,8 @@ def login():
 # Validadion of username input
 def login_user_validation():
     """
-    Validate if username is to find in user database (gspreed)
+    Summary:
+        Validate if username is to find in user database (gspreed).
     """
     list_of_users = get_google_users()
     print(Fore.BLUE + "This is the user validation." + Style.RESET_ALL)
@@ -532,6 +545,7 @@ def login_user_validation():
         username = input(
             "What is your username? (Test)\n"
         )  # Use "Test" as test user (with uppercase T)
+        # Validate if the user wants to exit the program using "EXIT"
         if username == "EXIT":
             restart()
             break
@@ -554,7 +568,8 @@ def login_user_validation():
 # Validation of password input
 def login_password_validation(username):
     """
-    Validate if the password insered by the users is valid
+    Summary:
+        Validate if the password insered by the users is valid.
     """
     list_of_passwords = get_google_users()
     wipe_terminal()  # Clear terminal
@@ -569,6 +584,7 @@ def login_password_validation(username):
         password = input(
             "Please enter your password? (Test)\n"
         )  # Use "Test" as test user (with uppercase T)
+        # Validate if the user wants to exit the program using "EXIT"
         if password == "EXIT":
             restart()
             break
@@ -603,7 +619,8 @@ def login_password_validation(username):
 # First screen with navigation
 def nav_survey_or_analyze():
     """
-    This function displays the first navigation where the user can choose between doing the survey or logging in and analyzing the data.
+    Summary:
+        This function displays the first navigation where the user can choose between doing the survey or logging in and analyzing the data.
     """
     while True:
         wipe_terminal()  # Clear terminal
@@ -630,7 +647,8 @@ def nav_survey_or_analyze():
 # Selection if results of one question or overall results
 def nav_one_or_all_question_results():
     """
-    Question if to analyse one specific question or the overall results of a company.
+    Summary:
+        Question if to analyse one specific question or the overall results of a company.
     """
     while True:
         wipe_terminal()
@@ -660,7 +678,8 @@ def nav_one_or_all_question_results():
 # Ask if to analyze a different question or exit
 def nav_analyze_different_question():
     """
-    Ask if to analyze a different question after the one just analyzed or exit the program
+    Summary:
+        Ask if to analyze a different question after the one just analyzed or exit the program
     """
     while True:
 
@@ -721,7 +740,8 @@ class Survey:
 
 def survey():
     """
-    Do survey.
+    Summary:
+        Do survey.
     """
     
     wipe_terminal()  # Clear terminal
@@ -733,7 +753,7 @@ def survey():
     
     name = survey_get_name()
 
-    answer = survey_get_answers()
+    answer = survey_get_answers(name)
 
     survey_answers = Survey(today, name, company, *answer)
 
@@ -746,7 +766,17 @@ def survey():
 
 
 def survey_get_name():
-    
+    """
+    Summary:
+        Get the user name by input and validate it for specific specifications.
+        A maximum of 20 letters, first leter uppercase and the rest lowercase.
+
+    Raises:
+        ValueError: When input is not max 20 letters, first uppercase, rest lowercase.
+
+    Returns:
+        string: Name of the user.
+    """
     while True:
         
         wipe_terminal()  # Clear terminal
@@ -754,12 +784,14 @@ def survey_get_name():
         print("(Max 20 letters and the first letter in uppercases)")
         print("If you want to exit, please enter 'EXIT'\n")
         name = input("Please type in your first: ")
-        
+        # Validate if the user wants to exit the program using "EXIT"
         if name == "EXIT":
             restart()
             break
 
         try:
+            # Validate if name is a maximum of 20 letters,
+            # first letter uppercase and rest lowercase.
             if (name.isalpha() and 
                 name[0].isupper() and 
                 name[1:].islower() and 
@@ -785,7 +817,8 @@ def survey_get_name():
 
 def survey_select_company():
     """
-    Select company the user wants to do the servey for
+    Summary:
+        Select company the user wants to do the servey for.
     """
 
     company = "Test Company"
@@ -798,30 +831,29 @@ def survey_select_company():
 
 
 
-def survey_get_answers():
+def survey_get_answers(name):
 
-    questions = [
-        "Please answer question 1: ",
-        "Please answer question 2: ",
-        "Please answer question 3: ",
-        "Please answer question 4: ",
-        "Please answer question 5: ",
-        "Please answer question 6: ",
-        "Please answer question 7: ",
-        "Please answer question 8: ",
-    ]
+    get_questions = get_questions_from_google()
+    selected_questions = get_questions[0]
+    questions = selected_questions[3:]
 
+    question_count = 0
     answers = []
 
     for question in questions:
 
+        question_count += 1
+
         while True:
 
             wipe_terminal()  # Clear terminal
-            print("Please choose a value between 0 and 10.")
+            print(f"{name}, please answer the following question.")
+            print("Choose a value between 0 and 10.\n")
             print("If you want to exit, please enter 'EXIT'\n")
-            user_input = input(question)
-
+            print(f"Question {question_count}:")
+            print(question)
+            user_input = input()
+            # Validate if the user wants to exit the program using "EXIT"
             if user_input == "EXIT":
                 restart()
                 break
@@ -831,8 +863,6 @@ def survey_get_answers():
 
                 if int_user_input >= 0 and int_user_input <= 10:
                     answers.append(int_user_input)
-                    print("Jap")
-                    input()
                     break
                 else:
                     raise ValueError
@@ -867,7 +897,8 @@ def survey_name():
 # Start of the program - Do survey or login and analyze data
 def main():
     """
-    This functions starts the program and contains all logics.
+    Summary:
+        This functions starts the program and contains all logics.
     """
     wipe_terminal()  # Clear terminal
 
@@ -913,6 +944,8 @@ def main():
 
 
 # --------------------------------- Program Start ---------------------------------
+
+
 
 survey()
 main()  # Start the program
