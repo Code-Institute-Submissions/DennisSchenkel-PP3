@@ -1,7 +1,3 @@
-# Your code goes here.
-# You can delete these comments, but do not change the name of this file
-# Write your code to expect a terminal of 80 characters wide and 24 rows high
-
 import os  # Import os for terminal wipe
 import sys  # Import sys for restart of app
 import subprocess  # Import subprocess for restart of app
@@ -34,6 +30,7 @@ SHEET_USER = SHEET.worksheet("Users")
 
 
 # --------------------------------- General Data ---------------------------------
+
 
 # A list of the topics of the questions in the survey
 question_topics = [
@@ -139,6 +136,8 @@ def data_choose_source():
     Summary:
         Ask for the data source to get data for analyzation from.
         Include option to go back to previous step. In this case restart the program.
+    Returns:
+        _type_: _description_
     """
     while True:
         wipe_terminal()
@@ -218,12 +217,15 @@ def data_get_excel_file():
                         "\nInvalid input. Please enter 'y' to try again or 'n' to exit."
                     )
 
-
+# DONE
 # Get Google spreadsheet by API request.
 def data_get_google_file():
     """
     Summary:
         Get content from survey data worksheet and format it as list of lists
+    
+    Returns:
+        List of lists: All survey result data without the first row (date, name, company, questions).
     """
     survey_data = SHEET.worksheet("Survey_data")  # Select worksheet "Survey_data"
     all_g_survey_data = survey_data.get_all_values()
@@ -234,9 +236,19 @@ def data_get_google_file():
 
 # --------------------------------- Data Analyzing Functions ---------------------------------
 
-
+# DONE
 # Get company list from gspread sheet.
 def get_google_companies(mode):
+    """
+    Summary:
+        Get a list of all companies that are existing in the gspread sheet.
+
+    Args:
+        mode (str): Selection of the mode. Ether "survey" or "analyze".
+
+    Returns:
+        List of str: List with all companies that are in de gspread database.
+    """
 
     # Get all survey data from gspread.
     data = data_get_google_file()
@@ -269,12 +281,17 @@ def get_google_companies(mode):
 
     return company_list
 
-
+# DONE
 # Choose which question to analyze
 def analyze_choose_question():
     """
     Summary:
         This function gives the user the option to choose a question for analyzing the results.
+    
+    Return:
+        selected_question (str): Text of the selected question
+        selection (str): Selection made by the user
+        selection_index (str): Index of the selected question
     """
     only_questions = get_questions_from_google()
     questions = only_questions[0]
@@ -333,7 +350,7 @@ def analyze_choose_question():
             )
             time.sleep(2)  # Wait for 2 seconds
 
-
+# DONE
 # Display results for one specific question
 def analyze_single_question_results(company, data):
     """
@@ -347,8 +364,11 @@ def analyze_single_question_results(company, data):
     while True:
 
         selected_question = analyze_choose_question()
+        # Get result for selected company from gspread.
         analyzation_results = analyze_get_overall_results(company, data)
+        # Get index of the selected question.
         question_index = int(selected_question[2])
+        # Get results of selected question.
         question_result = analyzation_results[1]
         sum = question_result[question_index]
 
@@ -372,7 +392,7 @@ def analyze_single_question_results(company, data):
         if option:
             break
 
-
+# DONE
 # Calculate and display the overall company results
 def analyze_overall_question_results(company, data):
     """
@@ -447,7 +467,7 @@ def analyze_overall_question_results(company, data):
             print("Wrong input. Please select one of the shown options.\n")
             time.sleep(2)  # Wait for 2 seconds
 
-
+# DONE
 # Get and calculate the overall company results.
 def analyze_get_overall_results(company, data):
     """
@@ -504,7 +524,6 @@ def analyze_get_overall_results(company, data):
 
 # --------------------------------- General Functions ---------------------------------
 
-
 # Clear the terminal from all text
 def wipe_terminal():
     """
@@ -550,12 +569,15 @@ def unexpected_error():
 
 # --------------------------------- Login Functions ---------------------------------
 
-
+# DONE
 # User login with username and password
 def login():
     """
     Summary:
         Login for users to analyze survey results.
+        
+    Return:
+        True: When login is valid return true.
     """
     wipe_terminal()  # Clear terminal
     username = (
@@ -647,7 +669,6 @@ def login_password_validation(username):
 
 
 # --------------------------------- Navigation Functions ---------------------------------
-
 
 # First screen with navigation
 def nav_survey_or_analyze():
@@ -743,8 +764,20 @@ def nav_analyze_different_question():
 
 # --------------------------------- Survey Functions ---------------------------------
 
-
+# DONE
+# Class for survey results.
 class Survey:
+    """
+    Summary:
+        Initialize the Survey class. Used for survey results and export to gspread.
+        
+    Args:
+        today (str): Current date as string
+        name (str): Name of the user
+        company (str): Name of the company
+        answers (list of ints): Question results in a list of ints between 0 to 10
+    """
+    
     def __init__(self, today, name, company, *answers):
         self.today = today
         self.name = name
@@ -752,6 +785,7 @@ class Survey:
         self.answers = answers
 
 
+# Function for going through the survey process.
 def survey():
     """
     Summary:
@@ -796,9 +830,10 @@ def survey():
 
     print(f"Thank you, {name}!")
     print(f"You've completed the survey for {company}")
+    time.sleep(2)  # Wait for 2 seconds
 
-
-# Get user name.
+# DONE
+# Get the users name.
 def survey_get_name():
     """
     Summary:
@@ -812,7 +847,6 @@ def survey_get_name():
         string: Name of the user.
     """
     while True:
-
         wipe_terminal()  # Clear terminal
         print("What is your first name?")
         print("(Max 20 letters and the first letter in uppercases)")
@@ -847,7 +881,14 @@ def survey_get_name():
 
 # Create a new company, that is not in the database.
 def survey_create_company(company_list):
+    """_summary_
 
+    Args:
+        company_list (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     while True:
         wipe_terminal()  # Clear terminal
         print("You want to create a new company for the survey?")
@@ -887,7 +928,7 @@ def survey_create_company(company_list):
                 )
                 time.sleep(2)  # Wait for 2 seconds
 
-
+# DONE
 # Get survey answeres from user.
 def survey_get_answers(name, company):
     """
@@ -1012,10 +1053,10 @@ def main():
     print("The end of everything\n")
     time.sleep(2)  # Wait for 2 seconds
     print("The program will restart in 2 seconds.")
-
+    restart()
 
 # --------------------------------- Program Start ---------------------------------
 
 
-# survey()
-main()  # Start the program
+# Start the program
+main()
