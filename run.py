@@ -417,7 +417,7 @@ def analyze_overall_question_results(company, data):
             Fore.BLUE
             + company
             + Style.RESET_ALL
-            + " reveived "
+            + " received "
             + Fore.BLUE
             + str(analyzation_results[0])
             + Style.RESET_ALL
@@ -543,8 +543,7 @@ def restart():
         This function is for restarting the run.py and is used as the EXIT solution
     """
     wipe_terminal()  # Clear terminal
-    print(Fore.BLUE + "You want to exit" + Style.RESET_ALL)
-    print("The program will restart in 2 seconds.")
+    print(Fore.BLUE + "The program will restart in 2 seconds." + Style.RESET_ALL)
     time.sleep(2)  # Wait for 2 seconds
 
     # End the current process and restart it
@@ -579,93 +578,102 @@ def login():
     Return:
         True: When login is valid return true.
     """
-    wipe_terminal()  # Clear terminal
-    username = (
-        login_user_validation()
-    )  # If username is found this function returns the correct username
-    login_password_validation(username)  # Correct password sets variable to True
-    return True  # Returns True when login worked correctly
 
+    # Counter for wrong login attempts
+    wrong_attempts_count = 0
 
-# Validadion of username input
-def login_user_validation():
-    """
-    Summary:
-        Validate if username is to find in user database (gspreed).
-    """
-    list_of_users = get_google_users()
-    print(Fore.BLUE + "This is the user validation." + Style.RESET_ALL)
-    print("If you want to exit, please enter 'EXIT'\n")
     while True:
-        username = input(
-            "What is your username? (Test)\n"
-        )  # Use "Test" as test user (with uppercase T)
+        print("This is the user login.\n")
+        
+        wipe_terminal()  # Clear terminal
+        print("If you want to exit, please enter 'EXIT'\n")
+        
+        
+        username = input("What is your username? (Test)\n")
         # Validate if the user wants to exit the program using "EXIT"
         if username == "EXIT":
             restart()
             break
-        else:
-            for element in list_of_users:
-                if username == element[0]:
-                    wipe_terminal()  # Clear terminal
-                    print(
-                        Fore.GREEN
-                        + f"Your username {username} is correct!"
-                        + Style.RESET_ALL
-                    )
-                    time.sleep(2)  # Wait for 2 seconds
-                    return username
-        wipe_terminal()  # Clear terminal
-        print(Fore.RED + "Username was not found.\nPlease try again." + Style.RESET_ALL)
-        print("If you want to exit, pleas enter 'EXIT'\n")
-
-
-# Validation of password input
-def login_password_validation(username):
-    """
-    Summary:
-        Validate if the password insered by the users is valid.
-    """
-    list_of_passwords = get_google_users()
-    wipe_terminal()  # Clear terminal
-    print(Fore.BLUE + "This is the password validation." + Style.RESET_ALL)
-    print("------------------------------------------------------------ \n")
-    print("If you want to exit, please enter 'EXIT'\n")
-    while True:
-        wipe_terminal()  # Clear terminal
-        print(Fore.BLUE + "This is the password validation." + Style.RESET_ALL)
-        print("------------------------------------------------------------ \n")
-        print("If you want to exit, please enter 'EXIT'\n")
-        password = input(
-            "Please enter your password? (Test)\n"
-        )  # Use "Test" as test user (with uppercase T)
+        
+        password = input("Please enter your password? (Test)\n")
         # Validate if the user wants to exit the program using "EXIT"
         if password == "EXIT":
             restart()
             break
+        
+        # If username is found in database, this function returns True
+        user_valid = login_user_validation(username)
+        
+        # If password is correct, functions returns True
+        pw_valid = login_password_validation(username, password)  
+        
+        # If username and password are correct, return True for login
+        if user_valid and pw_valid:
+            return True  # Login was successful
+        
+        # If login was incorrect, increase count and retart when cound is 3
         else:
-            for element in list_of_passwords:
-                if username == element[0]:
-                    if password == element[1]:
-                        wipe_terminal()  # Clear terminal
-                        print(
-                            Fore.GREEN
-                            + "Password is correct!\n"
-                            + Style.RESET_ALL
-                            + "You will now get logged in ..."
-                        )
-                        time.sleep(2)  # Wait for 2 seconds
-                        return True
-                    else:
-                        wipe_terminal()  # Clear terminal
-                        print(
-                            Fore.RED
-                            + "Password is not correct.\nPlease try again."
-                            + Style.RESET_ALL
-                        )
-                        time.sleep(2)  # Wait for 2 seconds
-                else:
-                    continue
+            wipe_terminal()  # Clear terminal
+            wrong_attempts_count += 1  # Increase count of failed login attempts
+            print("Username and/or password are wrong!")
+            if wrong_attempts_count < 3:
+                print(f"You have {3 - wrong_attempts_count} attempts left.")
+                time.sleep(3)  # Wait for 3 seconds
+            elif wrong_attempts_count == 3:
+                print("Your 3 login attempts failed.")
+                print("The program will restart.")
+                print("Your username will be blocked for 5 minutes!")   
+                time.sleep(4)  # Wait for 4 seconds
+                restart()
+                break
+
+# DONE
+# Validation for username input
+def login_user_validation(username):
+    """
+    Summary:
+        Validate if username is to find in user database (gspreed).
+        
+    Args:
+        username (str): Username entered by the user.
+    
+    Returns:
+        boolean: True if username is correct.
+    """
+    list_of_users = get_google_users()
+
+    for element in list_of_users:
+        if username == element[0]:
+            return True  # Username is correct
+
+    return False  # Username is wrong
+
+# DONE
+# Validation of password input
+def login_password_validation(username, password):
+    """
+    Summary:
+        Validate if the password insered by the users
+        is to be found associated zu the username in the database.
+    
+    Args:
+        username (str): Username entered by the user
+        password (str): Password entered by the zser
+    
+    Returns:
+        boolean: True if password is correct        
+    """
+    
+    list_of_passwords = get_google_users()
+
+    for element in list_of_passwords:
+        if username == element[0]:
+            if password == element[1]:
+                return True  # Password is correct
+            else:
+                return False  # Password is wrong
+        else:
+            continue
 
 
 # --------------------------------- Navigation Functions ---------------------------------
@@ -1020,7 +1028,7 @@ def main():
 
     # If login was valid, call function to choose data source for analyzation
     if survey_or_analyze == "do_login" and login_true:
-        print("You are now logged in")
+        print("You are now logged in!")
         time.sleep(2)  # Wait for 2 seconds
 
         # Choose data source to analyse. Excel file or gspread file.
