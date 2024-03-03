@@ -11,9 +11,9 @@ from colorama import Fore, Back, Style  # import color sheme
 
 # The following code was taken from the Code Institute Love Sandwitches project.
 import gspread  # Import to work with google sheets
-from google.oauth2.service_account import (
-    Credentials,
-)  # Import for authorization with the google API
+
+# Import for authorization with the google API
+from google.oauth2.service_account import (Credentials)  
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -31,7 +31,7 @@ SHEET_USER = SHEET.worksheet("Users")
 
 # --------------------------------- General Data ---------------------------------
 
-
+# DONE
 # A list of the topics of the questions in the survey
 question_topics = [
     "Motivation",
@@ -44,12 +44,21 @@ question_topics = [
     "Employee integration",
 ]
 
-
+# DONE
 # Choose company to analyse.
 def select_company(mode):
     """
     Summary:
-        This functions is for selecting the company to analyze. The list of companies to choose from comes from the companies in the results lists.
+        This functions is for selecting the company for doing the survey or to analyze. 
+        The list of companies to choose from comes from the companies in the results lists.
+        The User can also create a new company when doing the survey.
+    
+    Args:
+        mode (str): Selection of the mode. Ether "survey" or "analyze".
+    
+    Return:
+        selected_company (str): Selected company for survey or analyzation.
+        new_company (str): Company created by the user when doing survey.
     """
 
     while True:
@@ -100,44 +109,55 @@ def select_company(mode):
 
 # --------------------------------- Get Google Data ---------------------------------
 
-
+# DONE
 # Get questions from gspread sheet.
 def get_questions_from_google():
     """
     Summary:
-        Get content from survey data worksheet and format it as list of lists
+        Get content from survey data worksheet and format it as list of lists.
+        
+    Return:
+        questions (list of str): All questions from the survey as string
+        all_g_survey_data (list of lists): All data from the gspread survey results sheet.
     """
     survey_data = SHEET_DATA  # Select worksheet "Survey_data"
     all_g_survey_data = survey_data.get_all_values()  # All data in a list of lists
     questions = all_g_survey_data[0]  # Select only the index with the questions in it
     return questions, all_g_survey_data
 
-
+# DONE
 # Get users from gspread sheet.
 def get_google_users():
     """
     Summary:
         Get information about registered users from google sheet and worksheet "Users"
+        
+    Return:
+        all_g_survey_users (list of lists): All data from the gspread users sheet.
+
     """
     survey_results = SHEET_USER  # Select worksheet "Users"
-    all_g_survey_results = survey_results.get_all_values()
-    all_g_survey_results.pop(
+    all_g_survey_users = survey_results.get_all_values()
+    all_g_survey_users.pop(
         0
     )  # Remove the first row filled with questions from the list
-    return all_g_survey_results
+    return all_g_survey_users
 
 
 # --------------------------------- Data Source Functions ---------------------------------
 
-
+# DONE
 # Choose which source to get data from for analyzing
 def data_choose_source():
     """
     Summary:
         Ask for the data source to get data for analyzation from.
         Include option to go back to previous step. In this case restart the program.
+        
     Returns:
-        _type_: _description_
+        excel_file (list of lists): All survey result data from the excel file.
+        gspread (list of lists): All survey result data from gspread.
+        False (boolean): If user wants to exit the program.
     """
     while True:
         wipe_terminal()
@@ -164,7 +184,7 @@ def data_choose_source():
             print("Please try again in 2 seconds.")
             time.sleep(2)  # Wait for 2 seconds
 
-
+# DONE
 # Get Excel file by import
 def data_get_excel_file():
     """
@@ -173,6 +193,9 @@ def data_get_excel_file():
         The "samples.xlsx" can be used for test purposes.
         With the import a test for the import of a Excel file is done.
         If a Excel file is imported, the file is tested for correct structure.
+        
+    Returns:
+        excel_content_as_list (List of lists): All survey result data without the first row (date, name, company, questions).     
     """
     while True:
         wipe_terminal()  # Clear terminal
@@ -225,7 +248,7 @@ def data_get_google_file():
         Get content from survey data worksheet and format it as list of lists
     
     Returns:
-        List of lists: All survey result data without the first row (date, name, company, questions).
+        all_g_survey_data (List of lists): All survey result data without the first row (date, name, company, questions).
     """
     survey_data = SHEET.worksheet("Survey_data")  # Select worksheet "Survey_data"
     all_g_survey_data = survey_data.get_all_values()
@@ -524,6 +547,7 @@ def analyze_get_overall_results(company, data):
 
 # --------------------------------- General Functions ---------------------------------
 
+
 # Clear the terminal from all text
 def wipe_terminal():
     """
@@ -792,12 +816,12 @@ class Survey:
         self.company = company
         self.answers = answers
 
-
+# DONE
 # Function for going through the survey process.
 def survey():
     """
     Summary:
-        Do survey.
+        Logic for doing the survey and exporting results to gspead.
     """
 
     wipe_terminal()  # Clear terminal
@@ -886,16 +910,18 @@ def survey_get_name():
             print("You can try again in 5 seconds.")
             time.sleep(5)  # Wait for 5 seconds
 
-
+# DONE
 # Create a new company, that is not in the database.
 def survey_create_company(company_list):
-    """_summary_
+    """
+    Summary:
+        User can create a new company that is not already existing in the gspread survey results list.
 
     Args:
-        company_list (_type_): _description_
+        company_list (list of str): All companies that are in the gspread survey results list.
 
     Returns:
-        _type_: _description_
+        new_company (str): New company created by user.
     """
     while True:
         wipe_terminal()  # Clear terminal
