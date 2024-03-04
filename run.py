@@ -547,7 +547,7 @@ def analyze_get_overall_results(company, data):
 
 # --------------------------------- General Functions ---------------------------------
 
-
+# DONE
 # Clear the terminal from all text
 def wipe_terminal():
     """
@@ -559,7 +559,7 @@ def wipe_terminal():
     elif os.name == "nt":  # Identify of OS is Windows
         os.system("cls")
 
-
+# DONE
 # Restart the program by executing run.py
 def restart():
     """
@@ -576,7 +576,7 @@ def restart():
     )  # sys.argv[0] defines the path and script to start with python 3. In this case itselfe.
     sys.exit()  # After restarting the script, exit the current script.
 
-
+# DONE
 # Display an error message
 def unexpected_error():
     """
@@ -702,11 +702,16 @@ def login_password_validation(username, password):
 
 # --------------------------------- Navigation Functions ---------------------------------
 
+# DONE
 # First screen with navigation
 def nav_survey_or_analyze():
     """
     Summary:
         This function displays the first navigation where the user can choose between doing the survey or logging in and analyzing the data.
+    
+    Return:
+        "do_survey" (str): Returns the information that the user wants to do the survey.
+        "do_login" (str): Returns the information that the user wants login.       
     """
     while True:
         wipe_terminal()  # Clear terminal
@@ -729,12 +734,16 @@ def nav_survey_or_analyze():
             print("Wrong input. Please select one of the shown options.\n")
             time.sleep(2)  # Wait for 2 seconds
 
-
+# DONE
 # Selection if results of one question or overall results
 def nav_one_or_all_question_results():
     """
     Summary:
         Question if to analyse one specific question or the overall results of a company.
+
+    Return:
+        "One Question" (str): Returns the information that the user wants to analyze one single question.
+        "Overall Results" (str): Returns the information that the user wants analyze the overall results.        
     """
     while True:
         wipe_terminal()
@@ -760,12 +769,16 @@ def nav_one_or_all_question_results():
             print("Wrong input. Please select one of the shown options.\n")
             time.sleep(2)  # Wait for 2 seconds
 
-
+# DONE
 # Ask if to analyze a different question or exit
 def nav_analyze_different_question():
     """
     Summary:
         Ask if to analyze a different question after the one just analyzed or exit the program
+    
+    Return:
+        break: If the user wants to analyte another question for the selected company.
+        True (boolean): If the user wants to analyze a different company.
     """
     while True:
 
@@ -1084,10 +1097,11 @@ def main():
 
             print(company + analyzation)
 
-    print("The end of everything\n")
+    print("This is the end of all things!\n")
     time.sleep(2)  # Wait for 2 seconds
     print("The program will restart in 2 seconds.")
     restart()
+
 
 # --------------------------------- Program Start ---------------------------------
 
