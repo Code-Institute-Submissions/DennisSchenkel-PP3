@@ -66,9 +66,13 @@ def select_company(mode):
     while True:
         wipe_terminal()  # Clear terminal
         if mode == "survey":
-            print(Fore.BLUE + "Please select the company to do the survey." + Style.RESET_ALL)
+            print(Fore.BLUE + "Please select the company to do the survey."
+                  + Style.RESET_ALL
+                  )
         else:
-            print(Fore.BLUE + "Please select the company you want to analyze." + Style.RESET_ALL)
+            print(Fore.BLUE + "Please select the company you want to analyze."
+                  + Style.RESET_ALL
+                  )
         print("\n-------------------------------------------------- \n")
 
         company_list = get_google_companies(mode)
@@ -103,7 +107,7 @@ def select_company(mode):
                 break
             else:
                 wipe_terminal()  # Clear terminal
-                
+
                 print(Fore.RED + "Sorry, your selection is no valid option.\n"
                       + Style.RESET_ALL
                       )
@@ -174,7 +178,9 @@ def data_choose_source():
     """
     while True:
         wipe_terminal()
-        print(Fore.BLUE + "Where should your data come from?" + Style.RESET_ALL)
+        print(Fore.BLUE + "Where should your data come from?"
+              + Style.RESET_ALL
+              )
         print("\n-------------------------------------------------- \n")
         print(Fore.GREEN + "(1) " + Style.RESET_ALL +
               "Import Excel file to analyze\n"
@@ -182,7 +188,7 @@ def data_choose_source():
         print(Fore.GREEN + "(2) " + Style.RESET_ALL +
               "Use Google sheet to analyze\n"
               )
-        print(Fore.RED + "(0) " + Style.RESET_ALL+ 
+        print(Fore.RED + "(0) " + Style.RESET_ALL +
               "Go back to the start of the program\n"
               )
         option = input("What would you like to do?: ")
@@ -328,7 +334,9 @@ def get_google_companies(mode):
     for company in company_list:
         company_index = company_list.index(company) + 1
         index_list.append(company_index)
-        print(Fore.GREEN + f"({company_index}) " + Style.RESET_ALL + company + "\n")
+        print(Fore.GREEN + f"({company_index}) "
+              + Style.RESET_ALL + company + "\n"
+              )
 
     # If in survey mode, show option to create new company.
     if mode == "survey":
@@ -379,10 +387,13 @@ def analyze_choose_question():
                 question_index = questions.index(question)
                 index_list.append(question_index)
                 print(
-                    Fore.GREEN + f"({question_index + 1})" + Style.RESET_ALL + f"{question}"
-                )  # Print all questions and the associated index + 1
+                    Fore.GREEN + f"({question_index + 1})"
+                    + Style.RESET_ALL + f"{question}"
+                    )  # Print all questions and the associated index + 1
 
-            print(Fore.RED + "\n(0)" + Style.RESET_ALL + " If you like to exit")
+            print(Fore.RED + "\n(0)" + Style.RESET_ALL +
+                  " If you like to exit"
+                  )
             print("\n-------------------------------------------------- \n")
 
             # Take input which question the user selects.
@@ -409,7 +420,9 @@ def analyze_choose_question():
                 raise ValueError
         except ValueError:
             wipe_terminal()  # Clear terminal
-            print(Fore.RED + "Sorry, your selection is no valid option.\n" + Style.RESET_ALL)
+            print(Fore.RED + "Sorry, your selection is no valid option.\n"
+                  + Style.RESET_ALL
+                  )
             print("Please try again in 2 seconds.")
             time.sleep(2)  # Wait for 2 seconds
 
@@ -533,8 +546,12 @@ def analyze_overall_question_results(company, data):
         )
 
         print("\n-------------------------------------------------- \n")
-        print(Fore.GREEN + "(1)" + Style.RESET_ALL + " Analyse a different company\n")
-        print(Fore.GREEN + "(0)" + Style.RESET_ALL + " Exit the program\n")
+        print(Fore.GREEN + "(1)" + Style.RESET_ALL +
+              " Analyse a different company\n"
+              )
+        print(Fore.GREEN + "(0)" + Style.RESET_ALL +
+              " Exit the program\n"
+              )
         option = input("What would you like to do?: ")
 
         if option == "1":
@@ -692,19 +709,23 @@ def login():
 
     while True:
         wipe_terminal()  # Clear terminal
-        
+
         print(Fore.BLUE + "This is the user login.\n" + Style.RESET_ALL)
         print("-------------------------------------------------- \n")
-        
+
         print("If you want to exit, please enter 'EXIT'\n")
 
-        username = input("What is your" + Fore.GREEN + " username" + Style.RESET_ALL + "? (Test)\n")
+        username = input("What is your" + Fore.GREEN + " username"
+                         + Style.RESET_ALL + "? (Test)\n"
+                         )
         # Validate if the user wants to exit the program using "EXIT"
         if username == "EXIT":
             restart()
             break
 
-        password = input("\nPlease enter your" + Fore.GREEN + " password" + Style.RESET_ALL + "? (Test)\n")
+        password = input("\nPlease enter your" + Fore.GREEN + " password"
+                         + Style.RESET_ALL + "? (Test)\n"
+                         )
         # Validate if the user wants to exit the program using "EXIT"
         if password == "EXIT":
             restart()
@@ -724,9 +745,13 @@ def login():
         else:
             wipe_terminal()  # Clear terminal
             wrong_attempts_count += 1  # Increase count of failed login attempt
-            print(Fore.RED + "Username and/or password are wrong!" + Style.RESET_ALL)
+            print(Fore.RED + "Username and/or password are wrong!"
+                  + Style.RESET_ALL
+                  )
             if wrong_attempts_count < 3:
-                print("You have " + Fore.RED + f"{3 - wrong_attempts_count}" + Style.RESET_ALL + " attempts left.")
+                print("You have " + Fore.RED + f"{3 - wrong_attempts_count}"
+                      + Style.RESET_ALL + " attempts left."
+                      )
                 time.sleep(3)  # Wait for 3 seconds
             elif wrong_attempts_count == 3:
                 print("Your 3 login attempts failed.")
@@ -804,7 +829,7 @@ def nav_survey_or_analyze():
         that the user wants to do the survey.
         "do_login" (str): Returns the information,
         that the user wants login.
-    """    
+    """
     while True:
         wipe_terminal()  # Clear terminal
         print(Fore.BLUE + "Welcome to the EVP Survey\n" + Style.RESET_ALL)
@@ -857,7 +882,7 @@ def nav_one_or_all_question_results():
         print(Fore.BLUE + "Welcome to the survey results!\n"
               + Style.RESET_ALL
               )
-        
+
         print(
             "Please select if you like to analyze "
             "one specific question or the overall results.\n"
@@ -906,9 +931,15 @@ def nav_analyze_different_question():
     while True:
 
         wipe_terminal()
-        print(Fore.GREEN + "(1)" " Analyse another question\n" + Style.RESET_ALL)
-        print(Fore.GREEN + "(2)" " Analyse a different company\n" + Style.RESET_ALL)
-        print(Fore.RED + "(0)" " Exit the program\n" + Style.RESET_ALL)
+        print(Fore.GREEN + "(1)" " Analyse another question\n"
+              + Style.RESET_ALL
+              )
+        print(Fore.GREEN + "(2)" " Analyse a different company\n"
+              + Style.RESET_ALL
+              )
+        print(Fore.RED + "(0)" " Exit the program\n"
+              + Style.RESET_ALL
+              )
 
         option = input("What would you like to do?: ")
 
@@ -1074,7 +1105,9 @@ def survey_create_company(company_list):
     """
     while True:
         wipe_terminal()  # Clear terminal
-        print(Fore.BLUE + "You want to create a new company for the survey?\n" + Style.RESET_ALL)
+        print(Fore.BLUE + "You want to create a new company for the survey?\n"
+              + Style.RESET_ALL
+              )
         print("If you want to exit, please enter 'EXIT'\n")
         new_company = input("Enter the company name: ")
 
@@ -1086,9 +1119,15 @@ def survey_create_company(company_list):
         # Ask if the entered new company name is correct.
         while True:
             wipe_terminal()  # Clear terminal
-            print("Is " + Fore.BLUE + f"{new_company}" + Style.RESET_ALL + " as company name correct?\n")
-            print(Fore.GREEN + "(1)"  + Style.RESET_ALL + " Use the entered name\n")
-            print(Fore.RED + "(2)" + Style.RESET_ALL + " Enter different name\n")
+            print("Is " + Fore.BLUE + f"{new_company}" + Style.RESET_ALL +
+                  " as company name correct?\n"
+                  )
+            print(Fore.GREEN + "(1)" + Style.RESET_ALL +
+                  " Use the entered name\n"
+                  )
+            print(Fore.RED + "(2)" + Style.RESET_ALL +
+                  " Enter different name\n"
+                  )
             correct_name = input("What would you like to do?: ")
 
             if correct_name.lower() == "2":
@@ -1180,7 +1219,9 @@ def survey_get_answers(name, company):
             # If input is not correct, raise ValueError.
             except ValueError:
                 wipe_terminal()  # Clear terminal
-                print(Fore.RED + "Your answer is not valid.\n" + Style.RESET_ALL)
+                print(Fore.RED + "Your answer is not valid.\n"
+                      + Style.RESET_ALL
+                      )
                 print("Please choose a value between 0 and 10.")
                 time.sleep(2)  # Wait for 2 seconds
 
