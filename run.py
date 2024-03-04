@@ -7,13 +7,14 @@ from datetime import date  # Import to get date
 from colorama import Fore, Back, Style  # import color sheme
 
 
-# --------------------------------- Google API & Sheets ---------------------------------
+# ----------------------- Google API & Sheets -----------------------
+# The following code was taken from and inspired by
+# the Code Institute Love Sandwitches project.
 
-# The following code was taken from the Code Institute Love Sandwitches project.
 import gspread  # Import to work with google sheets
 
 # Import for authorization with the google API
-from google.oauth2.service_account import (Credentials)  
+from google.oauth2.service_account import Credentials
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -29,7 +30,7 @@ SHEET_DATA = SHEET.worksheet("Survey_data")
 SHEET_USER = SHEET.worksheet("Users")
 
 
-# --------------------------------- General Data ---------------------------------
+# ----------------------- General Data -----------------------
 
 # DONE
 # A list of the topics of the questions in the survey
@@ -44,18 +45,19 @@ question_topics = [
     "Employee integration",
 ]
 
+
 # DONE
 # Choose company to analyse.
 def select_company(mode):
     """
     Summary:
-        This functions is for selecting the company for doing the survey or to analyze. 
-        The list of companies to choose from comes from the companies in the results lists.
+        This functions selects the company to do the survey or to analyze.
+        The list of companies to choose from comes from the results lists.
         The User can also create a new company when doing the survey.
-    
+
     Args:
         mode (str): Selection of the mode. Ether "survey" or "analyze".
-    
+
     Return:
         selected_company (str): Selected company for survey or analyzation.
         new_company (str): Company created by the user when doing survey.
@@ -64,17 +66,18 @@ def select_company(mode):
     while True:
         wipe_terminal()  # Clear terminal
         if mode == "survey":
-            print("Please select the company to do the survey.")
+            print(Fore.BLUE + "Please select the company to do the survey." + Style.RESET_ALL)
         else:
-            print("Please select the company you want to analyze.")
-        print("------------------------------------------------------------ \n")
+            print(Fore.BLUE + "Please select the company you want to analyze." + Style.RESET_ALL)
+        print("\n-------------------------------------------------- \n")
 
         company_list = get_google_companies(mode)
 
         # Take input which company the user selects.
         selection = input()
 
-        # If the user chooses to do the survey, check if creation of a new company was selected.
+        # If the user chooses to do the survey,
+        # check if creation of a new company was selected.
         if mode == "survey" and selection == "NEW":
             # Get new company name and return it.
             new_company = survey_create_company(company_list)
@@ -94,20 +97,22 @@ def select_company(mode):
             else:
                 raise ValueError
         except ValueError:
-            # If users want to exit, they just enter "0" and the program will restart.
+            # If users wants to exit, they enter 0 and the program will restart
             if selection == "0":
                 restart()
                 break
             else:
                 wipe_terminal()  # Clear terminal
-                print("exeption Error")
-                print(
-                    "Sorry, your selection is no valid option.\nPlease try again in 2 seconds."
-                )
+                
+                print(Fore.RED + "Sorry, your selection is no valid option.\n"
+                      + Style.RESET_ALL
+                      )
+                print("Please try again in 2 seconds.")
                 time.sleep(2)  # Wait for 2 seconds
 
 
-# --------------------------------- Get Google Data ---------------------------------
+# ----------------------- Get Google Data -----------------------
+
 
 # DONE
 # Get questions from gspread sheet.
@@ -115,25 +120,31 @@ def get_questions_from_google():
     """
     Summary:
         Get content from survey data worksheet and format it as list of lists.
-        
+
     Return:
         questions (list of str): All questions from the survey as string
-        all_g_survey_data (list of lists): All data from the gspread survey results sheet.
+        all_g_survey_data (list of lists): All data from gspread results sheet.
     """
-    survey_data = SHEET_DATA  # Select worksheet "Survey_data"
-    all_g_survey_data = survey_data.get_all_values()  # All data in a list of lists
-    questions = all_g_survey_data[0]  # Select only the index with the questions in it
+    # Select worksheet "Survey_data"
+    survey_data = SHEET_DATA
+
+    # All data in a list of lists
+    all_g_survey_data = survey_data.get_all_values()
+
+    # Select only the index with the questions in it
+    questions = all_g_survey_data[0]
     return questions, all_g_survey_data
+
 
 # DONE
 # Get users from gspread sheet.
 def get_google_users():
     """
     Summary:
-        Get information about registered users from google sheet and worksheet "Users"
-        
+        Get information about registered users from gspread sheet "Users"
+
     Return:
-        all_g_survey_users (list of lists): All data from the gspread users sheet.
+        all_g_survey_users (list of lists): All data from gspread users sheet.
 
     """
     survey_results = SHEET_USER  # Select worksheet "Users"
@@ -144,7 +155,8 @@ def get_google_users():
     return all_g_survey_users
 
 
-# --------------------------------- Data Source Functions ---------------------------------
+# ----------------------- Data Source Functions -----------------------
+
 
 # DONE
 # Choose which source to get data from for analyzing
@@ -152,8 +164,9 @@ def data_choose_source():
     """
     Summary:
         Ask for the data source to get data for analyzation from.
-        Include option to go back to previous step. In this case restart the program.
-        
+        Include option to go back to previous step.
+        In this case restart the program.
+
     Returns:
         excel_file (list of lists): All survey result data from the excel file.
         gspread (list of lists): All survey result data from gspread.
@@ -161,9 +174,17 @@ def data_choose_source():
     """
     while True:
         wipe_terminal()
-        print("(1) Import Excel file to analyze\n")
-        print("(2) Use Google sheet to analyze\n")
-        print("(0) Go back to the start of the program\n")
+        print(Fore.BLUE + "Where should your data come from?" + Style.RESET_ALL)
+        print("\n-------------------------------------------------- \n")
+        print(Fore.GREEN + "(1) " + Style.RESET_ALL +
+              "Import Excel file to analyze\n"
+              )
+        print(Fore.GREEN + "(2) " + Style.RESET_ALL +
+              "Use Google sheet to analyze\n"
+              )
+        print(Fore.RED + "(0) " + Style.RESET_ALL+ 
+              "Go back to the start of the program\n"
+              )
         option = input("What would you like to do?: ")
         if option == "1":
             # Call function to get data from excel sheet
@@ -180,9 +201,12 @@ def data_choose_source():
             return False
         else:
             wipe_terminal()  # Clear terminal
-            print("Wrong input. Please select one of the shown options.\n")
+            print(Fore.RED + "Wrong input. Please select "
+                  "one of the shown options.\n" + Style.RESET_ALL
+                  )
             print("Please try again in 2 seconds.")
             time.sleep(2)  # Wait for 2 seconds
+
 
 # DONE
 # Get Excel file by import
@@ -193,9 +217,10 @@ def data_get_excel_file():
         The "samples.xlsx" can be used for test purposes.
         With the import a test for the import of a Excel file is done.
         If a Excel file is imported, the file is tested for correct structure.
-        
+
     Returns:
-        excel_content_as_list (List of lists): All survey result data without the first row (date, name, company, questions).     
+        excel_content_as_list (List of lists): All survey result data,
+        without the first row (date, name, company, questions).
     """
     while True:
         wipe_terminal()  # Clear terminal
@@ -225,9 +250,12 @@ def data_get_excel_file():
             wipe_terminal()  # Clear terminal
             print("FileNotFoundError: Sorry, but no Excel file was found.\n")
 
-            # Ask if the user wants to try again entering a file name and location
+            # Ask if the user wants to try again entering a file name
             while True:  # Test if user enters only y or n and no other key.
-                try_again = input("Do you want to try a different file? (y/n): ")
+                print("Do you want to try again?")
+                print("(y) for yes")
+                print("(n) for no")
+                try_again = input()
                 if try_again.lower() == "y":
                     print("\n")
                     break  # Go back to beginning of the first while loop
@@ -236,9 +264,10 @@ def data_get_excel_file():
                     break
                 else:
                     wipe_terminal()  # Clear terminal
-                    print(
-                        "\nInvalid input. Please enter 'y' to try again or 'n' to exit."
-                    )
+                    print("Invalid input. Enter 'y' "
+                          "to try again or 'n' to exit."
+                          )
+
 
 # DONE
 # Get Google spreadsheet by API request.
@@ -246,18 +275,20 @@ def data_get_google_file():
     """
     Summary:
         Get content from survey data worksheet and format it as list of lists
-    
+
     Returns:
-        all_g_survey_data (List of lists): All survey result data without the first row (date, name, company, questions).
+        all_g_survey_data (List of lists): All survey result data,
+        without the first row (date, name, company, questions).
     """
-    survey_data = SHEET.worksheet("Survey_data")  # Select worksheet "Survey_data"
+    survey_data = SHEET.worksheet("Survey_data")  # Select sheet "Survey_data"
     all_g_survey_data = survey_data.get_all_values()
-    all_g_survey_data.pop(0)  # Remove the first row filled with questions from the list
+    all_g_survey_data.pop(0)  # Remove the first row (questions) from the list
 
     return all_g_survey_data
 
 
-# --------------------------------- Data Analyzing Functions ---------------------------------
+# ----------------------- Data Analyzing Functions -----------------------
+
 
 # DONE
 # Get company list from gspread sheet.
@@ -276,9 +307,11 @@ def get_google_companies(mode):
     # Get all survey data from gspread.
     data = data_get_google_file()
 
-    # Create empty list for all companies that are contained in the results data.
+    # Create empty list for all companies,
+    # that are contained in the results data.
     company_list = []
-    # Create empty list for all the indexes the user can select in this function.
+    # Create empty list for all the indexes,
+    # the user can select in this function.
     index_list = []
 
     # Itterate through the list of data and check for every line,
@@ -289,28 +322,31 @@ def get_google_companies(mode):
         if entry[2] not in company_list:
             company_list.append(entry[2])
 
-    # After every company was added to the list, print every element in the list.
-    # Before every element of the list, print its index with +1 to not start at 0.
+    # After every company was added to the list, print every lists element.
+    # Before every element of the list, print its index with +1.
+    # +1 to not start at 0.
     for company in company_list:
         company_index = company_list.index(company) + 1
         index_list.append(company_index)
-        print(f"({company_index}) " + company + "\n")
+        print(Fore.GREEN + f"({company_index}) " + Style.RESET_ALL + company + "\n")
 
     # If in survey mode, show option to create new company.
     if mode == "survey":
-        print("(NEW) Create new company\n")
+        print(Fore.BLUE + "(NEW)" + Style.RESET_ALL + " Create new company\n")
 
-    print("\n(0) If you like to exit\n")
+    print(Fore.RED + "\n(0)" + Style.RESET_ALL + " If you like to exit\n")
 
     return company_list
+
 
 # DONE
 # Choose which question to analyze
 def analyze_choose_question():
     """
     Summary:
-        This function gives the user the option to choose a question for analyzing the results.
-    
+        This function gives the user the option to choose a question,
+        for analyzing the results.
+
     Return:
         selected_question (str): Text of the selected question
         selection (str): Selection made by the user
@@ -328,27 +364,32 @@ def analyze_choose_question():
         try:
 
             wipe_terminal()  # Clear terminal
-            print("From which question would you like to see the results?")
-            print("------------------------------------------------------------ \n")
+            print(Fore.BLUE + "From which question would you "
+                  "like to see the results?" + Style.RESET_ALL
+                  )
+            print("\n-------------------------------------------------- \n")
 
-            # Create empty list for all the indexes the user can select in this function.
-            # Creation of this list inside the loop to reset it with every loop.
+            # Create empty list for all the indexes
+            # the user can select in this function.
+            # Creation of this list inside the loop
+            # to reset it with every loop.
             index_list = []
 
             for question in questions:
                 question_index = questions.index(question)
                 index_list.append(question_index)
                 print(
-                    f"({question_index + 1}) {question}"
+                    Fore.GREEN + f"({question_index + 1})" + Style.RESET_ALL + f"{question}"
                 )  # Print all questions and the associated index + 1
 
-            print("\n(0) If you like to exit")
-            print("\n------------------------------------------------------------ \n")
+            print(Fore.RED + "\n(0)" + Style.RESET_ALL + " If you like to exit")
+            print("\n-------------------------------------------------- \n")
 
             # Take input which question the user selects.
             selection = input("\nChoose a question: ")
 
-            # If users want to exit, they just enter "0" and the program will restart.
+            # If users want to exit, they just enter "0"
+            # and the program will restart.
             if selection == "0":
                 restart()
                 break
@@ -368,21 +409,23 @@ def analyze_choose_question():
                 raise ValueError
         except ValueError:
             wipe_terminal()  # Clear terminal
-            print(
-                "Sorry, your selection is no valid option.\nPlease try again in 2 seconds."
-            )
+            print(Fore.RED + "Sorry, your selection is no valid option.\n" + Style.RESET_ALL)
+            print("Please try again in 2 seconds.")
             time.sleep(2)  # Wait for 2 seconds
+
 
 # DONE
 # Display results for one specific question
 def analyze_single_question_results(company, data):
     """
     Summary:
-        Display the results for a single specific question by using the analyze_get_overall_results function.
+        Display the results for a single specific question
+        by using the analyze_get_overall_results function.
 
     Args:
         company (string): Name of the selected company to analyze.
-        data (str, int): A list with all survey data that is then filtered for the selected company.
+        data (str, int): A list with all survey data,
+        that is then filtered for the selected company.
     """
     while True:
 
@@ -397,15 +440,16 @@ def analyze_single_question_results(company, data):
 
         wipe_terminal()  # Clear terminal
         print(
-            f"The results for question {selected_question[1]} for {company} are as follows:\n"
-        )
-        print("------------------------------------------------------------ \n")
+            Fore.BLUE + f"The results for question {selected_question[1]} "
+            "for {company} are as follows:\n" + Style.RESET_ALL
+            )
+        print("-------------------------------------------------- \n")
 
         print(selected_question[0] + "\n")
 
         print(f"Results: {'{:.2f}'.format(sum)} out of 10\n")
 
-        print("------------------------------------------------------------ \n")
+        print("-------------------------------------------------- \n")
         input("Press any key to continue!")
 
         wipe_terminal()  # Clear terminal
@@ -415,24 +459,32 @@ def analyze_single_question_results(company, data):
         if option:
             break
 
+
 # DONE
 # Calculate and display the overall company results
 def analyze_overall_question_results(company, data):
     """
     Summary:
-        Get all data for the selected company, calculate results and print them in an overview.
+        Get all data for the selected company,
+        calculate results and print them in an overview.
 
     Args:
         company (string): Name of the company to analyze
     """
-    #    result_data = get_questions_from_google() # Get all data from g-spread
-    #    results = result_data[1] # 1 to select the second RETURN from the function
+    # result_data = get_questions_from_google() # Get all data from g-spread
+    # results = result_data[1] # 1 to select the second RETURN
+    # from the function
 
     while True:
+
         analyzation_results = analyze_get_overall_results(company, data)
 
-        topic_index = 0  # Index for the topics list to go through when printing.
-        overall_sum = 0  # Variable for calculation the overall sum of ratings the companie received.
+        # Index for the topics list to go through when printing.
+        topic_index = 0
+
+        # Variable for calculation the overall sum
+        # of ratings the companie received.
+        overall_sum = 0
 
         wipe_terminal()  # Clear terminal
 
@@ -447,15 +499,21 @@ def analyze_overall_question_results(company, data):
             + " survey submissions."
         )
         print("Results per question are as follows:\n")
-        print("------------------------------------------------------------ \n")
+        print("-------------------------------------------------- \n")
 
-        # Display the results for each question/topic and calculate overall result sum.
+        # Display the results for each question/topic
+        # and calculate overall result sum.
         for sum in analyzation_results[1]:
-            overall_sum += sum  # Add rating of this specific question to the overall_sum for the company
+
+            # Add rating of this specific question
+            # to the overall_sum for the company
+            overall_sum += sum
             sum = "{:.2f}".format(
                 sum
             )  # Convert float to string and limit to two decimal points.
-            print(sum + " of 10 for " + question_topics[topic_index].lower() + "\n")
+            print(sum + " of 10 for "
+                  + question_topics[topic_index].lower() + "\n"
+                  )
             topic_index += 1  # Go to next topic
 
         print(
@@ -474,9 +532,9 @@ def analyze_overall_question_results(company, data):
             + "."
         )
 
-        print("\n------------------------------------------------------------ \n")
-        print("(1) Analyse a different company\n")
-        print("(0) Exit the program\n")
+        print("\n-------------------------------------------------- \n")
+        print(Fore.GREEN + "(1)" + Style.RESET_ALL + " Analyse a different company\n")
+        print(Fore.GREEN + "(0)" + Style.RESET_ALL + " Exit the program\n")
         option = input("What would you like to do?: ")
 
         if option == "1":
@@ -487,23 +545,30 @@ def analyze_overall_question_results(company, data):
             break
         else:
             wipe_terminal()  # Clear terminal
-            print("Wrong input. Please select one of the shown options.\n")
+            print(Fore.RED + "Wrong input. Please select"
+                  " one of the shown options.\n" + Style.RESET_ALL
+                  )
             time.sleep(2)  # Wait for 2 seconds
+
 
 # DONE
 # Get and calculate the overall company results.
 def analyze_get_overall_results(company, data):
     """
     Summary;
-        Calculate the average results for every company and every question by adding up the individual submits and deviding the sum by the sum of submits.
+        Calculate the average results for every company
+        and every question by adding up the individual submits
+        and deviding the sum by the sum of submits.
 
     Args:
-        results (list of lists): Contains all the individual answeres submitted by users taking the survey
+        results (list of lists): Contains all the individual answeres
+        submitted by users taking the survey
         company (string): Name of the company to analyze
 
     Returns:
         count_submits (int): The amount of submits to this companies survey.
-        result_sum (list of floats): Average results for every question for this company.
+        result_sum (list of floats): Average results
+        for every question for this company.
     """
     count_submits = 0  # Used for later deviding the summed up question results
 
@@ -522,13 +587,21 @@ def analyze_get_overall_results(company, data):
             count_submits += (
                 1  # For every submit for this company, increase the count by 1
             )
+
             result_count = len(
                 result
             )  # Length of each row of results in the results g-spread
-            question_index = 3  # Starting with 3 because 0-2 are Date, Name, Company and not question answers
-            sum_index = 0  # Starting with the first index in the list and go though it with the while loop.
 
-            # For every result to every question, add the answer to the result_sum list.
+            # Starting with 3 because 0-2 are Date,
+            # Name, Company and not question answers
+            question_index = 3
+
+            # Starting with the first index in the list
+            # and go though it with the while loop.
+            sum_index = 0
+
+            # For every result to every question,
+            # add the answer to the result_sum list.
             while question_index < result_count:
 
                 result_sum[sum_index] = result_sum[sum_index] + float(
@@ -545,7 +618,8 @@ def analyze_get_overall_results(company, data):
     return count_submits, result_sum
 
 
-# --------------------------------- General Functions ---------------------------------
+# ----------------------- General Functions -----------------------
+
 
 # DONE
 # Clear the terminal from all text
@@ -559,38 +633,48 @@ def wipe_terminal():
     elif os.name == "nt":  # Identify of OS is Windows
         os.system("cls")
 
+
 # DONE
 # Restart the program by executing run.py
 def restart():
     """
     Summary:
-        This function is for restarting the run.py and is used as the EXIT solution
+        This function is for restarting the run.py
+        and is used as the EXIT solution
     """
     wipe_terminal()  # Clear terminal
-    print(Fore.BLUE + "The program will restart in 2 seconds." + Style.RESET_ALL)
+    print(Fore.BLUE + "The program will restart"
+          " in 2 seconds." + Style.RESET_ALL
+          )
     time.sleep(2)  # Wait for 2 seconds
 
     # End the current process and restart it
-    subprocess.run(
-        ["python3", sys.argv[0]]
-    )  # sys.argv[0] defines the path and script to start with python 3. In this case itselfe.
+    subprocess.run(["python3", sys.argv[0]])
+    # sys.argv[0] defines the path and script
+    # to start with python 3. In this case itselfe.
+
     sys.exit()  # After restarting the script, exit the current script.
+
 
 # DONE
 # Display an error message
 def unexpected_error():
     """
     Summary:
-        If an error occures which reason is unknown, this error message is shown.
+        If an error occures which reason is unknown, "
+        "this error message is shown.
     """
     print(
-        "Housten, we have a problem!\nSome kind of fatal error happend!\nThe program will restart in 3 seconds!"
+        "Housten, we have a problem!\n"
+        "Some kind of fatal error happend!"
+        "\nThe program will restart in 3 seconds!"
     )
     time.sleep(3)  # Wait for 3 seconds
     restart()
 
 
-# --------------------------------- Login Functions ---------------------------------
+# ----------------------- Login Functions -----------------------
+
 
 # DONE
 # User login with username and password
@@ -598,7 +682,7 @@ def login():
     """
     Summary:
         Login for users to analyze survey results.
-        
+
     Return:
         True: When login is valid return true.
     """
@@ -607,49 +691,51 @@ def login():
     wrong_attempts_count = 0
 
     while True:
-        print("This is the user login.\n")
-        
         wipe_terminal()  # Clear terminal
+        
+        print(Fore.BLUE + "This is the user login.\n" + Style.RESET_ALL)
+        print("-------------------------------------------------- \n")
+        
         print("If you want to exit, please enter 'EXIT'\n")
-        
-        
-        username = input("What is your username? (Test)\n")
+
+        username = input("What is your" + Fore.GREEN + " username" + Style.RESET_ALL + "? (Test)\n")
         # Validate if the user wants to exit the program using "EXIT"
         if username == "EXIT":
             restart()
             break
-        
-        password = input("Please enter your password? (Test)\n")
+
+        password = input("\nPlease enter your" + Fore.GREEN + " password" + Style.RESET_ALL + "? (Test)\n")
         # Validate if the user wants to exit the program using "EXIT"
         if password == "EXIT":
             restart()
             break
-        
+
         # If username is found in database, this function returns True
         user_valid = login_user_validation(username)
-        
+
         # If password is correct, functions returns True
-        pw_valid = login_password_validation(username, password)  
-        
+        pw_valid = login_password_validation(username, password)
+
         # If username and password are correct, return True for login
         if user_valid and pw_valid:
             return True  # Login was successful
-        
+
         # If login was incorrect, increase count and retart when cound is 3
         else:
             wipe_terminal()  # Clear terminal
-            wrong_attempts_count += 1  # Increase count of failed login attempts
-            print("Username and/or password are wrong!")
+            wrong_attempts_count += 1  # Increase count of failed login attempt
+            print(Fore.RED + "Username and/or password are wrong!" + Style.RESET_ALL)
             if wrong_attempts_count < 3:
-                print(f"You have {3 - wrong_attempts_count} attempts left.")
+                print("You have " + Fore.RED + f"{3 - wrong_attempts_count}" + Style.RESET_ALL + " attempts left.")
                 time.sleep(3)  # Wait for 3 seconds
             elif wrong_attempts_count == 3:
                 print("Your 3 login attempts failed.")
                 print("The program will restart.")
-                print("Your username will be blocked for 5 minutes!")   
+                print("Your username will be blocked for 5 minutes!")
                 time.sleep(4)  # Wait for 4 seconds
                 restart()
                 break
+
 
 # DONE
 # Validation for username input
@@ -657,10 +743,10 @@ def login_user_validation(username):
     """
     Summary:
         Validate if username is to find in user database (gspreed).
-        
+
     Args:
         username (str): Username entered by the user.
-    
+
     Returns:
         boolean: True if username is correct.
     """
@@ -672,6 +758,7 @@ def login_user_validation(username):
 
     return False  # Username is wrong
 
+
 # DONE
 # Validation of password input
 def login_password_validation(username, password):
@@ -679,15 +766,15 @@ def login_password_validation(username, password):
     Summary:
         Validate if the password insered by the users
         is to be found associated zu the username in the database.
-    
+
     Args:
         username (str): Username entered by the user
         password (str): Password entered by the zser
-    
+
     Returns:
-        boolean: True if password is correct        
+        boolean: True if password is correct
     """
-    
+
     list_of_passwords = get_google_users()
 
     for element in list_of_passwords:
@@ -700,60 +787,91 @@ def login_password_validation(username, password):
             continue
 
 
-# --------------------------------- Navigation Functions ---------------------------------
+# ----------------------- Navigation Functions -----------------------
+
 
 # DONE
 # First screen with navigation
 def nav_survey_or_analyze():
     """
     Summary:
-        This function displays the first navigation where the user can choose between doing the survey or logging in and analyzing the data.
-    
+        This function displays the first navigation where
+        the user can choose between doing the survey
+        or logging in and analyzing the data.
+
     Return:
-        "do_survey" (str): Returns the information that the user wants to do the survey.
-        "do_login" (str): Returns the information that the user wants login.       
-    """
+        "do_survey" (str): Returns the information,
+        that the user wants to do the survey.
+        "do_login" (str): Returns the information,
+        that the user wants login.
+    """    
     while True:
         wipe_terminal()  # Clear terminal
-        print("Welcome to the EVP Survey\n")
+        print(Fore.BLUE + "Welcome to the EVP Survey\n" + Style.RESET_ALL)
+        print("-------------------------------------------------- \n")
+        print("With this survey, we want to find out,"
+              "what makes your employer special.\n")
         print("You have two options to choose from:\n")
-        print("(1) Do the survey\n")
-        print("(2) Login and analyze survey results\n")
+        print(Fore.GREEN + "(1)" + Style.RESET_ALL +
+              " Do the survey\n"
+              )
+        print(Fore.GREEN + "(2)" + Style.RESET_ALL +
+              " Login and analyze survey results\n"
+              )
         option = input("What would you like to do?: ")
         if option == "1":
             # Call survey function
+            wipe_terminal()  # Clear terminal
             print("Survey is loading ...")
             return "do_survey"
         elif option == "2":
             # Call login function
+            wipe_terminal()  # Clear terminal
             print("Login is loading ...")
             time.sleep(2)  # Wait for 2 seconds
             return "do_login"
         else:
             wipe_terminal()  # Clear terminal
-            print("Wrong input. Please select one of the shown options.\n")
+            print(Fore.RED + "Wrong input. Please select"
+                  " one of the shown options.\n" + Style.RESET_ALL
+                  )
             time.sleep(2)  # Wait for 2 seconds
+
 
 # DONE
 # Selection if results of one question or overall results
 def nav_one_or_all_question_results():
     """
     Summary:
-        Question if to analyse one specific question or the overall results of a company.
+        Question if to analyse one specific question
+        or the overall results of a company.
 
     Return:
-        "One Question" (str): Returns the information that the user wants to analyze one single question.
-        "Overall Results" (str): Returns the information that the user wants analyze the overall results.        
+        "One Question" (str): Returns the information
+        that the user wants to analyze one single question.
+        "Overall Results" (str): Returns the information
+        that the user wants analyze the overall results.
     """
     while True:
         wipe_terminal()
+        print(Fore.BLUE + "Welcome to the survey results!\n"
+              + Style.RESET_ALL
+              )
+        
         print(
-            "Please select if you like to analyze on specific question or the overall results."
+            "Please select if you like to analyze "
+            "one specific question or the overall results.\n"
         )
-        print("------------------------------------------------------------ \n")
-        print("(1) Analyse one single survey question\n")
-        print("(2) Analyse overall survey results\n")
-        print("(0) If you like to exit, please enter EXIT\n")
+        print("-------------------------------------------------- \n")
+        print(Fore.GREEN + "(1)" + Style.RESET_ALL +
+              " Analyse one single survey question\n"
+              )
+        print(Fore.GREEN + "(2)" + Style.RESET_ALL +
+              " Analyse overall survey results\n"
+              )
+        print(Fore.RED + "(0)" + Style.RESET_ALL +
+              " If you like to exit, please enter EXIT\n"
+              )
         option = input("What would you like to do?: ")
         if option == "1":
             print(option)
@@ -766,32 +884,39 @@ def nav_one_or_all_question_results():
             break
         else:
             wipe_terminal()  # Clear terminal
-            print("Wrong input. Please select one of the shown options.\n")
+            print(Fore.RED + "Wrong input. Please select "
+                  "one of the shown options.\n" + Style.RESET_ALL
+                  )
             time.sleep(2)  # Wait for 2 seconds
+
 
 # DONE
 # Ask if to analyze a different question or exit
 def nav_analyze_different_question():
     """
     Summary:
-        Ask if to analyze a different question after the one just analyzed or exit the program
-    
+        Ask if to analyze a different question
+        after the one just analyzed or exit the program
+
     Return:
-        break: If the user wants to analyte another question for the selected company.
+        break: If the user wants to analyte another question
+        for the selected company.
         True (boolean): If the user wants to analyze a different company.
     """
     while True:
 
         wipe_terminal()
-        print("(1) Analyse another question\n")
-        print("(2) Analyse a different company\n")
-        print("(0) Exit the program\n")
+        print(Fore.GREEN + "(1)" " Analyse another question\n" + Style.RESET_ALL)
+        print(Fore.GREEN + "(2)" " Analyse a different company\n" + Style.RESET_ALL)
+        print(Fore.RED + "(0)" " Exit the program\n" + Style.RESET_ALL)
 
         option = input("What would you like to do?: ")
 
         if option == "1":
             wipe_terminal()  # Clear terminal
-            print("You want to analyze a different question. \nList is loading...\n")
+            print("You want to analyze a different question."
+                  "\nList is loading...\n"
+                  )
             time.sleep(2)  # Wait for 2 seconds
             break
 
@@ -803,31 +928,37 @@ def nav_analyze_different_question():
             break
         else:
             wipe_terminal()  # Clear terminal
-            print("Wrong input. Please select one of the shown options.\n")
+            print(Fore.RED + "Wrong input. Please select "
+                  "one of the shown options.\n" + Style.RESET_ALL
+                  )
             time.sleep(2)  # Wait for 2 seconds
 
 
-# --------------------------------- Survey Functions ---------------------------------
+# ----------------------- Survey Functions -----------------------
+
 
 # DONE
 # Class for survey results.
 class Survey:
     """
     Summary:
-        Initialize the Survey class. Used for survey results and export to gspread.
-        
+        Initialize the Survey class.
+        Used for survey results and export to gspread.
+
     Args:
         today (str): Current date as string
         name (str): Name of the user
         company (str): Name of the company
-        answers (list of ints): Question results in a list of ints between 0 to 10
+        answers (list of ints): Question results in a list
+        of ints between 0 to 10
     """
-    
+
     def __init__(self, today, name, company, *answers):
         self.today = today
         self.name = name
         self.company = company
         self.answers = answers
+
 
 # DONE
 # Function for going through the survey process.
@@ -873,9 +1004,10 @@ def survey():
     # Export survey data to gspread sheet.
     SHEET_DATA.append_row(survey_data_to_db)
 
-    print(f"Thank you, {name}!")
+    print(Fore.BLUE + f"Thank you, {name}!" + Style.RESET_ALL)
     print(f"You've completed the survey for {company}")
     time.sleep(2)  # Wait for 2 seconds
+
 
 # DONE
 # Get the users name.
@@ -886,15 +1018,16 @@ def survey_get_name():
         A maximum of 20 letters, first leter uppercase and the rest lowercase.
 
     Raises:
-        ValueError: When input is not max 20 letters, first uppercase, rest lowercase.
+        ValueError: When input is not max 20 letters,
+        first uppercase, rest lowercase.
 
     Returns:
         string: Name of the user.
     """
     while True:
         wipe_terminal()  # Clear terminal
-        print("What is your first name?")
-        print("(Max 20 letters and the first letter in uppercases)")
+        print(Fore.BLUE + "What is your first name?\n" + Style.RESET_ALL)
+        print("(Max 20 letters and the first letter in uppercases)\n")
         print("If you want to exit, please enter 'EXIT'\n")
         name = input("Please type in your first name: ")
         # Validate if the user wants to exit the program using "EXIT"
@@ -923,22 +1056,25 @@ def survey_get_name():
             print("You can try again in 5 seconds.")
             time.sleep(5)  # Wait for 5 seconds
 
+
 # DONE
 # Create a new company, that is not in the database.
 def survey_create_company(company_list):
     """
     Summary:
-        User can create a new company that is not already existing in the gspread survey results list.
+        User can create a new company that is not already
+        existing in the gspread survey results list.
 
     Args:
-        company_list (list of str): All companies that are in the gspread survey results list.
+        company_list (list of str): All companies that are
+        in the gspread survey results list.
 
     Returns:
         new_company (str): New company created by user.
     """
     while True:
         wipe_terminal()  # Clear terminal
-        print("You want to create a new company for the survey?")
+        print(Fore.BLUE + "You want to create a new company for the survey?\n" + Style.RESET_ALL)
         print("If you want to exit, please enter 'EXIT'\n")
         new_company = input("Enter the company name: ")
 
@@ -950,16 +1086,16 @@ def survey_create_company(company_list):
         # Ask if the entered new company name is correct.
         while True:
             wipe_terminal()  # Clear terminal
-            print(f"Is {new_company} as company name correct?\n")
-            print("(1) Use the entered name")
-            print("(2) Enter different name\n")
+            print("Is " + Fore.BLUE + f"{new_company}" + Style.RESET_ALL + " as company name correct?\n")
+            print(Fore.GREEN + "(1)"  + Style.RESET_ALL + " Use the entered name\n")
+            print(Fore.RED + "(2)" + Style.RESET_ALL + " Enter different name\n")
             correct_name = input("What would you like to do?: ")
 
             if correct_name.lower() == "2":
                 print("\n")
                 break  # Go back to beginning of the first while loop
             elif correct_name.lower() == "1":
-                # Check if the entered company is already existing in the database
+                # Check if the entered company is already existing in database
                 if new_company in company_list:
                     wipe_terminal()  # Clear terminal
                     print(f"{new_company} is already in the database.")
@@ -971,9 +1107,11 @@ def survey_create_company(company_list):
             else:
                 wipe_terminal()  # Clear terminal
                 print(
-                    "\nInvalid input. Please enter '1' to continue or (2) for a different name."
+                    "\nInvalid input. Please enter '1' "
+                    "to continue or (2) for a different name."
                 )
                 time.sleep(2)  # Wait for 2 seconds
+
 
 # DONE
 # Get survey answeres from user.
@@ -1013,11 +1151,15 @@ def survey_get_answers(name, company):
 
         while True:
             wipe_terminal()  # Clear terminal
-            print(f"{name}, you are doing the survey for the company {company}.\n")
+            print(Fore.BLUE + f"{name}, you are doing the survey "
+                  f"for the company {company}.\n" + Style.RESET_ALL
+                  )
+            print("-------------------------------------------------- \n")
             print("Please answer the following question.")
             print("Choose a value between 0 and 10.\n")
             print("If you want to exit, please enter 'EXIT'\n")
-            print(f"Question {question_count}:")
+            print("-------------------------------------------------- \n")
+            print(Fore.BLUE + f"Question {question_count}:" + Style.RESET_ALL)
             print(question)
             user_input = input()
             # Validate if the user wants to exit the program using "EXIT"
@@ -1038,14 +1180,14 @@ def survey_get_answers(name, company):
             # If input is not correct, raise ValueError.
             except ValueError:
                 wipe_terminal()  # Clear terminal
-                print("Your answer is not valid.")
+                print(Fore.RED + "Your answer is not valid.\n" + Style.RESET_ALL)
                 print("Please choose a value between 0 and 10.")
                 time.sleep(2)  # Wait for 2 seconds
 
     return answers
 
 
-# --------------------------------- Program Flow ---------------------------------
+# ----------------------- Program Flow -----------------------
 
 
 # Start of the program - Do survey or login and analyze data
@@ -1056,18 +1198,20 @@ def main():
     """
     wipe_terminal()  # Clear terminal
 
-    # Calling the first navigation function to ask if user wants to analyze existing data or do the survey
+    # Calling the first navigation function to
+    # ask if user wants to analyze existing data or do the survey
     survey_or_analyze = nav_survey_or_analyze()
 
     # Select what option is choosen in the first navigation step
     if survey_or_analyze == "do_survey":
-        survey()  # Start survey
+        survey()  # Start survey, the end of the program is included.
     elif survey_or_analyze == "do_login":
         login_true = login()  # Start login process
 
     # If login was valid, call function to choose data source for analyzation
     if survey_or_analyze == "do_login" and login_true:
-        print("You are now logged in!")
+        wipe_terminal()  # Clear terminal
+        print(Fore.GREEN + "You are now logged in!" + Style.RESET_ALL)
         time.sleep(2)  # Wait for 2 seconds
 
         # Choose data source to analyse. Excel file or gspread file.
@@ -1078,10 +1222,12 @@ def main():
 
         while True:
             # User is now logged in and can start with the analyzing.
-            # Function to start the first analyzing step with selecting the company to analyze.
+            # Function to start the first analyzing step
+            # with selecting the company to analyze.
             company = select_company(mode)
 
-            # Function to define if the user wants to analyze one specific question or the overall results of the company.
+            # Function to define if the user wants to analyze one
+            # specific question or the overall results of the company.
             analyzation = nav_one_or_all_question_results()
 
             if analyzation == "One question":
@@ -1103,7 +1249,7 @@ def main():
     restart()
 
 
-# --------------------------------- Program Start ---------------------------------
+# ----------------------- Program Start -----------------------
 
 
 # Start the program
