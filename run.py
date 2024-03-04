@@ -95,7 +95,7 @@ def select_company(mode):
             if selection_index >= 0 and selection_index < len(company_list):
                 selected_company = company_list[selection_index]
                 wipe_terminal()  # Clear terminal
-                print(f"You selected: ({selection}) {selected_company}")
+                print(f"\nYou selected: ({selection}) {selected_company}")
                 time.sleep(2)  # Wait for 2 seconds
                 return selected_company
             else:
@@ -495,7 +495,7 @@ def analyze_overall_question_results(company, data):
 
         print(
             Fore.BLUE
-            + company
+            + "\n" + company
             + Style.RESET_ALL
             + " received "
             + Fore.BLUE
@@ -742,8 +742,10 @@ def login():
                 time.sleep(3)  # Wait for 3 seconds
             elif wrong_attempts_count == 3:
                 print("\nYour 3 login attempts failed.")
-                print("The program will restart.")
-                print("Your username will be blocked for 5 minutes!")
+                print("The program will restart.\n")
+                print(Fore.RED + "Your username will be blocked "
+                      "for 5 minutes!" + Style.RESET_ALL
+                      )
                 time.sleep(4)  # Wait for 4 seconds
                 restart()
                 break
@@ -818,7 +820,7 @@ def nav_survey_or_analyze():
         wipe_terminal()  # Clear terminal
         print(Fore.BLUE + "\nWelcome to the EVP Survey\n" + Style.RESET_ALL)
         print("-------------------------------------------------- \n")
-        print("With this survey, we want to find out,"
+        print("With this survey, we want to find out, "
               "what makes your employer special.\n")
         print("You have two options to choose from:\n")
         print(Fore.GREEN + "(1)" + Style.RESET_ALL +
@@ -836,7 +838,7 @@ def nav_survey_or_analyze():
         elif option == "2":
             # Call login function
             wipe_terminal()  # Clear terminal
-            print("Login is loading ...")
+            print("\nLogin is loading ...")
             time.sleep(2)  # Wait for 2 seconds
             return "do_login"
         else:
@@ -1037,6 +1039,7 @@ def survey_get_name():
     while True:
         wipe_terminal()  # Clear terminal
         print(Fore.BLUE + "\nWhat is your first name?\n" + Style.RESET_ALL)
+        print("-------------------------------------------------- \n")
         print("(Max 20 letters and the first letter in uppercases)\n")
         print("If you want to exit, please enter 'EXIT'\n")
         name = input("Please type in your first name: ")
@@ -1128,9 +1131,9 @@ def survey_create_company(company_list):
             else:
                 wipe_terminal()  # Clear terminal
                 print(
-                    "\nInvalid input. Please enter '1' "
+                    "\nInvalid input. Please enter (1) "
                     "to continue or (2) for a different name."
-                )
+                    )
                 time.sleep(2)  # Wait for 2 seconds
 
 
@@ -1264,11 +1267,11 @@ def main():
                 unexpected_error()
 
             print(company + analyzation)
-
+    wipe_terminal()  # Clear terminal
     print("\nThis is the end of all things!\n")
-    print("The program will restart in 2 seconds.")
-    time.sleep(2)  # Wait for 2 seconds
-
+    print("The program will restart in 3 seconds.")
+    time.sleep(3)  # Wait for 3 seconds
+    
     restart()
 
 
