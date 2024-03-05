@@ -1,77 +1,193 @@
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
+# EVP Survey
 
-Welcome,
+## Introduction
 
-This is the Code Institute student template for deploying your third portfolio project, the Python command-line project. The last update to this file was: **March 14, 2023**
+Code Institute - Portfolio Project 3 - Python Command-Line Application
 
-## Reminders
+![The deployed application can be found here] (Link to app here)
 
-- Your code must be placed in the `run.py` file
-- Your dependencies must be placed in the `requirements.txt` file
-- Do not edit any of the other files or your code may not deploy properly
-
-## Creating the Heroku app
-
-When you create the app, you will need to add two buildpacks from the _Settings_ tab. The ordering is as follows:
-
-1. `heroku/python`
-2. `heroku/nodejs`
-
-You must then create a _Config Var_ called `PORT`. Set this to `8000`
-
-If you have credentials, such as in the Love Sandwiches project, you must create another _Config Var_ called `CREDS` and paste the JSON into the value field.
-
-Connect your GitHub repository and deploy as normal.
-
-## Constraints
-
-The deployment terminal is set to 80 columns by 24 rows. That means that each line of text needs to be 80 characters or less otherwise it will be wrapped onto a second line.
-
----
-
-Happy coding!
+This application is giving small companies a tool to do surveys among their employees to get valid information about what makes the company a special employer and what is the EVP (Employer Value Proposition). Therefore users can do the survey and answer 8 questions that later can be used in a analyzation of the overall company results.
+Users with an account are able to access the analyzation of the survey company results.
 
 
+## Table of Contents
+
+* [Introduction](#introduction)
+
+* [User Experience](#user-experience-ux)
+  * [User Stories](#user-stories)
+
+* [Design](#design)
+  * [Color Scheme](#color-scheme)
+  * [Flowchart](#flowchart)
+
+* [Features](#features)
+  * [Frontend Features](#frontend-features)
+  * [Logic Features](#logic-features)
+  * [Technical Features](#technical-features)
+  * [Accessibility](#accessibility)
+
+* [Technologies Used](#technologies-used)
+  * [Languages Used](#languages-used)
+  * [Frameworks, Libraries Used](#frameworks--libraries-used)
+  + [Programs Used](#programs-used)
+
+* [Deployment](#deployment)
+
+* [Testing](#testing)
+  * [Validator Testing](#validator-testing)
+  * [Lighthouse Testing](#lighthouse-testing)
+  * [Manual Testing](#manual-testing)
+  * [Known And Unfixed Bugs](#known--unfixed-bugs)
+  * [Learnings](#learnings)
+  * [Possible Improvements](#possible-improvements)
+
+* [Credits](#credits)
+  * [Acknowledgments](#acknowledgments)
 
 
 
-## Modules & libraries used
 
-### Google-Auth
 
-Google-Auth helps with the authentication to use the google API
 
-### gspread
+## User Experience
 
+This application is giving small companies a tool to do surveys among their employees to get valid information about what makes the company a special employer. Therefore users can do the survey and answer 8 questions that later can be used in a analyzation of the overall company results.
+Users with an account are able to access the analyzation of the survey company results.
+
+### User Stories
+
+**Employees doing the survey**
+
+
+
+**Employer analyzing survey results**
+
+
+
+
+## Design
+
+### Color Scheme
+
+**Blue**
+
+Page headlines.
+
+Highlighting important information.
+
+
+**Green**
+
+Highlighting navigation options
+
+
+**Red**
+
+Highlighting of exit options.
+
+Highlighting important critical information.
+
+Invalid input message.
+
+
+### Flowchart
+
+
+
+
+
+## Features
+### Frontend Features
+### Logic Features
+
+
+
+### Technical Features
+
+**User Login**
+
+
+
+**Data Source Selection**
+
+Choose between two different data sources to get data from. Google Spreadsheet as cloud service or a local Excel file.
+
+
+**Data Export**
+
+
+
+### Accessibility
+
+## Technologies Used
+### Languages Used
+
+- Python
+
+
+
+### Modules & libraries used
+
+**Google-Auth**
+Google-Auth helps with the authentication to use the google API.
+
+**gspread**
 gspread is needed for accessing and updating data in a google spread sheet.
 
-
-### xlrd
-
+**xlrd**
 xlrd is a library that helps with reading data from Excel files (.xls).
 
+**Panda**
+Panda helps with importing and analyzing data.
 
-### Panda
-
-Panda helps with importing and analyzing data
-
-
-### openpyxl
-
+**openpyxl**
 openpyxl is a library that helps with reading data from Excel files (.xlsx/.xlsm).
 
-### colorama
+**colorama**
+colorama helps with coloring the text and its background.
 
-colorama helps with coloring the text and its background
-
-### Misc.
-
+**Misc.**
 - pyArrow
 - os - for terminal wipe
 - sys - Import sys for restart of app
 - subprocess - Import subprocess for restart of app
 - time - Import time for sleep feature
 - datetime - Import to get date
+
+
+### Programs Used
+
+- VS Code
+- Lucid
+- Heroku
+- Git
+- GitHub
+- Excel
+- Google Spreadsheet
+
+
+
+## Deployment
+
+## Testing
+### Validator Testing
+### Lighthouse Testing
+### Manual Testing
+### Known And Unfixed Bugs
+### Learnings
+### Possible Improvements
+
+## Credits
+### Acknowledgments
+
+
+
+
+
+
+
+
 
 
 
@@ -107,29 +223,6 @@ How well are new employees integrated into the company?
 
 
 
-
-## Items to develop
-
-### Login
-
-- Ask for Login
-- Ask if just do survey
-
-
-
-### Result calculation
-
-- Select compamy to analyse
-    - Loop through result list and add each company and number of done surveys in another list
-
-
-
-### Do survey
-
-- Select existing company from list
-- If not in list, write own company name
-
-- Go back to previous question
 
 
 

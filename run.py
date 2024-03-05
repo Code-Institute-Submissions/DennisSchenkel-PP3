@@ -1271,7 +1271,7 @@ def main():
     print("\nThis is the end of all things!\n")
     print("The program will restart in 3 seconds.")
     time.sleep(3)  # Wait for 3 seconds
-    
+
     restart()
 
 
