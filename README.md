@@ -6,7 +6,7 @@ Code Institute - Portfolio Project 3 - Python Command-Line Application
 
 [The deployed application can be found here](https://ci-pp3-survey-dennis-schenkel-25f95a95d1e3.herokuapp.com/)
 
-This application is giving small companies a tool to do surveys among their employees to get valid information about what makes the company a special employer and what is the EVP (Employer Value Proposition). Therefore users can do the survey and answer 8 questions that later can be used in a analyzation of the overall company results.
+This application is giving small companies a tool to do surveys among their employees to get valid information about what makes the company a special employer and what is the EVP (Employer Value Proposition). Therefore, users can do the survey and answer 8 questions that later can be used in an analyzation of the overall company results.
 Users with an account are able to access the analyzation of the survey company results.
 
 
@@ -52,7 +52,7 @@ Users with an account are able to access the analyzation of the survey company r
 
 ## User Experience
 
-This application is giving small companies a tool to do surveys among their employees to get valid information about what makes the company a special employer. Therefore users can do the survey and answer 8 questions that later can be used in a analyzation of the overall company results.
+This application is giving small companies a tool to do surveys among their employees to get valid information about what makes the company a special employer. Therefore, users can do the survey and answer 8 questions that later can be used in an analyzation of the overall company results.
 Users with an account are able to access the analyzation of the survey company results.
 
 
@@ -60,8 +60,8 @@ Users with an account are able to access the analyzation of the survey company r
 
 **Employees doing the survey**
 
-- As a employee, I would like to select the company that I work for, so that I can do the survey.
-- As a employer. I want to be able to add another company to the list of companies, so I can do the survey for a company not already listet.
+- As an employee, I would like to select the company that I work for, so that I can do the survey.
+- As an employer. I want to be able to add another company to the list of companies, so I can do the survey for a company not already listed.
 
 
 **Employer analyzing survey results**
@@ -82,7 +82,7 @@ Users with an account are able to access the analyzation of the survey company r
 
 ### Color Scheme
 
-This application uses only a few colores for highlighting important information and user options.
+This application uses only a few colors for highlighting important information and user options.
 
 **Blue**
 
@@ -108,7 +108,7 @@ This application uses only a few colores for highlighting important information 
 
 ### Flowchart
 
-The option to exit the program is indicated in the flowchart with "(Exit Opt.)" in every step it is available.
+The option to exit the program is indicated in the flowchart with "(Exit Opt.)" in every step, it is available.
 
 ![Flowchart](documentation/images/flowchart.png)
 
@@ -129,14 +129,14 @@ The option to exit the program is indicated in the flowchart with "(Exit Opt.)" 
 
 - User login: Users can log in by using a valid username and password.
 
-- User data: The gspread file imported contains a sheet with information of multiple users including username and password.
+- User data: The gspread file imported contains a sheet with information of multiple users, including username and password.
 
-- 3 Invalid login attempts: When a user unsuccessfully tries to log in for three times, the program is ending and a message displayed that the account is blocked for 5 minutes. (This is not really happening due to avoiding misunderstanding when testing the app. This feature could easily be added by posting a time stamp in the users gspread sheet and with every login attempt test if a time stamp of no longer then 5 minutes ago is associated with the user.)
+- 3 Invalid login attempts: When a user unsuccessfully tries to log in for three times, the program is ending and a message displayed that the account is blocked for 5 minutes. (This is not really happening due to avoiding misunderstanding when testing the app. This feature could easily be added by posting a time stamp in the user's gspread sheet and with every login attempt test if a time stamp of no longer then 5 minutes ago is associated with the user.)
 
 
 **Data Source Selection**
 
-When selecting to analyse survey results, the user can choose between two different data sources to get data from. Google Spreadsheet as cloud service or a local Excel file.
+When selecting to analyze survey results, the user can choose between two different data sources to get data from. Google Spreadsheet as cloud service or a local Excel file.
 The local Excel file must be located within the application folder. In the current state only the owner of the repository can add different files. In a later version a upload feature could be added.
 
 **Data Export**
@@ -160,10 +160,10 @@ When a survey has been conducted, the results are exported to a gspread sheet an
 ### Modules & libraries used
 
 **Google-Auth**
-- Google-Auth helps with the authentication to use the google API.
+- Google-Auth helps with the authentication to use the Google API.
 
 **gspread**
-- gspread is needed for accessing and updating data in a google spread sheet.
+- gspread is needed for accessing and updating data in a Google spread sheet.
 
 **xlrd**
 - xlrd is a library that helps with reading data from Excel files (.xls).

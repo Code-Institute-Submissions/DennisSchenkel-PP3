@@ -46,11 +46,11 @@ question_topics = [
 ]
 
 
-# Choose company to analyse.
+# Choose company to analyze.
 def select_company(mode):
     """
     Summary:
-        This functions selects the company to do the survey or to analyze.
+        This function selects the company to do the survey or to analyze.
         The list of companies to choose from comes from the results lists.
         The User can also create a new company when doing the survey.
 
@@ -170,7 +170,7 @@ def data_choose_source():
         In this case restart the program.
 
     Returns:
-        excel_file (list of lists): All survey result data from the excel file.
+        excel_file (list of lists): All survey results data from Excel file.
         gspread (list of lists): All survey result data from gspread.
         False (boolean): If user wants to exit the program.
     """
@@ -216,10 +216,10 @@ def data_choose_source():
 def data_get_excel_file():
     """
     Summary:
-        This functions asks for the location of the file to import.
+        This function asks for the location of the file to import.
         The "samples.xlsx" can be used for test purposes.
-        With the import a test for the import of a Excel file is done.
-        If a Excel file is imported, the file is tested for correct structure.
+        With the import, a test for the import of a Excel file is done.
+        If an Excel file is imported, the file is tested for correct structure.
 
     Returns:
         excel_content_as_list (List of lists): All survey result data,
@@ -239,7 +239,7 @@ def data_get_excel_file():
             excel_content = pd.read_excel(get_excel)
 
             # Validation for correct Excel structure is not implemented
-            # Validation would check file tructure is correct.
+            # Validation would check file structure is correct.
             # If correct, TRUE, else FALSE
 
             # Return content of the excel file
@@ -302,7 +302,7 @@ def get_google_companies(mode):
         mode (str): Selection of the mode. Ether "survey" or "analyze".
 
     Returns:
-        List of str: List with all companies that are in de gspread database.
+        List of str: List with all companies that are in the gspread database.
     """
 
     # Get all survey data from gspread.
@@ -566,15 +566,15 @@ def analyze_get_overall_results(company, data):
     Summary;
         Calculate the average results for every company
         and every question by adding up the individual submits
-        and deviding the sum by the sum of submits.
+        and dividing the sum by the sum of submits.
 
     Args:
-        results (list of lists): Contains all the individual answeres
+        results (list of lists): Contains all the individual answers
         submitted by users taking the survey
         company (string): Name of the company to analyze
 
     Returns:
-        count_submits (int): The amount of submits to this companies survey.
+        count_submits (int): The amount of submits to these companies survey.
         result_sum (list of floats): Average results
         for every question for this company.
     """
@@ -605,7 +605,7 @@ def analyze_get_overall_results(company, data):
             question_index = 3
 
             # Starting with the first index in the list
-            # and go though it with the while loop.
+            # and go through it with the while loop.
             sum_index = 0
 
             # For every result to every question,
@@ -657,7 +657,7 @@ def restart():
     # End the current process and restart it
     subprocess.run(["python3", sys.argv[0]])
     # sys.argv[0] defines the path and script
-    # to start with python 3. In this case itselfe.
+    # to start with python 3. In this case itself.
 
     sys.exit()  # After restarting the script, exit the current script.
 
@@ -666,12 +666,12 @@ def restart():
 def unexpected_error():
     """
     Summary:
-        If an error occures which reason is unknown, "
+        If an error occurs which reason is unknown, "
         "this error message is shown.
     """
     print(
-        "Housten, we have a problem!\n"
-        "Some kind of fatal error happend!"
+        "Houston, we have a problem!\n"
+        "Some kind of fatal error happened!"
         "\nThe program will restart in 3 seconds!"
     )
     time.sleep(3)  # Wait for 3 seconds
@@ -728,7 +728,7 @@ def login():
         if user_valid and pw_valid:
             return True  # Login was successful
 
-        # If login was incorrect, increase count and retart when cound is 3
+        # If login was incorrect, increase count and restart when count is 3
         else:
             wipe_terminal()  # Clear terminal
             wrong_attempts_count += 1  # Increase count of failed login attempt
@@ -777,8 +777,8 @@ def login_user_validation(username):
 def login_password_validation(username, password):
     """
     Summary:
-        Validate if the password insered by the users
-        is to be found associated zu the username in the database.
+        Validate if the password inserted by the users
+        is to be found associated to the username in the database.
 
     Args:
         username (str): Username entered by the user
@@ -861,7 +861,7 @@ def nav_one_or_all_question_results():
         "One Question" (str): Returns the information
         that the user wants to analyze one single question.
         "Overall Results" (str): Returns the information
-        that the user wants analyze the overall results.
+        that the user wants to analyze the overall results.
     """
     while True:
         wipe_terminal()
@@ -909,7 +909,7 @@ def nav_analyze_different_question():
         after the one just analyzed or exit the program
 
     Return:
-        break: If the user wants to analyte another question
+        break: If the user wants to analyze another question
         for the selected company.
         True (boolean): If the user wants to analyze a different company.
     """
@@ -965,7 +965,7 @@ class Survey:
         name (str): Name of the user
         company (str): Name of the company
         answers (list of ints): Question results in a list
-        of ints between 0 to 10
+        of ints between 0 and 10
     """
 
     def __init__(self, today, name, company, *answers):
@@ -1028,7 +1028,7 @@ def survey_get_name():
     """
     Summary:
         Get the user name by input and validate it for specific specifications.
-        A maximum of 20 letters, first leter uppercase and the rest lowercase.
+        A maximum of 20 letters, first letter uppercase and the rest lowercase.
 
     Raises:
         ValueError: When input is not max 20 letters,
@@ -1142,7 +1142,7 @@ def survey_create_company(company_list):
 def survey_get_answers(name, company):
     """
     Summary:
-        The user has to answer 8 questions with an int valie
+        The user has to answer 8 questions with an int value
         between 0 and 10. The results are then used for saving
         in the gspread file.
 
@@ -1153,7 +1153,7 @@ def survey_get_answers(name, company):
         ValueError: Error for when no valid input was given.
 
     Returns:
-        answers (list of ints): A list with a int value between 0 and 10
+        answers (list of ints): A list with an int value between 0 and 10
         for each answered question.
     """
     # Get all data from gspread.
@@ -1165,7 +1165,7 @@ def survey_get_answers(name, company):
 
     # Initializing a counter for questions.
     question_count = 0
-    # Initialising a list to be filled with the users answers.
+    # Initializing a list to be filled with the users answers.
     answers = []
 
     for question in questions:
@@ -1220,7 +1220,7 @@ def survey_get_answers(name, company):
 def main():
     """
     Summary:
-        This functions starts the program and contains all logics.
+        This function starts the program and contains all logics.
     """
     wipe_terminal()  # Clear terminal
 
@@ -1228,7 +1228,7 @@ def main():
     # ask if user wants to analyze existing data or do the survey
     survey_or_analyze = nav_survey_or_analyze()
 
-    # Select what option is choosen in the first navigation step
+    # Select what option is chosen in the first navigation step
     if survey_or_analyze == "do_survey":
         survey()  # Start survey, the end of the program is included.
     elif survey_or_analyze == "do_login":
