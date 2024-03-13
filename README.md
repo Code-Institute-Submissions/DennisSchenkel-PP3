@@ -55,20 +55,34 @@ Users with an account are able to access the analyzation of the survey company r
 This application is giving small companies a tool to do surveys among their employees to get valid information about what makes the company a special employer. Therefore users can do the survey and answer 8 questions that later can be used in a analyzation of the overall company results.
 Users with an account are able to access the analyzation of the survey company results.
 
+
 ### User Stories
 
 **Employees doing the survey**
 
+- As a employee, I would like to select the company that I work for, so that I can do the survey.
+- As a employer. I want to be able to add another company to the list of companies, so I can do the survey for a company not already listet.
 
 
 **Employer analyzing survey results**
 
+- As a manager, I want to be able to log into a secured area, so that I get access to the survey results.
+- As a manager, I want be able to select a source of data, so that I am able to use my own excel file as data source.
+- As a manager, I would like to select the company that I work for, to work with only the relevant data.
+- As a manager, I would like to select the results of a specific question, to get only the results of this question.
+- As a manager, I would like to select an overview of the overall results of the company survey, to get all relevant information on one scree.
 
+
+**All users**
+
+- As a user, I would like to be able to exit the application at any stage, so I am not trapped in a lengthy process that I can not stop.
 
 
 ## Design
 
 ### Color Scheme
+
+This application uses only a few colores for highlighting important information and user options.
 
 **Blue**
 
@@ -93,12 +107,15 @@ Invalid input message.
 
 ### Flowchart
 
-
+![Flowchart](documentation/images/flowchart.png)
 
 
 
 ## Features
+
 ### Frontend Features
+
+
 ### Logic Features
 
 
@@ -121,6 +138,7 @@ Choose between two different data sources to get data from. Google Spreadsheet a
 ### Accessibility
 
 ## Technologies Used
+
 ### Languages Used
 
 - Python
