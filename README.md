@@ -4,7 +4,7 @@
 
 Code Institute - Portfolio Project 3 - Python Command-Line Application
 
-![The deployed application can be found here] (Link to app here)
+[The deployed application can be found here](https://ci-pp3-survey-dennis-schenkel-25f95a95d1e3.herokuapp.com/)
 
 This application is giving small companies a tool to do surveys among their employees to get valid information about what makes the company a special employer and what is the EVP (Employer Value Proposition). Therefore users can do the survey and answer 8 questions that later can be used in a analyzation of the overall company results.
 Users with an account are able to access the analyzation of the survey company results.
@@ -202,6 +202,10 @@ When a survey has been conducted, the results are exported to a gspread sheet an
 
 ## Testing
 ### Validator Testing
+
+The code validation with the Code Institute Python Linter shows no errors
+![CI Python Linter](documentation/images/ci-python-linter.png)
+
 ### Lighthouse Testing
 ### Manual Testing
 ### Known And Unfixed Bugs
