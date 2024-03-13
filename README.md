@@ -86,26 +86,29 @@ This application uses only a few colores for highlighting important information 
 
 **Blue**
 
-Page headlines.
+- Page headlines - All page headlines are in blue color.
 
-Highlighting important information.
+- Highlighting important information - Important information like results are in blue color.
 
 
 **Green**
 
-Highlighting navigation options
+- Highlighting navigation options - Options that can be selected by the user are in green color.
 
 
 **Red**
 
-Highlighting of exit options.
+- Highlighting important critical information - Critical information like invalid login attempt are in red color.
 
-Highlighting important critical information.
+- Invalid input message - Information about invalid input is stated in red color.
 
-Invalid input message.
+- Highlighting of exit options - Exit options are in red color.
+
 
 
 ### Flowchart
+
+The option to exit the program is indicated in the flowchart with "(Exit Opt.)" in every step it is available.
 
 ![Flowchart](documentation/images/flowchart.png)
 
@@ -124,18 +127,27 @@ Invalid input message.
 
 **User Login**
 
+- User login: Users can log in by using a valid username and password.
+
+- User data: The gspread file imported contains a sheet with information of multiple users including username and password.
+
+- 3 Invalid login attempts: When a user unsuccessfully tries to log in for three times, the program is ending and a message displayed that the account is blocked for 5 minutes. (This is not really happening due to avoiding misunderstanding when testing the app. This feature could easily be added by posting a time stamp in the users gspread sheet and with every login attempt test if a time stamp of no longer then 5 minutes ago is associated with the user.)
 
 
 **Data Source Selection**
 
-Choose between two different data sources to get data from. Google Spreadsheet as cloud service or a local Excel file.
-
+When selecting to analyse survey results, the user can choose between two different data sources to get data from. Google Spreadsheet as cloud service or a local Excel file.
+The local Excel file must be located within the application folder. In the current state only the owner of the repository can add different files. In a later version a upload feature could be added.
 
 **Data Export**
 
+When a survey has been conducted, the results are exported to a gspread sheet and extended with the current date.
 
 
 ### Accessibility
+
+
+
 
 ## Technologies Used
 
@@ -148,22 +160,22 @@ Choose between two different data sources to get data from. Google Spreadsheet a
 ### Modules & libraries used
 
 **Google-Auth**
-Google-Auth helps with the authentication to use the google API.
+- Google-Auth helps with the authentication to use the google API.
 
 **gspread**
-gspread is needed for accessing and updating data in a google spread sheet.
+- gspread is needed for accessing and updating data in a google spread sheet.
 
 **xlrd**
-xlrd is a library that helps with reading data from Excel files (.xls).
+- xlrd is a library that helps with reading data from Excel files (.xls).
 
 **Panda**
-Panda helps with importing and analyzing data.
+- Panda helps with importing and analyzing data.
 
 **openpyxl**
-openpyxl is a library that helps with reading data from Excel files (.xlsx/.xlsm).
+- openpyxl is a library that helps with reading data from Excel files (.xlsx/.xlsm).
 
 **colorama**
-colorama helps with coloring the text and its background.
+- colorama helps with coloring the text and its background.
 
 **Misc.**
 - pyArrow
