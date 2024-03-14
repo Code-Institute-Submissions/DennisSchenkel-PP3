@@ -36,7 +36,6 @@ Users with an account are able to access the analyzation of the survey company r
 
 * [Testing](#testing)
   * [Validator Testing](#validator-testing)
-  * [Lighthouse Testing](#lighthouse-testing)
   * [Manual Testing](#manual-testing)
   * [Known And Unfixed Bugs](#known--unfixed-bugs)
   * [Learnings](#learnings)
@@ -146,7 +145,7 @@ When a survey has been conducted, the results are exported to a gspread sheet an
 
 ### Accessibility
 
-
+Since the application is solely console based, accessibility can not really be influenced by the creator. Still, it is important to make the console content as readable as possible by using colors and clear structures. In this application, I tried to make the content as understandable and readable as possible.
 
 
 ## Technologies Used
@@ -162,20 +161,26 @@ When a survey has been conducted, the results are exported to a gspread sheet an
 **Google-Auth**
 - Google-Auth helps with the authentication to use the Google API.
 
+
 **gspread**
 - gspread is needed for accessing and updating data in a Google spread sheet.
+
 
 **xlrd**
 - xlrd is a library that helps with reading data from Excel files (.xls).
 
+
 **Panda**
 - Panda helps with importing and analyzing data.
+
 
 **openpyxl**
 - openpyxl is a library that helps with reading data from Excel files (.xlsx/.xlsm).
 
+
 **colorama**
 - colorama helps with coloring the text and its background.
+
 
 **Misc.**
 - pyArrow
@@ -187,6 +192,8 @@ When a survey has been conducted, the results are exported to a gspread sheet an
 
 
 ### Programs Used
+
+During the development of this application, the following programs have been used.
 
 - VS Code
 - Lucid
@@ -206,11 +213,21 @@ When a survey has been conducted, the results are exported to a gspread sheet an
 The code validation with the Code Institute Python Linter shows no errors
 ![CI Python Linter](documentation/images/ci-python-linter.png)
 
-### Lighthouse Testing
+
 ### Manual Testing
 ### Known And Unfixed Bugs
 ### Learnings
+
+
+
 ### Possible Improvements
+
+- Deactivating user account for five minutes after three failed login attempts.
+- User can upload own Excel file with survey results to analyze.
+- Uploaded Excel file will be checked for correct structure and data validity.
+- Improving the visual design with some ASCII art and other ways for better structuring.
+- More sophisticated analyzing algorithm.
+
 
 ## Credits
 ### Acknowledgments
