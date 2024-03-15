@@ -45,6 +45,13 @@ question_topics = [
     "Employee integration",
 ]
 
+exit_words = [
+    "EXIT", "Exit", "eXit", "exIt", "exiT",
+    "EXit", "EXIt", "EXiT", "eXIT",
+    "ExIt", "ExiT", "ExIT",
+    "eXiT", "eXIT",
+    "ExiT", "exit"
+]
 
 # Choose company to analyze.
 def select_company(mode):
@@ -706,7 +713,7 @@ def login():
                          + Style.RESET_ALL + "? (Test)\n"
                          )
         # Validate if the user wants to exit the program using "EXIT"
-        if username == "EXIT":
+        if username in exit_words:
             restart()
             break
 
@@ -714,7 +721,7 @@ def login():
                          + Style.RESET_ALL + "? (Test)\n"
                          )
         # Validate if the user wants to exit the program using "EXIT"
-        if password == "EXIT":
+        if password in exit_words:
             restart()
             break
 
@@ -1045,7 +1052,7 @@ def survey_get_name():
         print("If you want to exit, please enter 'EXIT'\n")
         name = input("Please type in your first name: ")
         # Validate if the user wants to exit the program using "EXIT"
-        if name == "EXIT":
+        if name in exit_words:
             restart()
             break
 
@@ -1095,7 +1102,7 @@ def survey_create_company(company_list):
         new_company = input("Enter the company name: ")
 
         # Validate if the user wants to exit the program using "EXIT"
-        if new_company == "EXIT":
+        if new_company in exit_words:
             restart()
             break
 
@@ -1187,7 +1194,7 @@ def survey_get_answers(name, company):
             print(question)
             user_input = input()
             # Validate if the user wants to exit the program using "EXIT"
-            if user_input == "EXIT":
+            if user_input in exit_words:
                 restart()
                 break
 
