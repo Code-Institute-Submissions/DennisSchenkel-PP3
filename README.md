@@ -261,14 +261,16 @@ The code validation with the Code Institute Python Linter shows no errors
 | Complete survey | Answer all questions with valide input | Load thany you screen with user name and company, then load reload screen and restart app | Pass |
 | Complete survey data upload | Answer all questions with valide input | Data is uploaded as a new row to gspread with current date | Pass |
 
-
+| **Test** | **Description** | **Expected Outcome** | **Result** |
 | --- | --- | --- | --- |
 | **Analyzing Results** |  |  |  |
 | --- | --- | --- | --- |
 | **User Login** |  |  |  |
-
-
-| **Select Data Sourcey** |  |  |  |
+| Enter correct username | Enter "Test" as username and press enter | Display input for password | Pass |
+| Enter correct password | Enter "Test" as password and press enter | Show screen with login confirmation, followed by data source selection | Pass |
+| Enter incorrect login credentials | Enter ether wrong username or password or both | Display error message and increase failed attempts counter | Pass |
+| 3 fails login attemts | Use incorrect login credentials for 3 times | Increase failed attempts counter and restart app after third failed attempt | Pass |
+| **Select Data Source** |  |  |  |
 | Select "Import Excel file to analyze" | Enter "1" and press enter | Show screen with input of Excel file name | Pass |
 | Correct Excel file name | Enter a correct Excel file name and press enter | Show screen for selection of company | Pass |
 | Wrong Excel file name | Enter a wrong Excel file name and press enter | Show error screen with option to try again or not | Pass |

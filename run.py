@@ -269,8 +269,10 @@ def data_get_excel_file():
             # Ask if the user wants to try again entering a file name
             while True:  # Test if user enters only y or n and no other key.
                 print("Do you want to try again?\n")
-                print(Fore.GREEN + "(1)" + Style.RESET_ALL + " to enter different file name\n")
-                print(Fore.RED + "(0)" + Style.RESET_ALL + " to EXIT the application\n")
+                print(Fore.GREEN + "(1)" + Style.RESET_ALL
+                      + " to enter different file name\n")
+                print(Fore.RED + "(0)" + Style.RESET_ALL
+                      + " to EXIT the application\n")
                 try_again = input("What would you like to do?")
                 if try_again == "1":
                     print("\n")
@@ -465,7 +467,7 @@ def analyze_single_question_results(company, data):
             + Fore.BLUE
             + company
             + Style.RESET_ALL
-            + " are as follows:\n" 
+            + " are as follows:\n"
             )
         print("-------------------------------------------------- \n")
 
@@ -761,7 +763,7 @@ def login():
                       "for 5 minutes!" + Style.RESET_ALL
                       )
                 print("No, not really ;)")
-                time.sleep(4)  # Wait for 4 seconds
+                time.sleep(5)  # Wait for 5 seconds
                 restart()
                 break
 
@@ -937,7 +939,7 @@ def nav_analyze_different_question():
               + " Analyze a different company\n"
               )
         print(Fore.RED + "(0)" + Style.RESET_ALL
-              +" Exit the program\n"
+              + " Exit the program\n"
               )
 
         option = input("What would you like to do?: ")
@@ -1256,7 +1258,7 @@ def main():
 
         # Choose data source to analyze. Excel file or gspread file.
         data = data_choose_source()
-        
+
         # Defines mode as analyzation mode
         mode = "analyze"
 
@@ -1291,9 +1293,6 @@ def main():
 
 
 # ----------------------- Program Start -----------------------
-
-
-
 
 
 # Start the program
