@@ -45,12 +45,19 @@ question_topics = [
     "Employee integration",
 ]
 
+# Valid spellings to use when trying to exit the app
 exit_words = [
     "EXIT", "Exit", "eXit", "exIt", "exiT",
     "EXit", "EXIt", "EXiT", "eXIT",
     "ExIt", "ExiT", "ExIT",
     "eXiT", "eXIT",
     "ExiT", "exit"
+]
+
+# Valid spellings to use when trying to create a new company
+new_words = [
+    "NEW", "New", "nEw", "neW",
+    "NEw", "NeW", "nEW", "new"
 ]
 
 # Choose company to analyze.
@@ -89,7 +96,7 @@ def select_company(mode):
 
         # If the user chooses to do the survey,
         # check if creation of a new company was selected.
-        if mode == "survey" and selection == "NEW":
+        if mode == "survey" and selection in new_words:
             # Get new company name and return it.
             new_company = survey_create_company(company_list)
             return new_company
