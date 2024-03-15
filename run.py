@@ -557,7 +557,7 @@ def analyze_overall_question_results(company, data):
 
         print("\n-------------------------------------------------- \n")
         print(Fore.GREEN + "(1)" + Style.RESET_ALL +
-              " Analyze a different company\n"
+              " Analyze a different company"
               )
         print(Fore.RED + "(0)" + Style.RESET_ALL +
               " Exit the program\n"
