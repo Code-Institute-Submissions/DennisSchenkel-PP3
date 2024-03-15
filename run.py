@@ -345,7 +345,7 @@ def get_google_companies(mode):
         company_index = company_list.index(company) + 1
         index_list.append(company_index)
         print(Fore.GREEN + f"({company_index}) "
-              + Style.RESET_ALL + company + "\n"
+              + Style.RESET_ALL + company
               )
 
     # If in survey mode, show option to create new company.
@@ -498,10 +498,6 @@ def analyze_overall_question_results(company, data):
     Args:
         company (string): Name of the company to analyze
     """
-    # result_data = get_questions_from_google() # Get all data from g-spread
-    # results = result_data[1] # 1 to select the second RETURN
-    # from the function
-
     while True:
 
         analyzation_results = analyze_get_overall_results(company, data)
@@ -539,7 +535,7 @@ def analyze_overall_question_results(company, data):
                 sum
             )  # Convert float to string and limit to two decimal points.
             print(sum + " of 10 for "
-                  + question_topics[topic_index].lower() + "\n"
+                  + question_topics[topic_index].lower()
                   )
             topic_index += 1  # Go to next topic
 
@@ -938,14 +934,14 @@ def nav_analyze_different_question():
     while True:
 
         wipe_terminal()
-        print(Fore.GREEN + "(1)" " Analyze another question\n"
-              + Style.RESET_ALL
+        print(Fore.GREEN + "\n(1)" + Style.RESET_ALL
+              + " Analyze another question\n"
               )
-        print(Fore.GREEN + "(2)" " Analyze a different company\n"
-              + Style.RESET_ALL
+        print(Fore.GREEN + "(2)" + Style.RESET_ALL
+              + " Analyze a different company\n"
               )
-        print(Fore.RED + "(0)" " Exit the program\n"
-              + Style.RESET_ALL
+        print(Fore.RED + "(0)" + Style.RESET_ALL
+              +" Exit the program\n"
               )
 
         option = input("What would you like to do?: ")
