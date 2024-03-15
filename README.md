@@ -220,26 +220,26 @@ The code validation with the Code Institute Python Linter shows no errors
 | --- | --- | --- | --- |
 | **Welcome Screen** |  |  |  |
 | --- | --- | --- | --- |
-| Selecting "Do the survey" | Entering 1 and pressing enter | App accepting input and loading list of companies from gspread | Pass |
-| Selecting "Login and analyze survey results" | Entering 2 and pressing enter | Accepting input, showing loading screen and login screen | Pass |
-| Enter not shown option (int) | Entering an integer that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
-| Enter not shown option (str) | Entering an string that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
-| Enter not shown option (empty space) | Not entering anything and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Select "Do the survey" | Enter "1" and pressing enter | App accepting input and loading list of companies from gspread | Pass |
+| Select "Login and analyze survey results" | Enter "2" and pressing enter | Accepting input, showing loading screen and login screen | Pass |
+| Enter not shown option (int) | Enter an integer that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Enter not shown option (str) | Enter a string that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Enter not shown option (empty space) | Not enter anything and pressing enter | Show error message for wrong input and reload screen | Pass |
 | --- | --- | --- | --- |
 | **Conducting Survey** |  |  |  |
 | --- | --- | --- | --- |
 | **Select Company** |  |  |  |
-| Select a shown company | Entering an int shown and press enter | Show screen to confirm selection and loading screen for input of first name | Pass |
-| Select "Create new compyne" | Entering "NEW" and press enter | Show screen to enter new company name or exit the app | Pass |
-| Enter "NEW" in not only upper cases | Entering "NEW" in various writings | Show screen to enter new company name or exit the app | Pass |
-| Exit application | Entering "0" and press enter | Show confirmation screen that app is restarting in 2 seconds an then restarts | Pass |
-| Enter not shown option (int) | Entering an integer that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
-| Enter not shown option (str) | Entering an string that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
-| Enter not shown option (empty space) | Not entering anything and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Select a shown company | Enter an int shown and press enter | Show screen to confirm selection and loading screen for input of first name | Pass |
+| Select "Create new compyne" | Enter "NEW" and press enter | Show screen to enter new company name or exit the app | Pass |
+| Enter "NEW" in not only upper cases | Enter "NEW" in various writings | Show screen to enter new company name or exit the app | Pass |
+| Exit application | Enter "0" and press enter | Show confirmation screen that app is restarting in 2 seconds an then restarts | Pass |
+| Enter not shown option (int) | Enter an integer that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Enter not shown option (str) | Enter a string that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Enter not shown option (empty space) | Not enter anything and pressing enter | Show error message for wrong input and reload screen | Pass |
 | **Create New Company** |  |  |  |
 | Enter new company name | Enter a new company name and press enter | Show screen to confirm entered new company name | Pass |
 | Exit application | Enter "EXIT" and press enter | Show confirmation screen that app is restarting in 2 seconds an then restarts | Pass |
-| Enter "EXIT" in not only upper cases | Entering "EXIT" in various writings | Show confirmation screen that app is restarting in 2 seconds an then restarts | Pass |
+| Enter "EXIT" in not only upper cases | Enter "EXIT" in various writings | Show confirmation screen that app is restarting in 2 seconds an then restarts | Pass |
 | Enter new company name | A company name is entered | Show screen to confirm entered company name | Pass |
 | Confirm new company name | Confirm new company name by pressing 1 and enter | Show next screen for entering the users first name | Pass |
 | Decline new company name | Decline new company name by pressing 2 and enter | Reload screen to enter new comoany name | Pass |
@@ -253,42 +253,71 @@ The code validation with the Code Institute Python Linter shows no errors
 | Enter name with empty space  | Enter name with an empty space in it | Show error screen with name conventions and reload after 5 seconds | Pass |
 | Enter name with with 20+ letters  | Enter name with to many letters (20+) | Show error screen with name conventions and reload after 5 seconds | Pass |
 | **Answer Survey Questions** |  |  |  |
-
-
-
-
+| Enter value between 0 and 10 | Enter a value that is between 0 and 10 and press enter | Load next question/screen | Pass |
+| Enter value grater then 10 | Enter a value that is greater then 10 | Show error message for wrong input and reload screen | Pass |
+| Enter incorrect | Enter a value that is no int from 0 to 10 (str, spaced, symbols) | Show error message for wrong input and reload screen | Pass |
+| Exit application | Enter "EXIT" and press enter | Show confirmation screen that app is restarting in 2 seconds an then restarts | Pass |
+| Enter "EXIT" in not only upper cases | Enter "EXIT" in various writings | Show confirmation screen that app is restarting in 2 seconds an then restarts | Pass |
+| Complete survey | Answer all questions with valide input | Load thany you screen with user name and company, then load reload screen and restart app | Pass |
+| Complete survey data upload | Answer all questions with valide input | Data is uploaded as a new row to gspread with current date | Pass |
 
 
 | --- | --- | --- | --- |
 | **Analyzing Results** |  |  |  |
 | --- | --- | --- | --- |
-| Step 1 circle active | Mark circle step indicator as active | The first of the white circles in the header gets a dark-colored border. | Pass |
-| Step 1 text active  | Change text of step indicator in header | Text in header changes to "Step 1: Select talent to reach". | Pass |
-| Step 1 circle done  | Mark circle step indicator as done | When going to step 2 the bordered circle of step 1 gets filled out and the number gets white. | Pass |
-| Step 1 circle back  | Change of circle step indicator in header | When going back to the start page from step 1, the bordered circle of step 1 gets back to white again and all circles are completely white. | Pass |
-| Step 1 text back  | Change text of step indicator in header | Text in header changes back to "Start". | Pass |
-| Step 2 circle active | Mark circle step indicator as active | The second of the white circles in the header gets a dark-colored border. | Pass |
-| Step 2 text active | Change text of step indicator in header | Text in header changes to "Step 2: Choose platforms to use". | Pass |
-| Step 2 circle done  | Mark circle step indicator as done | When going to step 3 the bordered circle of step 2 gets filled out and the number gets white. | Pass |
-| Step 2 circle back  | Change of circle step indicator in header | When going back to step 1 from step 2, the bordered circle of step 2 gets back to white again and the circle of step 1 is no longer filled out but only with the border again. Former white number of the now active gets black again. | Pass |
-| Step 2 text back  | Change text of step indicator in header | Text in header changes back to "Step 1: Select talent to reach". | Pass |
-| Step 3 circle active | Mark circle step indicator as active | The third of the white circles in the header gets a dark-colored border. | Pass |
-| Step 3 text active | Change text of step indicator in header | Text in header changes to "Step 3: Define budget to allocate". | Pass |
-| Step 3 circle done  | Mark circle step indicator as done | When going to step 4 the bordered circle of step 3 gets filled out and the number gets white. | Pass |
-| Step 3 circle back  | Change of circle step indicator in header | When going back to step 2 from step 3, the bordered circle of step 3 gets back to white again and the circle of step 2 is no longer filled out but only with the border again. Former white number of the now active gets black again. | Pass |
-| Step 3 text back  | Change text of step indicator in header | Text in header changes back to "Step 2: Choose platforms to use". | Pass |
-| Step 4 circle active | Mark circle step indicator as active | The fourth of the white circles in the header gets a dark-colored border. | Pass |
-| Step 4 text active | Change text of step indicator in header | Text in header changes to "Step 4: Results & recommendations". | Pass |
-| Step 4 circle back  | Change of circle step indicator in header | When going back to step 3 from step 4, the bordered circle of step 4 gets back to white again and the circle of step 3 is no longer filled out but only with the border again. Former white number of the now active gets black again. | Pass |
-| Step 4 text back  | Change text of step indicator in header | Text in header changes back to "Step 3: Define budget to allocate". | Pass |
-| **Footer** |  |  |  |
-| Responsiveness - Footer imprint element | Check for responsiveness of footer element | Footer element with imprint link should always be located at the bottom right of the page and stay in this position when window size is changed. | Pass |
-| Footer Imprint Link | Click on the logo in footer | Loading of the imprint.html in the same tab. | Pass |
+| **User Login** |  |  |  |
 
 
+| **Select Data Sourcey** |  |  |  |
+| Select "Import Excel file to analyze" | Enter "1" and press enter | Show screen with input of Excel file name | Pass |
+| Correct Excel file name | Enter a correct Excel file name and press enter | Show screen for selection of company | Pass |
+| Wrong Excel file name | Enter a wrong Excel file name and press enter | Show error screen with option to try again or not | Pass |
+| Try again entering Excel file name | Enter "1" and press enter | Show screen with input of Excel file name | Pass |
+| Exit application | Enter "0" and press enter | Show confirmation screen that app is restarting in 2 seconds an then restarts | Pass |
+| Select "Use Google sheet to analyze" | Enter "2" and press enter | Show screen for selection of company | Pass |
+| Enter not shown option (int) | Enter an integer that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Enter not shown option (str) | Enter a string that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Enter not shown option (empty space) | Not enter anything and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Exit application | Enter "0" and press enter | Show confirmation screen that app is restarting in 2 seconds an then restarts | Pass |
+| **Select Company** |  |  |  |
+| Select a shown company | Enter an int shown and press enter | Show screen to confirm selection and loading screen for selecting type of analyzation | Pass |
+| Enter not shown option (int) | Enter an integer that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Enter not shown option (str) | Enter a string that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Enter not shown option (empty space) | Not enter anything and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Exit application | Enter "0" and press enter | Show confirmation screen that app is restarting in 2 seconds an then restarts | Pass |
+| **Select Results Type** |  |  |  |
+| Select "Analyze one single survey question" | Enter "1" and press enter | Show screen with individual question to select | Pass |
+| Select "Analyze overall survey results" | Enter "2" and press enter | Show screen with the overall survey results for company | Pass |
+| Exit application | Enter "0" and press enter | Show confirmation screen that app is restarting in 2 seconds an then restarts | Pass |
+| Enter not shown option (int) | Enter an integer that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Enter not shown option (str) | Enter a string that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Enter not shown option (empty space) | Not enter anything and pressing enter | Show error message for wrong input and reload screen | Pass |
+| **Analyze One Servey Question Step 1** |  |  |  |
+| Select a shown question (int between 1 and 8) | Enter one shown int and press enter | Show screen to confirm selected question and load screen with question results | Pass |
+| Exit application | Enter "0" and press enter | Show confirmation screen that app is restarting in 2 seconds an then restarts | Pass |
+| Enter not shown option (int) | Enter an integer that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Enter not shown option (str) | Enter a string that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Enter not shown option (empty space) | Not enter anything and pressing enter | Show error message for wrong input and reload screen | Pass |
+| **Analyze One Servey Question Step 2** |  |  |  |
+| Continue after result | Enter any key and press enter | Show screen with the next options | Pass |
+| Select "Analyze another question" | Enter "1" and pressing enter | Show screen with individual question to select | Pass |
+| Select "Analyze a different company" | Enter "2" and press enter | Show screen with all availabe companies to select | Pass |
+| Exit application | Enter "0" and press enter | Show confirmation screen that app is restarting in 2 seconds an then restarts | Pass |
+| Enter not shown option (int) | Enter an integer that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Enter not shown option (str) | Enter a string that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Enter not shown option (empty space) | Not enter anything and pressing enter | Show error message for wrong input and reload screen | Pass |
+| **Analyze Overall Results** |  |  |  |
+| Select "Analyze a different company" | Enter "1" and press enter | Show screen with all availabe companies to select | Pass |
+| Exit application | Enter "0" and press enter | Show confirmation screen that app is restarting in 2 seconds an then restarts | Pass |
+| Enter not shown option (int) | Enter an integer that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Enter not shown option (str) | Enter a string that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Enter not shown option (empty space) | Not enter anything and pressing enter | Show error message for wrong input and reload screen | Pass |
 
 
 ### Known And Unfixed Bugs
+
+- When the list of available companies in gspread gets to long, the clear terminal function doesn't work as intended. The function only deletes the part visible in the console. The part above the visible part, that is only visible when scrolled upwards, won't be deleted correctly and stays in the console for the time the app runs.
+
 ### Learnings
 
 
