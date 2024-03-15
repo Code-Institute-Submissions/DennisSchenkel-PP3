@@ -93,7 +93,7 @@ def select_company(mode):
         company_list = get_google_companies(mode)
 
         # Take input which company the user selects.
-        selection = input()
+        selection = input("What would you like to do?: ")
 
         # If the user chooses to do the survey,
         # check if creation of a new company was selected.
@@ -214,10 +214,8 @@ def data_choose_source():
             gspread = data_get_google_file()
             return gspread
         elif option == "0":
-            wipe_terminal()  # Clear terminal
-            print("\nThe program will restart in 2 seconds.")
-            time.sleep(2)  # Wait for 2 seconds
-            return False
+            restart()
+            break
         else:
             wipe_terminal()  # Clear terminal
             print(Fore.RED + "\nWrong input. Please select "
@@ -557,7 +555,7 @@ def analyze_overall_question_results(company, data):
 
         print("\n-------------------------------------------------- \n")
         print(Fore.GREEN + "(1)" + Style.RESET_ALL +
-              " Analyze a different company"
+              " Analyze a different company\n"
               )
         print(Fore.RED + "(0)" + Style.RESET_ALL +
               " Exit the program\n"
