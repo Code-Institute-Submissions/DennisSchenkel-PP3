@@ -60,6 +60,7 @@ new_words = [
     "NEw", "NeW", "nEW", "new"
 ]
 
+
 # Choose company to analyze.
 def select_company(mode):
     """
@@ -553,7 +554,7 @@ def analyze_overall_question_results(company, data):
 
         print("\n-------------------------------------------------- \n")
         print(Fore.GREEN + "(1)" + Style.RESET_ALL +
-              " Analyse a different company\n"
+              " Analyze a different company\n"
               )
         print(Fore.GREEN + "(0)" + Style.RESET_ALL +
               " Exit the program\n"
@@ -868,7 +869,7 @@ def nav_survey_or_analyze():
 def nav_one_or_all_question_results():
     """
     Summary:
-        Question if to analyse one specific question
+        Question if to analyze one specific question
         or the overall results of a company.
 
     Return:
@@ -889,13 +890,13 @@ def nav_one_or_all_question_results():
         )
         print("-------------------------------------------------- \n")
         print(Fore.GREEN + "(1)" + Style.RESET_ALL +
-              " Analyse one single survey question\n"
+              " Analyze one single survey question\n"
               )
         print(Fore.GREEN + "(2)" + Style.RESET_ALL +
-              " Analyse overall survey results\n"
+              " Analyze overall survey results\n"
               )
         print(Fore.RED + "(0)" + Style.RESET_ALL +
-              " If you like to exit, please enter EXIT\n"
+              " If you like to exit\n"
               )
         option = input("What would you like to do?: ")
         if option == "1":
@@ -930,10 +931,10 @@ def nav_analyze_different_question():
     while True:
 
         wipe_terminal()
-        print(Fore.GREEN + "(1)" " Analyse another question\n"
+        print(Fore.GREEN + "(1)" " Analyze another question\n"
               + Style.RESET_ALL
               )
-        print(Fore.GREEN + "(2)" " Analyse a different company\n"
+        print(Fore.GREEN + "(2)" " Analyze a different company\n"
               + Style.RESET_ALL
               )
         print(Fore.RED + "(0)" " Exit the program\n"
@@ -1254,7 +1255,7 @@ def main():
         print(Fore.GREEN + "\nYou are now logged in!" + Style.RESET_ALL)
         time.sleep(2)  # Wait for 2 seconds
 
-        # Choose data source to analyse. Excel file or gspread file.
+        # Choose data source to analyze. Excel file or gspread file.
         data = data_choose_source()
 
         # Defines mode as analyzation mode
