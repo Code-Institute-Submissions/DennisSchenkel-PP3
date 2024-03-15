@@ -521,7 +521,7 @@ def analyze_overall_question_results(company, data):
             + Style.RESET_ALL
             + " survey submissions."
         )
-        print("\nResults per question are as follows:\n")
+        print("Results per question are as follows:\n")
         print("-------------------------------------------------- \n")
 
         # Display the results for each question/topic
