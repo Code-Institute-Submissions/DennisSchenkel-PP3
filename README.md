@@ -215,6 +215,79 @@ The code validation with the Code Institute Python Linter shows no errors
 
 
 ### Manual Testing
+
+| **Test** | **Description** | **Expected Outcome** | **Result** |
+| --- | --- | --- | --- |
+| **Welcome Screen** |  |  |  |
+| --- | --- | --- | --- |
+| Selecting "Do the survey" | Entering 1 and pressing enter | App accepting input and loading list of companies from gspread | Pass |
+| Selecting "Login and analyze survey results" | Entering 2 and pressing enter | Accepting input, showing loading screen and login screen | Pass |
+| Enter not shown option (int) | Entering an integer that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Enter not shown option (str) | Entering an string that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Enter not shown option (empty space) | Not entering anything and pressing enter | Show error message for wrong input and reload screen | Pass |
+| --- | --- | --- | --- |
+| **Conducting Survey** |  |  |  |
+| --- | --- | --- | --- |
+| **Select Company** |  |  |  |
+| Select a shown company | Entering an int shown and press enter | Show screen to confirm selection and loading screen for input of first name | Pass |
+| Select "Create new compyne" | Entering "NEW" and press enter | Show screen to enter new company name or exit the app | Pass |
+| Enter "NEW" in not only upper cases | Entering "NEW" in various writings | Show screen to enter new company name or exit the app | Pass |
+| Exit application | Entering "0" and press enter | Show confirmation screen that app is restarting in 2 seconds an then restarts | Pass |
+| Enter not shown option (int) | Entering an integer that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Enter not shown option (str) | Entering an string that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
+| Enter not shown option (empty space) | Not entering anything and pressing enter | Show error message for wrong input and reload screen | Pass |
+| **Create New Company** |  |  |  |
+| Enter new company name | Enter a new company name and press enter | Show screen to confirm entered new company name | Pass |
+| Exit application | Enter "EXIT" and press enter | Show confirmation screen that app is restarting in 2 seconds an then restarts | Pass |
+| Enter "EXIT" in not only upper cases | Entering "EXIT" in various writings | Show confirmation screen that app is restarting in 2 seconds an then restarts | Pass |
+| Enter new company name | A company name is entered | Show screen to confirm entered company name | Pass |
+| Confirm new company name | Confirm new company name by pressing 1 and enter | Show next screen for entering the users first name | Pass |
+| Decline new company name | Decline new company name by pressing 2 and enter | Reload screen to enter new comoany name | Pass |
+| Enter existing company name | An existing company name is entered and confirmed | Show error message and exit hint and reload screen to enter new company name | Pass |
+| **Enter Users First Name** |  |  |  |
+| Enter name | Enter name with first letter uppercase and not more then 20 letters | Load first survey question with correct name in header | Pass |
+| Enter wrong name (int) | Enter name with an integer in it | Show error screen with name conventions and reload after 5 seconds | Pass |
+| Enter name with first letter not uppercase  | Enter name where the first letter or is not uppercase | Show error screen with name conventions and reload after 5 seconds | Pass |
+| Enter name with wrong letter sizes  | Enter name where the first letter or is not uppercase and/or others are uppercase | Show error screen with name conventions and reload after 5 seconds | Pass |
+| Enter name with empty space  | Enter name with an empty space in it | Show error screen with name conventions and reload after 5 seconds | Pass |
+| Enter name with empty space  | Enter name with an empty space in it | Show error screen with name conventions and reload after 5 seconds | Pass |
+| Enter name with with 20+ letters  | Enter name with to many letters (20+) | Show error screen with name conventions and reload after 5 seconds | Pass |
+| **Answer Survey Questions** |  |  |  |
+
+
+
+
+
+
+| --- | --- | --- | --- |
+| **Analyzing Results** |  |  |  |
+| --- | --- | --- | --- |
+| Step 1 circle active | Mark circle step indicator as active | The first of the white circles in the header gets a dark-colored border. | Pass |
+| Step 1 text active  | Change text of step indicator in header | Text in header changes to "Step 1: Select talent to reach". | Pass |
+| Step 1 circle done  | Mark circle step indicator as done | When going to step 2 the bordered circle of step 1 gets filled out and the number gets white. | Pass |
+| Step 1 circle back  | Change of circle step indicator in header | When going back to the start page from step 1, the bordered circle of step 1 gets back to white again and all circles are completely white. | Pass |
+| Step 1 text back  | Change text of step indicator in header | Text in header changes back to "Start". | Pass |
+| Step 2 circle active | Mark circle step indicator as active | The second of the white circles in the header gets a dark-colored border. | Pass |
+| Step 2 text active | Change text of step indicator in header | Text in header changes to "Step 2: Choose platforms to use". | Pass |
+| Step 2 circle done  | Mark circle step indicator as done | When going to step 3 the bordered circle of step 2 gets filled out and the number gets white. | Pass |
+| Step 2 circle back  | Change of circle step indicator in header | When going back to step 1 from step 2, the bordered circle of step 2 gets back to white again and the circle of step 1 is no longer filled out but only with the border again. Former white number of the now active gets black again. | Pass |
+| Step 2 text back  | Change text of step indicator in header | Text in header changes back to "Step 1: Select talent to reach". | Pass |
+| Step 3 circle active | Mark circle step indicator as active | The third of the white circles in the header gets a dark-colored border. | Pass |
+| Step 3 text active | Change text of step indicator in header | Text in header changes to "Step 3: Define budget to allocate". | Pass |
+| Step 3 circle done  | Mark circle step indicator as done | When going to step 4 the bordered circle of step 3 gets filled out and the number gets white. | Pass |
+| Step 3 circle back  | Change of circle step indicator in header | When going back to step 2 from step 3, the bordered circle of step 3 gets back to white again and the circle of step 2 is no longer filled out but only with the border again. Former white number of the now active gets black again. | Pass |
+| Step 3 text back  | Change text of step indicator in header | Text in header changes back to "Step 2: Choose platforms to use". | Pass |
+| Step 4 circle active | Mark circle step indicator as active | The fourth of the white circles in the header gets a dark-colored border. | Pass |
+| Step 4 text active | Change text of step indicator in header | Text in header changes to "Step 4: Results & recommendations". | Pass |
+| Step 4 circle back  | Change of circle step indicator in header | When going back to step 3 from step 4, the bordered circle of step 4 gets back to white again and the circle of step 3 is no longer filled out but only with the border again. Former white number of the now active gets black again. | Pass |
+| Step 4 text back  | Change text of step indicator in header | Text in header changes back to "Step 3: Define budget to allocate". | Pass |
+| **Footer** |  |  |  |
+| Responsiveness - Footer imprint element | Check for responsiveness of footer element | Footer element with imprint link should always be located at the bottom right of the page and stay in this position when window size is changed. | Pass |
+| Footer Imprint Link | Click on the logo in footer | Loading of the imprint.html in the same tab. | Pass |
+
+
+
+
 ### Known And Unfixed Bugs
 ### Learnings
 
