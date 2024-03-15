@@ -406,7 +406,7 @@ def analyze_choose_question():
             print("\n-------------------------------------------------- \n")
 
             # Take input which question the user selects.
-            selection = input("\nChoose a question: ")
+            selection = input("Choose a question: ")
 
             # If users want to exit, they just enter "0"
             # and the program will restart.
@@ -461,8 +461,15 @@ def analyze_single_question_results(company, data):
 
         wipe_terminal()  # Clear terminal
         print(
-            Fore.BLUE + f"\nThe results for question {selected_question[1]} "
-            "for {company} are as follows:\n" + Style.RESET_ALL
+            f"\nThe results for question "
+            + Fore.BLUE
+            + selected_question[1]
+            + Style.RESET_ALL
+            + " for "
+            + Fore.BLUE
+            + company
+            + Style.RESET_ALL
+            + " are as follows:\n" 
             )
         print("-------------------------------------------------- \n")
 
@@ -556,7 +563,7 @@ def analyze_overall_question_results(company, data):
         print(Fore.GREEN + "(1)" + Style.RESET_ALL +
               " Analyze a different company\n"
               )
-        print(Fore.GREEN + "(0)" + Style.RESET_ALL +
+        print(Fore.RED + "(0)" + Style.RESET_ALL +
               " Exit the program\n"
               )
         option = input("What would you like to do?: ")
