@@ -62,7 +62,7 @@ new_words = [
 
 
 # Choose company to analyze.
-def select_company(mode):
+def select_company(mode, data):
     """
     Summary:
         This function selects the company to do the survey or to analyze.
@@ -90,7 +90,7 @@ def select_company(mode):
                   )
         print("\n-------------------------------------------------- \n")
 
-        company_list = get_google_companies(mode)
+        company_list = get_companies(mode, data)
 
         # Take input which company the user selects.
         selection = input("What would you like to do?: ")
@@ -268,20 +268,20 @@ def data_get_excel_file():
 
             # Ask if the user wants to try again entering a file name
             while True:  # Test if user enters only y or n and no other key.
-                print("Do you want to try again?")
-                print(Fore.GREEN + "(y)" + Style.RESET_ALL + "for yes")
-                print(Fore.RED + "(n)" + Style.RESET_ALL + "for no")
-                try_again = input()
-                if try_again.lower() == "y":
+                print("Do you want to try again?\n")
+                print(Fore.GREEN + "(1)" + Style.RESET_ALL + " to enter different file name\n")
+                print(Fore.RED + "(0)" + Style.RESET_ALL + " to EXIT the application\n")
+                try_again = input("What would you like to do?")
+                if try_again == "1":
                     print("\n")
                     break  # Go back to beginning of the first while loop
-                elif try_again.lower() == "n":
+                elif try_again == "0":
                     restart()
                     break
                 else:
                     wipe_terminal()  # Clear terminal
-                    print("Invalid input. Enter 'y' "
-                          "to try again or 'n' to exit."
+                    print("Invalid input. Enter '1' "
+                          "to try again or '0' to exit.\n"
                           )
 
 
@@ -305,21 +305,19 @@ def data_get_google_file():
 # ----------------------- Data Analyzing Functions -----------------------
 
 
-# Get company list from gspread sheet.
-def get_google_companies(mode):
+# Get company list from selectes source gspread or Excel.
+def get_companies(mode, data):
     """
     Summary:
-        Get a list of all companies that are existing in the gspread sheet.
+        Get a list of all companies that are existing in the selected source.
 
     Args:
         mode (str): Selection of the mode. Ether "survey" or "analyze".
+        data (List of lists): All data from selected source.
 
     Returns:
         List of str: List with all companies that are in the gspread database.
     """
-
-    # Get all survey data from gspread.
-    data = data_get_google_file()
 
     # Create empty list for all companies,
     # that are contained in the results data.
@@ -1258,7 +1256,7 @@ def main():
 
         # Choose data source to analyze. Excel file or gspread file.
         data = data_choose_source()
-
+        
         # Defines mode as analyzation mode
         mode = "analyze"
 
@@ -1266,7 +1264,7 @@ def main():
             # User is now logged in and can start with the analyzing.
             # Function to start the first analyzing step
             # with selecting the company to analyze.
-            company = select_company(mode)
+            company = select_company(mode, data)
 
             # Function to define if the user wants to analyze one
             # specific question or the overall results of the company.
@@ -1293,6 +1291,9 @@ def main():
 
 
 # ----------------------- Program Start -----------------------
+
+
+
 
 
 # Start the program
