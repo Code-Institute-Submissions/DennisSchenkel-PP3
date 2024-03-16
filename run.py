@@ -1001,6 +1001,7 @@ def survey():
     wipe_terminal()  # Clear terminal
 
     # Get the company to do the survey for.
+    data = data_get_google_file()
 
     # Defines mode as survey mode.
     mode = "survey"
@@ -1011,7 +1012,7 @@ def survey():
     today = today_raw.isoformat()
 
     # Get the company name from user.
-    company = select_company(mode)
+    company = select_company(mode, data)
 
     # Get the users name.
     name = survey_get_name()
