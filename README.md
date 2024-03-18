@@ -15,6 +15,7 @@ Users with an account are able to access the analyzation of the survey company r
 * [Introduction](#introduction)
 
 * [User Experience](#user-experience)
+  * [Login Credentials](#login-credentials)
   * [User Stories](#user-stories)
 
 * [Design](#design)
@@ -79,7 +80,7 @@ More accounts can be added in the gspread file in sheet "Users".
 - As a manager, I want to be able to select a source of data, so that I am able to use my own excel file as data source.
 - As a manager, I would like to select the company that I work for, to work with only the relevant data.
 - As a manager, I would like to select the results of a specific question, to get only the results of this question.
-- As a manager, I would like to select an overview of the overall results of the company survey, to get all relevant information on one scree.
+- As a manager, I would like to select an overview of the overall results of the company survey, to get all relevant information on one screen.
 
 
 **All users**
@@ -285,6 +286,8 @@ The code validation with the Code Institute Python Linter shows no errors
 | Enter not shown option (int) | Enter an integer that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
 | Enter not shown option (str) | Enter a string that is not shown and pressing enter | Show error message for wrong input and reload screen | Pass |
 | Enter not shown option (empty space) | Not enter anything and pressing enter | Show error message for wrong input and reload screen | Pass |
+
+| **Test** | **Description** | **Expected Outcome** | **Result** |
 | --- | --- | --- | --- |
 | **Conducting Survey** |  |  |  |
 | --- | --- | --- | --- |
@@ -378,7 +381,7 @@ The code validation with the Code Institute Python Linter shows no errors
 
 ### Known And Unfixed Bugs
 
-- When the list of available companies in gspread gets to long, the clear terminal function doesn't work as intended. The function only deletes the part visible in the console. The part above the visible part, that is only visible when scrolled upwards, won't be deleted correctly and stays in the console for the time the app runs.
+- When the list of available companies in gspread gets to long, the clear terminal function doesn't work as intended. The function only deletes the part visible in the console. The part above the visible part, that is only visible when scrolled upwards, won't be deleted correctly and stays in the console for the time the app runs. A fix would be to add pagination to the list of companies.
 
 
 ### Possible Improvements
@@ -388,12 +391,13 @@ The code validation with the Code Institute Python Linter shows no errors
 - Uploaded Excel file will be checked for correct structure and data validity.
 - Improving the visual design with some ASCII art and other ways for better structuring.
 - More sophisticated analyzing algorithm.
+- Add pagination to the list of selectable companies when the list of companies is longer then 10.
 
 
 ## Credits
 ### Acknowledgments
 
-- Thanks to Gareth McGirr for providing great mentorship as part of the Code Academy course.
+- Thanks to Gareth McGirr for providing great mentorship as part of the Code Institute course.
 
 
 Although I have not copied entire code, I'd like to acknowledge the following resources as inspiration
