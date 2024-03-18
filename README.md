@@ -31,6 +31,7 @@ Users with an account are able to access the analyzation of the survey company r
   + [Programs Used](#programs-used)
 
 * [Deployment](#deployment)
+  * [Version Control](#version-control)
   * [Heroku deployment](#heroku-deployment)
 
 * [Testing](#testing)
@@ -198,7 +199,7 @@ The option to exit the program is indicated in the flowchart with "(Exit Opt.)" 
 
 During the development of this application, the following programs have been used.
 
-- VS Code
+- Visual Studio Code
 - Lucid
 - Heroku
 - Git
@@ -210,9 +211,20 @@ During the development of this application, the following programs have been use
 
 ## Deployment
 
-[The deployed application can be found here](https://ci-pp3-survey-dennis-schenkel-25f95a95d1e3.herokuapp.com/)
+### Version Control
+
+This application was developed using Visuel Studio Code as the IDE and GitHub for hosting the repository.
+
+Git was used for version control by using the following comments:
+
+- git add filename - Select the files that should be uploaded and updated to the GitHub repository.
+- git commit -m "commit message" - Commenting the commit to better understand the changes in this specific commit.
+- git push - Upload the commit to GitHub.
+
 
 ### Heroku Deployment
+
+[The deployed application can be found here](https://ci-pp3-survey-dennis-schenkel-25f95a95d1e3.herokuapp.com/)
 
 **Step 0: Create requirements.txt**
 - Create the requirements.txt
