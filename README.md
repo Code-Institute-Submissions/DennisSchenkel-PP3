@@ -52,6 +52,17 @@ Users with an account are able to access the analyzation of the survey company r
 This application is giving small companies a tool to do surveys among their employees to get valid information about what makes the company a special employer. Therefore, users can do the survey and answer 8 questions that later can be used in an analyzation of the overall company results.
 Users with an account are able to access the analyzation of the survey company results.
 
+### Login Credentials
+
+The following information can be used to login any analyze the results.
+More accounts can be added in the gspread file in sheet "Users".
+
+| **Username** | **Password** |
+| --- | --- |
+| Lisa | Password123 |
+| John | 123Password |
+| Test | Test |
+
 
 ### User Stories
 
