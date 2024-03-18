@@ -22,8 +22,6 @@ Users with an account are able to access the analyzation of the survey company r
   * [Flowchart](#flowchart)
 
 * [Features](#features)
-  * [Frontend Features](#frontend-features)
-  * [Logic Features](#logic-features)
   * [Technical Features](#technical-features)
   * [Accessibility](#accessibility)
 
@@ -33,6 +31,10 @@ Users with an account are able to access the analyzation of the survey company r
   + [Programs Used](#programs-used)
 
 * [Deployment](#deployment)
+  * [Heroku deployment](#heroku-deployment)
+  * [Excel file structure](#excel-file-structure)
+  * [Questions used](#questions-used)
+
 
 * [Testing](#testing)
   * [Validator Testing](#validator-testing)
@@ -59,23 +61,42 @@ Users with an account are able to access the analyzation of the survey company r
 
 **Employees doing the survey**
 
-- As an employee, I would like to select the company that I work for, so that I can do the survey.
-- As an employer. I want to be able to add another company to the list of companies, so I can do the survey for a company not already listed.
+`
+As an employee, I would like to select the company that I work for, so that I can do the survey.
+`
 
+
+`
+As an employer. I want to be able to add another company to the list of companies, so I can do the survey for a company not already listed.`
+`
 
 **Employer analyzing survey results**
 
-- As a manager, I want to be able to log into a secured area, so that I get access to the survey results.
-- As a manager, I want be able to select a source of data, so that I am able to use my own excel file as data source.
-- As a manager, I would like to select the company that I work for, to work with only the relevant data.
-- As a manager, I would like to select the results of a specific question, to get only the results of this question.
-- As a manager, I would like to select an overview of the overall results of the company survey, to get all relevant information on one scree.
+`
+As a manager, I want to be able to log into a secured area, so that I get access to the survey results.
+`
 
+`
+As a manager, I want be able to select a source of data, so that I am able to use my own excel file as data source.
+`
+
+`
+As a manager, I would like to select the company that I work for, to work with only the relevant data.
+`
+
+`
+As a manager, I would like to select the results of a specific question, to get only the results of this question.
+`
+
+`
+As a manager, I would like to select an overview of the overall results of the company survey, to get all relevant information on one scree.
+`
 
 **All users**
 
-- As a user, I would like to be able to exit the application at any stage, so I am not trapped in a lengthy process that I can not stop.
-
+`
+As a user, I would like to be able to exit the application at any stage, so I am not trapped in a lengthy process that I can not stop.
+`
 
 ## Design
 
@@ -86,21 +107,19 @@ This application uses only a few colors for highlighting important information a
 **Blue**
 
 - Page headlines - All page headlines are in blue color.
-
 - Highlighting important information - Important information like results are in blue color.
 
 
 **Green**
 
 - Highlighting navigation options - Options that can be selected by the user are in green color.
+- Highlight successful login - when logged in, a screen with green text is shown to confirm login.
 
 
 **Red**
 
 - Highlighting important critical information - Critical information like invalid login attempt are in red color.
-
 - Invalid input message - Information about invalid input is stated in red color.
-
 - Highlighting of exit options - Exit options are in red color.
 
 
@@ -115,11 +134,11 @@ The option to exit the program is indicated in the flowchart with "(Exit Opt.)" 
 
 ## Features
 
-### Frontend Features
-
-
-### Logic Features
-
+- Terminal is cleared with every screen to keep a good overview and good user experience.
+- The surveys can be conducted by anyone.
+- Everyone doing a survey can add a new company, as long as it is not in the database.
+- Results for companies can only be seen when logged in.
+- Validation for every input.
 
 
 ### Technical Features
@@ -135,17 +154,16 @@ The option to exit the program is indicated in the flowchart with "(Exit Opt.)" 
 
 **Data Source Selection**
 
-When selecting to analyze survey results, the user can choose between two different data sources to get data from. Google Spreadsheet as cloud service or a local Excel file.
-The local Excel file must be located within the application folder. In the current state only the owner of the repository can add different files. In a later version a upload feature could be added.
+- When selecting to analyze survey results, the user can choose between two different data sources to get data from. Google Spreadsheet as cloud service or a local Excel file. (The local Excel file must be located within the application folder. In the current state only the owner of the repository can add different files. In a later version a upload feature could be added.)
 
 **Data Export**
 
-When a survey has been conducted, the results are exported to a gspread sheet and extended with the current date.
+- When a survey has been conducted, the results are exported to a gspread sheet and extended with the current date.
 
 
 ### Accessibility
 
-Since the application is solely console based, accessibility can not really be influenced by the creator. Still, it is important to make the console content as readable as possible by using colors and clear structures. In this application, I tried to make the content as understandable and readable as possible.
+- Since the application is solely console based, accessibility can not really be influenced by the creator. Still, it is important to make the console content as readable as possible by using colors and clear structures. In this application, I tried to make the content as understandable and readable as possible.
 
 
 ## Technologies Used
@@ -153,7 +171,6 @@ Since the application is solely console based, accessibility can not really be i
 ### Languages Used
 
 - Python
-
 
 
 ### Modules & libraries used
@@ -183,7 +200,7 @@ Since the application is solely console based, accessibility can not really be i
 
 
 **Misc.**
-- pyArrow
+- pyArrow - for panda integration
 - os - for terminal wipe
 - sys - Import sys for restart of app
 - subprocess - Import subprocess for restart of app
@@ -202,10 +219,85 @@ During the development of this application, the following programs have been use
 - GitHub
 - Excel
 - Google Spreadsheet
-
+- CI Python Linter
 
 
 ## Deployment
+
+
+### Heroku Deployment
+
+**Step 0: Create requirements.txt**
+- Create the requirements.txt
+- Make sure it contains all needed moduls and libraries.
+
+**Step 1: Use account**
+- Create a Heroku account
+- Log into the Heroku account
+
+**Step 2: Create new app**
+- On the dashboard click "New" in the upper right corner.
+- Select "Create new app"
+- Select a name for the application - the name should only contain lowercase letters, numbers, and dashes.
+- Choose a region. (Europe as we are in Europe)
+
+**Step 3: Define deployment methode**
+- Select GitHub as deployment methode
+- Connect GitHub account to Heroku
+- Select account and search for repository
+- Connect to found repository
+
+**Step 4: Settings**
+- Switch to the settings page (Menu in the top)
+- Click on "Reveal Config Vars"
+- Add one with the key "CREDS" and as value the content of the file creds.json from IDE.
+- Add one with the key "PORT" and value of "8000"
+- In the next section click on "Add buildpack"
+- If not already selected, add Python.
+- Add nodejs next.
+
+**Step 5: Deploy application**
+- Switch to the deploy page (Menu in the top)
+- Look under manual deployment
+- Select a branch to deploy (Main in my case)
+- Click "Deploy Branche"
+
+**Step 6: Use app**
+- Heroku will then set up the virtual invirement with all modules and libraries needed. (This can take some time)
+- When Heroku is done with the deployment, click "View" and start the
+- Use app
+
+
+### Excel file structure
+
+The structure of the Excel file has to be as follow:
+
+- Only one sheet
+- Name of file and sheet does not matter
+- Questions and kind of field input in first row
+    -   Date, Name, Company Name, Questions
+- Answers in following rows
+- Question answeres between 0 and 10
+
+[Gspread file can be found here](https://docs.google.com/spreadsheets/d/16vTHxofSbLFpQXTzHNgIS84chSTrg7NF4gkwami_Di0/edit?usp=sharing)
+
+
+### Questions used
+
+The following questions have been used in the survey:
+
+- How motivated are you to come to work every day?
+- How much do you feel valued and recognized for your work?
+- How would you rate the opportunities for professional development and career opportunities in the company?
+- Do you feel you are treated fairly and equally?
+- How would you rate the company's salary and benefits?
+- How transparent are decision-making processes in the company?
+- How would you rate the leadership skills in the company?
+- How well are new employees integrated into the company?
+
+
+
+
 
 ## Testing
 ### Validator Testing
@@ -240,7 +332,6 @@ The code validation with the Code Institute Python Linter shows no errors
 | Enter new company name | Enter a new company name and press enter | Show screen to confirm entered new company name | Pass |
 | Exit application | Enter "EXIT" and press enter | Show confirmation screen that app is restarting in 2 seconds an then restarts | Pass |
 | Enter "EXIT" in not only upper cases | Enter "EXIT" in various writings | Show confirmation screen that app is restarting in 2 seconds an then restarts | Pass |
-| Enter new company name | A company name is entered | Show screen to confirm entered company name | Pass |
 | Confirm new company name | Confirm new company name by pressing 1 and enter | Show next screen for entering the users first name | Pass |
 | Decline new company name | Decline new company name by pressing 2 and enter | Reload screen to enter new comoany name | Pass |
 | Enter existing company name | An existing company name is entered and confirmed | Show error message and exit hint and reload screen to enter new company name | Pass |
@@ -346,34 +437,7 @@ The code validation with the Code Institute Python Linter shows no errors
 
 
 
-## Excel file structure
 
-- Only one sheet
-- Questions and kind of field input in first row
-    -   Date, Name, Company Name, Questions
-- Answers in following rows
-
-G-Spread
-https://docs.google.com/spreadsheets/d/16vTHxofSbLFpQXTzHNgIS84chSTrg7NF4gkwami_Di0/edit?usp=sharing
-
-
-## Questions to integrate
-
-How motivated are you to come to work every day?
-
-How much do you feel valued and recognized for your work?
-
-How would you rate the opportunities for professional development and career opportunities in the company?
-
-Do you feel you are treated fairly and equally?
-
-How would you rate the company's salary and benefits?
-
-How transparent are decision-making processes in the company?
-
-How would you rate the leadership skills in the company?
-
-How well are new employees integrated into the company?
 
 
 
