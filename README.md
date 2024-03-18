@@ -14,7 +14,7 @@ Users with an account are able to access the analyzation of the survey company r
 
 * [Introduction](#introduction)
 
-* [User Experience](#user-experience-ux)
+* [User Experience](#user-experience)
   * [User Stories](#user-stories)
 
 * [Design](#design)
@@ -27,24 +27,24 @@ Users with an account are able to access the analyzation of the survey company r
 
 * [Technologies Used](#technologies-used)
   * [Languages Used](#languages-used)
-  * [Frameworks, Libraries Used](#frameworks--libraries-used)
+  * [Modules & Libraries Used](#modules--libraries-used)
   + [Programs Used](#programs-used)
 
 * [Deployment](#deployment)
   * [Heroku deployment](#heroku-deployment)
-  * [Excel file structure](#excel-file-structure)
-  * [Questions used](#questions-used)
-
 
 * [Testing](#testing)
   * [Validator Testing](#validator-testing)
   * [Manual Testing](#manual-testing)
-  * [Known And Unfixed Bugs](#known--unfixed-bugs)
-  * [Learnings](#learnings)
+  * [Known And Unfixed Bugs](#known-and-unfixed-bugs)
   * [Possible Improvements](#possible-improvements)
 
 * [Credits](#credits)
   * [Acknowledgments](#acknowledgments)
+
+* [Misc.](#misc)
+  * [Excel file structure](#excel-file-structure)
+  * [Questions used](#questions-used)
 
 
 ## User Experience
@@ -207,17 +207,17 @@ During the development of this application, the following programs have been use
 - Create the requirements.txt
 - Make sure it contains all needed modules and libraries.
 
-**Step 1: Use account**
+**Step 1: Use Account**
 - Create a Heroku account
 - Log into the Heroku account
 
-**Step 2: Create new app**
+**Step 2: Create New App**
 - On the dashboard, click "New" in the upper right corner.
 - Select "Create new app"
 - Select a name for the application - the name should only contain lowercase letters, numbers, and dashes.
 - Choose a region. (Europe as we are in Europe)
 
-**Step 3: Define deployment methode**
+**Step 3: Define Deployment Methode**
 - Select GitHub as deployment methode
 - Connect GitHub account to Heroku
 - Select account and search for repository
@@ -232,44 +232,16 @@ During the development of this application, the following programs have been use
 - If not already selected, add Python.
 - Add nodejs next.
 
-**Step 5: Deploy application**
+**Step 5: Deploy Application**
 - Switch to the deploy page (Menu in the top)
 - Look under manual deployment
 - Select a branch to deploy (Main in my case)
 - Click "Deploy Branche"
 
-**Step 6: Use app**
+**Step 6: Use App**
 - Heroku will then set up the virtual envirement with all modules and libraries needed. (This can take some time)
 - When Heroku is done with the deployment, click "View" and start the
 - Use app
-
-
-### Excel file structure
-
-The structure of the Excel file has to be as follows:
-
-- Only one sheet
-- Name of file and sheet does not matter
-- Questions and kind of field input in first row
-    -   Date, Name, Company Name, Questions
-- Answers in following rows
-- Question answers between 0 and 10
-
-[Gspread file can be found here](https://docs.google.com/spreadsheets/d/16vTHxofSbLFpQXTzHNgIS84chSTrg7NF4gkwami_Di0/edit?usp=sharing)
-
-
-### Questions used
-
-The following questions have been used in the survey:
-
-- How motivated are you to come to work every day?
-- How much do you feel valued and recognized for your work?
-- How would you rate the opportunities for professional development and career opportunities in the company?
-- Do you feel you are treated fairly and equally?
-- How would you rate the company's salary and benefits?
-- How transparent are decision-making processes in the company?
-- How would you rate the leadership skills in the company?
-- How well are new employees integrated into the company?
 
 
 ## Testing
@@ -409,3 +381,32 @@ Although I have not copied entire code, I'd like to acknowledge the following re
 - wipe_terminal() - using os 
     - A lengthy discussion on the various methods of clearing the terminal is to find here: https://stackoverflow.com/questions/2084508/clear-the-terminal-in-python
 
+
+## Misc.
+
+### Excel File Structure
+
+The structure of the Excel file has to be as follows:
+
+- Only one sheet
+- Name of file and sheet does not matter
+- Questions and kind of field input in first row
+    -   Date, Name, Company Name, Questions
+- Answers in following rows
+- Question answers between 0 and 10
+
+[Gspread file can be found here](https://docs.google.com/spreadsheets/d/16vTHxofSbLFpQXTzHNgIS84chSTrg7NF4gkwami_Di0/edit?usp=sharing)
+
+
+### Questions Used
+
+The following questions have been used in the survey:
+
+- How motivated are you to come to work every day?
+- How much do you feel valued and recognized for your work?
+- How would you rate the opportunities for professional development and career opportunities in the company?
+- Do you feel you are treated fairly and equally?
+- How would you rate the company's salary and benefits?
+- How transparent are decision-making processes in the company?
+- How would you rate the leadership skills in the company?
+- How well are new employees integrated into the company?
