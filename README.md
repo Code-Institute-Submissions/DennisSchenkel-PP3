@@ -65,9 +65,8 @@ Users with an account are able to access the analyzation of the survey company r
 As an employee, I would like to select the company that I work for, so that I can do the survey.
 `
 
-
 `
-As an employer. I want to be able to add another company to the list of companies, so I can do the survey for a company not already listed.`
+As an employer. I want to be able to add another company to the list of companies, so I can do the survey for a company not already listed.
 `
 
 **Employer analyzing survey results**
@@ -224,6 +223,7 @@ During the development of this application, the following programs have been use
 
 ## Deployment
 
+[The deployed application can be found here](https://ci-pp3-survey-dennis-schenkel-25f95a95d1e3.herokuapp.com/)
 
 ### Heroku Deployment
 
@@ -411,9 +411,6 @@ The code validation with the Code Institute Python Linter shows no errors
 
 - When the list of available companies in gspread gets to long, the clear terminal function doesn't work as intended. The function only deletes the part visible in the console. The part above the visible part, that is only visible when scrolled upwards, won't be deleted correctly and stays in the console for the time the app runs.
 
-### Learnings
-
-
 
 ### Possible Improvements
 
@@ -427,25 +424,7 @@ The code validation with the Code Institute Python Linter shows no errors
 ## Credits
 ### Acknowledgments
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Acknowledgement
+- Thanks to Gareth McGirr for providing great mentorship as part of the Code Academy course.
 
 
 Although I not copied entire code, I'd like to acknoledge the following resources as inspiration
